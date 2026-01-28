@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter);
+  
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  --radius-sm: var(--radius);
+  --radius-md: calc(var(--radius) + 2px);
+  --radius-lg: calc(var(--radius) + 4px);
+}
+
+:root {
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.87 0 0);
+  --radius: 0.625rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.145 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.145 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.985 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.396 0.141 25.723);
+    --destructive-foreground: oklch(0.637 0.237 25.331);
+    --border: oklch(0.269 0 0);
+    --input: oklch(0.269 0 0);
+    --ring: oklch(0.439 0 0);
+  }
+}
+
+/* Custom Cyber/Modern Dark Theme Overrides */
+.dark {
+  --background: oklch(14.48% 0.02 264.45); /* #0B0E14 - Dark Slate */
+  --foreground: oklch(98.5% 0 0);
+  
+  --card: oklch(20% 0.02 264.45);
+  --card-foreground: oklch(98.5% 0 0);
+  
+  --popover: oklch(14.48% 0.02 264.45);
+  --popover-foreground: oklch(98.5% 0 0);
+  
+  /* Electric Blue Primary */
+  --primary: oklch(62.3% 0.19 259.9); /* #3b82f6 equivalent vibrant blue */
+  --primary-foreground: oklch(98.5% 0 0);
+  
+  --secondary: oklch(25% 0.03 264.45);
+  --secondary-foreground: oklch(98.5% 0 0);
+  
+  --muted: oklch(25% 0.03 264.45);
+  --muted-foreground: oklch(70% 0 0);
+  
+  --accent: oklch(25% 0.03 264.45);
+  --accent-foreground: oklch(98.5% 0 0);
+  
+  --destructive: oklch(60% 0.25 25);
+  --destructive-foreground: oklch(98.5% 0 0);
+  
+  --border: oklch(25% 0.03 264.45);
+  --input: oklch(25% 0.03 264.45);
+  --ring: oklch(62.3% 0.19 259.9);
+}
+
+/* Force Dark Mode by default for this premium feel or allow system pref */
+:root {
+    color-scheme: dark;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10;
+}
+
+.glass-card {
+    @apply bg-card/60 backdrop-blur-md border border-border/50 shadow-xl;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full hover:bg-primary/50 transition-colors;
+}
+
+/* Animations */
+@keyframes glow {
+  0% { box-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary); }
+  50% { box-shadow: 0 0 20px var(--primary), 0 0 30px var(--primary); }
+  100% { box-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary); }
+}

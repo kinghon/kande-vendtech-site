@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "skills": {
+    "x-trends": {
+      "version": "1.2.1",
+      "installedAt": 1769585428246
+    },
+    "okx": {
+      "version": "1.1.0",
+      "installedAt": 1769585434552
+    },
+    "atxp": {
+      "version": "1.0.0",
+      "installedAt": 1769585435535
+    },
+    "linkedin-cli": {
+      "version": "1.0.0",
+      "installedAt": 1769585436561
+    },
+    "excel": {
+      "version": "1.0.0",
+      "installedAt": 1769585437729
+    },
+    "tldr": {
+      "version": "1.0.1",
+      "installedAt": 1769585438819
+    },
+    "tmux": {
+      "version": "1.0.0",
+      "installedAt": 1769585439949
+    },
+    "deep-research": {
+      "version": "1.0.0",
+      "installedAt": 1769585445711
+    },
+    "calendar": {
+      "version": "1.0.0",
+      "installedAt": 1769585446878
+    },
+    "email": {
+      "version": "1.1.0",
+      "installedAt": 1769585448206
+    },
+    "byterover": {
+      "version": "1.2.2",
+      "installedAt": 1769585449469
+    },
+    "codex-sub-agents": {
+      "version": "1.0.0",
+      "installedAt": 1769585465248
+    },
+    "clawdbot-filesystem": {
+      "version": "1.0.2",
+      "installedAt": 1769585466628
+    },
+    "financial-market-analysis": {
+      "version": "1.0.0",
+      "installedAt": 1769585467880
+    },
+    "brave-images": {
+      "version": "1.0.1",
+      "installedAt": 1769585469142
+    },
+    "xai": {
+      "version": "1.1.0",
+      "installedAt": 1769585474825
+    },
+    "auto-updater": {
+      "version": "1.0.0",
+      "installedAt": 1769585475904
+    },
+    "mole-mac-cleanup": {
+      "version": "1.1.0",
+      "installedAt": 1769585477028
+    },
+    "verify-on-browser": {
+      "version": "1.0.0",
+      "installedAt": 1769585478776
+    },
+    "news-aggregator-skill-2": {
+      "version": "0.1.0",
+      "installedAt": 1769585480007
+    }
+  }
+}
