@@ -22,5 +22,13 @@
     "timestamp": "2026-01-29",
     "source": "config",
     "status": "active"
+  },
+  {
+    "id": "kurtis-004",
+    "fact": "Prefers Telegram over WhatsApp for Jarvis communication",
+    "category": "preference",
+    "timestamp": "2026-01-29",
+    "source": "conversation",
+    "status": "active"
   }
 ]
