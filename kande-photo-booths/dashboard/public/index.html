@@ -1,0 +1,3708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kande Photo Booths - Event Dashboard</title>
+  <link rel="icon" type="image/jpeg" sizes="32x32" href="/kande-logo.jpg">
+  <link rel="icon" type="image/jpeg" sizes="16x16" href="/kande-logo.jpg">
+  <link rel="apple-touch-icon" href="/kande-logo.jpg">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-logo {
+      height: 32px;
+      width: auto;
+      border-radius: 4px;
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .mobile-toggle:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .hamburger {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: white;
+      position: relative;
+    }
+
+    .hamburger::before,
+    .hamburger::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 2px;
+      background: white;
+      transition: all 0.3s;
+    }
+
+    .hamburger::before {
+      top: -6px;
+    }
+
+    .hamburger::after {
+      top: 6px;
+    }
+
+    .mobile-toggle.active .hamburger {
+      background: transparent;
+    }
+
+    .mobile-toggle.active .hamburger::before {
+      top: 0;
+      transform: rotate(45deg);
+    }
+
+    .mobile-toggle.active .hamburger::after {
+      top: 0;
+      transform: rotate(-45deg);
+    }
+
+    .header-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+      transition: all 0.3s ease;
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 768px) {
+      .mobile-toggle {
+        display: block;
+      }
+
+      .header {
+        padding: 15px 20px;
+      }
+
+      .header-controls {
+        max-height: 0;
+        overflow: hidden;
+        margin-top: 0;
+        opacity: 0;
+      }
+
+      .header-controls.expanded {
+        max-height: 200px;
+        margin-top: 15px;
+        opacity: 1;
+      }
+
+      .header-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .header input, .header select, .header button {
+        margin-bottom: 8px;
+      }
+    }
+
+    .header input, .header select, .header button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .header input, .header select {
+      background: rgba(255,255,255,0.9);
+      min-width: 150px;
+    }
+
+    .header button {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .header button:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .admin-badge {
+      background: #ffd700;
+      color: #333;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .stat-card .number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    .stat-card .label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .event-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .event-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .event-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .export-btn {
+      position: absolute;
+      top: 45px;
+      right: 12px;
+      background: rgba(102, 126, 234, 0.1);
+      border: none;
+      border-radius: 6px;
+      padding: 8px;
+      cursor: pointer;
+      color: #667eea;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+
+    .export-btn:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    .copy-link-btn {
+      position: absolute;
+      top: 45px;
+      right: 50px;
+      background: rgba(102, 126, 234, 0.1);
+      border: none;
+      border-radius: 6px;
+      padding: 8px;
+      cursor: pointer;
+      color: #667eea;
+      transition: all 0.2s;
+      z-index: 10;
+      font-size: 14px;
+    }
+
+    .copy-link-btn:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    .copy-link-btn.copied {
+      background: #28a745;
+      color: white;
+    }
+
+    .event-header {
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .event-header.distant {
+      background: linear-gradient(135deg, #ff7b7b 0%, #d63031 100%);
+      color: white;
+    }
+
+    .event-header.distant .event-title {
+      color: white;
+    }
+
+    .event-header.distant .event-type {
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+
+    .distance-badge {
+      position: absolute;
+      top: 10px;
+      right: 5px;
+      z-index: 15;
+      background: rgba(255,255,255,0.9);
+      color: #d63031;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .event-card {
+      position: relative;
+    }
+
+    .subcontractor-section {
+      margin-top: 15px;
+      padding-top: 12px;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .subcontractor-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .subcontractor-checkbox input[type="checkbox"] {
+      transform: scale(1.1);
+    }
+
+    .subcontractor-checkbox label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #495057;
+      cursor: pointer;
+    }
+
+    .subcontractor-name {
+      margin-left: 24px;
+      display: none;
+    }
+
+    .subcontractor-name.visible {
+      display: block;
+    }
+
+    .subcontractor-name input {
+      width: 200px;
+      padding: 6px 10px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    .subcontractor-name input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+    }
+
+    .event-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .event-type {
+      background: #e8f4fd;
+      color: #1976d2;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .event-date {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .date-box {
+      background: #667eea;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      text-align: center;
+      min-width: 70px;
+    }
+
+    .date-box .month {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .date-box .day {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .date-box .weekday {
+      font-size: 0.7rem;
+      opacity: 0.8;
+    }
+
+    .time-info {
+      color: #666;
+    }
+
+    .time-info .time {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .event-body {
+      padding: 20px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .info-section {
+      margin-bottom: 15px;
+    }
+
+    .info-section h4 {
+      color: #999;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+    }
+
+    .info-section p, .info-section ul {
+      color: #333;
+    }
+
+    .info-section ul {
+      list-style: none;
+    }
+
+    .info-section li {
+      padding: 3px 0;
+    }
+
+    .staff-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .staff-badge {
+      background: #f0f0f0;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .staff-badge .role {
+      color: #888;
+      font-size: 0.75rem;
+    }
+
+    .services-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .service-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .service-row:last-child {
+      border-bottom: none;
+    }
+
+    .service-row.hidden-service {
+      opacity: 0.4;
+      text-decoration: line-through;
+    }
+
+    .service-hide-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 6px;
+      font-size: 0.75rem;
+      color: #999;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .service-hide-btn:hover {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .service-hide-btn.is-hidden {
+      color: #28a745;
+    }
+
+    .service-qty {
+      background: #667eea;
+      color: white;
+      min-width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .service-name {
+      color: #333;
+      font-size: 0.9rem;
+      flex: 1;
+    }
+
+    .service-price {
+      color: #2e7d32;
+      font-size: 0.85rem;
+      font-weight: 500;
+      min-width: 80px;
+      text-align: right;
+    }
+
+    .services-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0 0;
+      margin-top: 8px;
+      border-top: 2px solid #667eea;
+      font-weight: 600;
+    }
+
+    .services-total .total-label {
+      color: #333;
+      font-size: 0.9rem;
+    }
+
+    .services-total .total-amount {
+      color: #2e7d32;
+      font-size: 1rem;
+    }
+
+    .custom-fields {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .custom-fields summary {
+      cursor: pointer;
+      color: #667eea;
+      font-weight: 500;
+      padding: 5px 0;
+    }
+
+    .custom-fields-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .custom-field {
+      background: #fafafa;
+      padding: 12px;
+      border-radius: 8px;
+      border-left: 3px solid #667eea;
+    }
+
+    .custom-field .field-name {
+      font-size: 0.75rem;
+      color: #888;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .custom-field .field-value {
+      color: #333;
+      word-break: break-word;
+    }
+
+    .vsco-link {
+      display: inline-block;
+      margin-top: 15px;
+      color: #667eea;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .vsco-link:hover {
+      text-decoration: underline;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .loading::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto;
+      border: 3px solid #eee;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error {
+      background: #ffebee;
+      color: #c62828;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .last-updated {
+      text-align: center;
+      color: #999;
+      font-size: 0.8rem;
+      padding: 20px;
+    }
+
+    .checklists {
+      border-top: 1px solid #eee;
+      margin-top: 20px;
+      padding-top: 20px;
+      display: none;
+    }
+
+    .checklists.expanded {
+      display: block;
+    }
+
+    .checklist-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .checklist-button {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.2s;
+      flex: 1;
+    }
+
+    .checklist-button:hover {
+      background: #5a6fd8;
+    }
+
+    .checklist-button.expanded {
+      background: #dc3545;
+    }
+
+    .checklist-button.expanded:hover {
+      background: #c82333;
+    }
+
+    .notes-section {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 15px 0;
+    }
+
+    .notes-section h5 {
+      margin: 0 0 10px 0;
+      color: #495057;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .packer-notes-display {
+      background: #e3f2fd;
+      border: 1px solid #2196f3;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 15px 0;
+    }
+
+    .packer-notes-display h5 {
+      margin: 0 0 10px 0;
+      color: #1976d2;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .packer-notes-content {
+      background: white;
+      border: 1px solid #bbdefb;
+      border-radius: 4px;
+      padding: 10px;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+
+    .notes-textarea {
+      width: 100%;
+      min-height: 80px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      padding: 8px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    .notes-textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+    }
+
+    .checklist-staff-section {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 15px 0;
+    }
+
+    .staff-dropdown label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #495057;
+    }
+
+    .staff-dropdown select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      background: white;
+    }
+
+    .staff-dropdown select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .required-star {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    .staff-other-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .staff-other-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+    }
+
+    .checklist-footer {
+      border-top: 1px solid #dee2e6;
+      padding-top: 15px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .done-button {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s;
+      height: fit-content;
+    }
+
+    .done-button:hover {
+      background: #218838;
+    }
+
+    .done-button:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+    }
+
+    .checklist-button.completed {
+      background: #28a745;
+      position: relative;
+    }
+
+    .checklist-button.completed:hover {
+      background: #218838;
+    }
+
+    .checklist-button.completed::after {
+      content: "✓ COMPLETED";
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ffd700;
+      color: #333;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 10px;
+      border: 2px solid white;
+    }
+
+    .submitted-badge {
+      background: #28a745;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .checklist-button-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+    }
+    
+    .checklist-button-wrapper .checklist-button {
+      width: 100%;
+    }
+
+    .checklist-completion-info {
+      font-size: 0.75rem;
+      color: #28a745;
+      font-weight: 600;
+      text-align: center;
+      max-width: 200px;
+    }
+
+    /* Signature Modal */
+    .signature-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .signature-modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .signature-content {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .signature-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .signature-canvas {
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    .signature-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .signature-controls button {
+      flex: 1;
+      min-width: 120px;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .clear-signature {
+      background: #6c757d;
+      color: white;
+    }
+
+    .clear-signature:hover {
+      background: #5a6268;
+    }
+
+    .submit-signature {
+      background: #28a745;
+      color: white;
+    }
+
+    .submit-signature:hover {
+      background: #218838;
+    }
+
+    .submit-signature:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+    }
+
+    .cancel-signature {
+      background: #dc3545;
+      color: white;
+    }
+
+    .cancel-signature:hover {
+      background: #c82333;
+    }
+
+    /* Inline Signature */
+    .signature-section {
+      margin-bottom: 15px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .signature-section label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .inline-signature {
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      background: white;
+      touch-action: none;
+      cursor: crosshair;
+      display: block;
+      margin: 0 auto 10px auto;
+      max-width: 100%;
+    }
+
+    .clear-sig-btn {
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 6px 15px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .clear-sig-btn:hover {
+      background: #5a6268;
+    }
+
+    .submission-error {
+      background: #dc3545;
+      color: white;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+
+    .checklist-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .checklist-tab {
+      padding: 8px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      background: #f8f9fa;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .checklist-tab.active {
+      border-color: #667eea;
+      background: #667eea;
+      color: white;
+    }
+
+    .checklist-tab:hover:not(.active) {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+
+    .checklist-content {
+      display: none;
+    }
+
+    .checklist-content.active {
+      display: block;
+    }
+
+    .checklist-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .checklist-progress {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      border: 1px solid #eee;
+      transition: all 0.2s;
+    }
+
+    .checklist-item:hover {
+      background: #f8f9fa;
+    }
+
+    .checklist-item.completed {
+      background: #f0f9f0;
+      border-color: #4caf50;
+    }
+
+    .checklist-item.required {
+      border-left: 3px solid #ff9800;
+    }
+
+    .checklist-item.required.completed {
+      border-left-color: #4caf50;
+    }
+
+    .checklist-checkbox {
+      margin: 0;
+      transform: scale(1.2);
+      cursor: pointer;
+    }
+
+    .checklist-text {
+      flex: 1;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .checklist-meta {
+      font-size: 0.75rem;
+      color: #28a745;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .checklist-meta.packed-info {
+      color: #667eea;
+      font-style: italic;
+    }
+
+    .checklist-checkbox:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .required-badge {
+      background: #ff9800;
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      .header h1 { font-size: 1.2rem; }
+      .header-controls { flex-direction: column; }
+      .header input, .header select { width: 100%; }
+      .info-grid { grid-template-columns: 1fr; }
+      .custom-fields-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Image modal */
+    .image-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .image-modal.active {
+      display: flex;
+    }
+    .image-modal img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 8px;
+    }
+    .image-modal-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 40px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-top">
+      <h1><img src="/kande-logo.jpg" alt="KANDE" class="header-logo"> Photo Booths <span id="adminBadge" class="admin-badge" style="display:none">ADMIN</span></h1>
+      <button class="mobile-toggle" id="mobileToggle" onclick="toggleMobileHeader()">
+        <span class="hamburger"></span>
+      </button>
+    </div>
+    <div class="header-controls" id="headerControls">
+      <input type="password" id="adminPassword" placeholder="Admin password" style="display:inline-block">
+      <button id="loginBtn" onclick="toggleAdmin()">🔐 Login</button>
+      <div id="emailToggleContainer" style="display:none; align-items:center; gap:5px;">
+        <label style="font-size:14px; cursor:pointer;" for="emailToggle">
+          <input type="checkbox" id="emailToggle" checked style="margin-right:5px;">
+          📧 Send Emails
+        </label>
+      </div>
+      <button id="packerConfigBtn" onclick="window.location.href='/packer-config.html'" style="display:none; background:#667eea;">📦 Packer Config</button>
+      <select id="staffFilter">
+        <option value="">All Events</option>
+      </select>
+      <button onclick="loadEvents()">🔄 Refresh</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="stats" id="stats">
+      <div class="stat-card">
+        <div class="number" id="totalEvents">-</div>
+        <div class="label">Upcoming Events</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="thisWeek">-</div>
+        <div class="label">This Week</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="thisMonth">-</div>
+        <div class="label">This Month</div>
+      </div>
+    </div>
+
+    <div id="eventList" class="event-list">
+      <div class="loading">Loading events...</div>
+    </div>
+
+    <div id="lastUpdated" class="last-updated"></div>
+  </div>
+
+  <!-- Signature Modal -->
+  <div id="signatureModal" class="signature-modal">
+    <div class="signature-content">
+      <div class="signature-header">
+        <h3>📝 Sign to Complete Checklist</h3>
+        <p>Please sign below to confirm completion</p>
+      </div>
+      
+      <canvas id="signatureCanvas" class="signature-canvas" width="460" height="200"></canvas>
+      
+      <div class="signature-controls">
+        <button class="clear-signature" onclick="clearSignature()">🗑️ Clear</button>
+        <button class="submit-signature" id="submitSignature" onclick="submitWithSignature()" disabled>✓ Submit</button>
+        <button class="cancel-signature" onclick="cancelSignature()">✖️ Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allEvents = [];
+    let isAdmin = false;
+    let adminPassword = '';
+    let checklistCache = {};
+
+    // Load completion info for all events on page load
+    async function loadAllChecklistCompletionInfo(events) {
+      for (const event of events) {
+        try {
+          const res = await fetch(`/api/checklist/${event.id}`);
+          if (res.ok) {
+            const data = await res.json();
+            checklistCache[event.id] = data;
+            
+            // Update packer completion info
+            const packerSubmitted = data.packer_submitted;
+            if (packerSubmitted) {
+              const packerBtn = document.getElementById(`packer-btn-${event.id}`);
+              const packerInfo = document.getElementById(`packer-completion-${event.id}`);
+              if (packerBtn) packerBtn.classList.add('completed');
+              if (packerInfo) {
+                const time = new Date(packerSubmitted.submittedAt).toLocaleString();
+                packerInfo.textContent = `${packerSubmitted.submittedBy} • ${time}`;
+              }
+            }
+            
+            // Update attendant completion info
+            const attendantSubmitted = data.attendant_submitted;
+            if (attendantSubmitted) {
+              const attendantBtn = document.getElementById(`attendant-btn-${event.id}`);
+              const attendantInfo = document.getElementById(`attendant-completion-${event.id}`);
+              if (attendantBtn) attendantBtn.classList.add('completed');
+              if (attendantInfo) {
+                const time = new Date(attendantSubmitted.submittedAt).toLocaleString();
+                attendantInfo.textContent = `${attendantSubmitted.submittedBy} • ${time}`;
+              }
+            }
+          }
+        } catch (e) {
+          console.error(`Failed to load checklist for ${event.id}:`, e);
+        }
+      }
+    }
+
+    // Toggle individual checklist visibility
+    function toggleSingleChecklist(eventId, type, buttonElement) {
+      const checklistDiv = document.getElementById(`${type}-checklist-${eventId}`);
+      const isExpanded = checklistDiv.classList.contains('expanded');
+      
+      // Get both checklists and buttons for this event
+      const packerDiv = document.getElementById(`packer-checklist-${eventId}`);
+      const attendantDiv = document.getElementById(`attendant-checklist-${eventId}`);
+      const buttonsContainer = buttonElement.closest('.checklist-buttons');
+      const packerButton = buttonsContainer.querySelector('button[onclick*="packer"]');
+      const attendantButton = buttonsContainer.querySelector('button[onclick*="attendant"]');
+      
+      if (isExpanded) {
+        // Collapse current checklist
+        checklistDiv.classList.remove('expanded');
+        buttonElement.classList.remove('expanded');
+      } else {
+        // First, collapse both checklists and reset button states
+        packerDiv.classList.remove('expanded');
+        attendantDiv.classList.remove('expanded');
+        packerButton.classList.remove('expanded');
+        attendantButton.classList.remove('expanded');
+        
+        // Then expand the clicked one
+        checklistDiv.classList.add('expanded');
+        buttonElement.classList.add('expanded');
+        
+        // Load checklist data if not already loaded, or render from cache
+        if (!checklistCache[eventId]) {
+          loadChecklist(eventId);
+        } else {
+          // Data already cached, just render the items
+          // If checklist is submitted, ensure all items show as completed
+          if (checklistCache[eventId].packer_submitted) {
+            checklistCache[eventId].packer.forEach(item => {
+              if (!item.completed) {
+                item.completed = true;
+                item.completedAt = checklistCache[eventId].packer_submitted.submittedAt;
+              }
+            });
+          }
+          if (checklistCache[eventId].attendant_submitted) {
+            checklistCache[eventId].attendant.forEach(item => {
+              if (!item.completed) {
+                item.completed = true;
+                item.completedAt = checklistCache[eventId].attendant_submitted.submittedAt;
+              }
+            });
+          }
+          renderChecklist(eventId, 'packer', checklistCache[eventId].packer);
+          renderChecklist(eventId, 'attendant', checklistCache[eventId].attendant);
+        }
+        
+        // Load staff dropdown
+        loadStaffDropdown(eventId, type);
+      }
+    }
+
+    // Save notes function
+    async function saveNotes(eventId, type, notes) {
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/notes/${type}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ notes })
+        });
+
+        if (res.ok) {
+          // Update local cache
+          if (!checklistCache[eventId]) {
+            checklistCache[eventId] = {};
+          }
+          if (!checklistCache[eventId].notes) {
+            checklistCache[eventId].notes = {};
+          }
+          checklistCache[eventId].notes[type] = notes;
+          console.log(`Saved ${type} notes for event ${eventId}`);
+        } else {
+          console.error('Failed to save notes');
+        }
+      } catch (error) {
+        console.error('Error saving notes:', error);
+      }
+    }
+
+    // Save packer notes function
+    async function savePackerNotes(eventId, notes) {
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/notes/packer-notes`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ notes })
+        });
+
+        if (res.ok) {
+          // Update local cache
+          if (!checklistCache[eventId]) {
+            checklistCache[eventId] = {};
+          }
+          if (!checklistCache[eventId].notes) {
+            checklistCache[eventId].notes = {};
+          }
+          checklistCache[eventId].notes['packer-notes'] = notes;
+          
+          // Update display in pickup checklist
+          updatePackerNotesDisplay(eventId, notes);
+          
+          console.log(`Saved packer notes for event ${eventId}`);
+        } else {
+          console.error('Failed to save packer notes');
+        }
+      } catch (error) {
+        console.error('Error saving packer notes:', error);
+      }
+    }
+
+    // Toggle subcontractor name field
+    function toggleSubcontractor(eventId, checked) {
+      const nameField = document.getElementById(`subcontractor-name-${eventId}`);
+      const input = document.getElementById(`subcontractor-input-${eventId}`);
+      
+      if (checked) {
+        nameField.classList.add('visible');
+        input.focus();
+      } else {
+        nameField.classList.remove('visible');
+        input.value = '';
+        saveSubcontractor(eventId, '');
+      }
+    }
+
+    // Save subcontractor info
+    async function saveSubcontractor(eventId, name) {
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/subcontractor`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subcontractor: name })
+        });
+
+        if (res.ok) {
+          // Update local cache
+          if (!checklistCache[eventId]) {
+            checklistCache[eventId] = {};
+          }
+          checklistCache[eventId].subcontractor = name;
+          console.log(`Saved subcontractor for event ${eventId}:`, name);
+        } else {
+          console.error('Failed to save subcontractor');
+        }
+      } catch (error) {
+        console.error('Error saving subcontractor:', error);
+      }
+    }
+
+    // Toggle service visibility for subcontracted events
+    async function toggleServiceVisibility(eventId, serviceIndex, button) {
+      const serviceRow = document.getElementById(`service-${eventId}-${serviceIndex}`);
+      const isHidden = serviceRow.classList.toggle('hidden-service');
+      
+      // Update button state
+      button.classList.toggle('is-hidden', isHidden);
+      button.textContent = isHidden ? '👁‍🗨' : '👁';
+      button.title = isHidden ? 'Show for subcontractor' : 'Hide for subcontractor';
+      
+      // Save to server
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/hidden-services`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ serviceIndex, hidden: isHidden })
+        });
+        if (res.ok) {
+          console.log(`Service ${serviceIndex} visibility toggled for event ${eventId}`);
+        }
+      } catch (error) {
+        console.error('Error saving service visibility:', error);
+      }
+    }
+
+    // Load hidden services for an event
+    async function loadHiddenServices(eventId) {
+      try {
+        const res = await fetch(`/api/checklist/${eventId}`);
+        const data = await res.json();
+        
+        if (data.hiddenServices && Array.isArray(data.hiddenServices)) {
+          data.hiddenServices.forEach(idx => {
+            const serviceRow = document.getElementById(`service-${eventId}-${idx}`);
+            const button = document.getElementById(`hide-btn-${eventId}-${idx}`);
+            if (serviceRow) {
+              serviceRow.classList.add('hidden-service');
+            }
+            if (button) {
+              button.classList.add('is-hidden');
+              button.textContent = '👁‍🗨';
+              button.title = 'Show for subcontractor';
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error loading hidden services:', error);
+      }
+    }
+
+    // Save backdrop text
+    async function saveBackdrop(eventId, text) {
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/backdrop`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ backdropText: text })
+        });
+        if (res.ok) {
+          console.log('Backdrop text saved');
+        }
+      } catch (error) {
+        console.error('Error saving backdrop:', error);
+      }
+    }
+
+    // Auto-resize textarea to fit content
+    function autoResizeTextarea(textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
+
+    // Save Kurtis' Notes
+    async function saveKurtisNotes(eventId, text) {
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/kurtis-notes`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ kurtisNotes: text })
+        });
+        if (res.ok) {
+          console.log('Kurtis notes saved');
+          // Update preview
+          updateNotesPreview(eventId);
+        }
+      } catch (error) {
+        console.error('Error saving Kurtis notes:', error);
+      }
+    }
+
+    // Format text in textarea (insert markdown syntax)
+    function formatNotes(eventId, format) {
+      const textarea = document.getElementById(`kurtis-notes-${eventId}`);
+      if (!textarea) return;
+      
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const text = textarea.value;
+      const selectedText = text.substring(start, end);
+      
+      let newText, newCursorPos;
+      
+      switch(format) {
+        case 'bold':
+          newText = text.substring(0, start) + '**' + selectedText + '**' + text.substring(end);
+          newCursorPos = selectedText ? end + 4 : start + 2;
+          break;
+        case 'italic':
+          newText = text.substring(0, start) + '_' + selectedText + '_' + text.substring(end);
+          newCursorPos = selectedText ? end + 2 : start + 1;
+          break;
+        case 'underline':
+          newText = text.substring(0, start) + '__' + selectedText + '__' + text.substring(end);
+          newCursorPos = selectedText ? end + 4 : start + 2;
+          break;
+        case 'bullet':
+          // Add bullet at start of line or selection
+          const beforeStart = text.lastIndexOf('\n', start - 1) + 1;
+          newText = text.substring(0, beforeStart) + '• ' + text.substring(beforeStart);
+          newCursorPos = start + 2;
+          break;
+        case 'link':
+          const url = prompt('Enter URL:', 'https://');
+          if (!url || url === 'https://') return;
+          const linkText = selectedText || prompt('Enter link text:', 'Link') || 'Link';
+          newText = text.substring(0, start) + '[' + linkText + '](' + url + ')' + text.substring(end);
+          newCursorPos = start + linkText.length + url.length + 4;
+          break;
+        default:
+          return;
+      }
+      
+      textarea.value = newText;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+      textarea.focus();
+      autoResizeTextarea(textarea);
+      saveKurtisNotes(eventId, newText);
+    }
+
+    // Render markdown to HTML for preview
+    function renderMarkdown(text) {
+      if (!text) return '';
+      return text
+        // Links: [text](url)
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" style="color: #667eea;">$1</a>')
+        // Bold: **text** or __text__
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/__(.+?)__/g, '<u>$1</u>')
+        // Italic: _text_ or *text*
+        .replace(/_(.+?)_/g, '<em>$1</em>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        // Bullets: • or - at start of line
+        .replace(/^[•\-]\s*(.+)$/gm, '<li>$1</li>')
+        .replace(/(<li>.*<\/li>\n?)+/g, '<ul style="margin: 5px 0 5px 20px; padding: 0;">$&</ul>')
+        // Line breaks
+        .replace(/\n/g, '<br>');
+    }
+
+    // Toggle between edit and preview mode (default is preview)
+    function toggleNotesMode(eventId) {
+      const textarea = document.getElementById(`kurtis-notes-${eventId}`);
+      const preview = document.getElementById(`kurtis-notes-preview-${eventId}`);
+      const editBtn = document.getElementById(`notes-edit-btn-${eventId}`);
+      const toolbar = document.getElementById(`notes-toolbar-${eventId}`);
+      
+      if (textarea.style.display === 'none') {
+        // Switch to edit mode
+        textarea.style.display = 'block';
+        preview.style.display = 'none';
+        toolbar.style.display = 'flex';
+        editBtn.textContent = '✓ Done';
+        editBtn.style.background = '#28a745';
+        editBtn.style.borderColor = '#28a745';
+        editBtn.style.color = 'white';
+        autoResizeTextarea(textarea);
+        textarea.focus();
+      } else {
+        // Switch to preview mode
+        textarea.style.display = 'none';
+        preview.style.display = 'block';
+        toolbar.style.display = 'none';
+        preview.innerHTML = renderMarkdown(textarea.value) || '<em style="color: #999;">No notes</em>';
+        editBtn.textContent = '✏️ Edit';
+        editBtn.style.background = 'transparent';
+        editBtn.style.borderColor = '#667eea';
+        editBtn.style.color = '#667eea';
+      }
+    }
+    
+    // Initialize preview for all notes on page load
+    function initializeNotePreviews() {
+      document.querySelectorAll('[id^="kurtis-notes-preview-"]').forEach(preview => {
+        const eventId = preview.id.replace('kurtis-notes-preview-', '');
+        const textarea = document.getElementById(`kurtis-notes-${eventId}`);
+        if (textarea) {
+          preview.innerHTML = renderMarkdown(textarea.value) || '<em style="color: #999;">No notes</em>';
+        }
+      });
+    }
+
+    // Update preview content
+    function updateNotesPreview(eventId) {
+      const textarea = document.getElementById(`kurtis-notes-${eventId}`);
+      const preview = document.getElementById(`kurtis-notes-preview-${eventId}`);
+      if (preview && preview.style.display !== 'none') {
+        preview.innerHTML = renderMarkdown(textarea.value) || '<em style="color: #999;">No notes</em>';
+      }
+    }
+
+    // Upload and resize backdrop image
+    // Helper to display backdrop image with remove button
+    function displayBackdropImage(eventId, thumbnailUrl, fullUrl) {
+      const container = document.getElementById(`backdrop-image-${eventId}`);
+      // Use fullUrl for modal, or thumbnailUrl if no fullUrl provided
+      const modalUrl = fullUrl || thumbnailUrl;
+      if (container) {
+        container.innerHTML = `
+          <div style="position: relative; display: inline-block;">
+            <img src="${thumbnailUrl}" onclick="openImageModal('${modalUrl}')" style="width: 175px; height: 175px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; cursor: pointer;" title="Click to enlarge">
+            <button onclick="event.stopPropagation(); removeBackdropImage('${eventId}')" style="position: absolute; top: -8px; right: -8px; background: #ff4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 14px; line-height: 1;">×</button>
+          </div>
+        `;
+      }
+    }
+
+    async function uploadBackdropImage(eventId, input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const img = new Image();
+      img.onload = async () => {
+        // Create thumbnail (175x175)
+        const thumbCanvas = document.createElement('canvas');
+        thumbCanvas.width = 175;
+        thumbCanvas.height = 175;
+        const thumbCtx = thumbCanvas.getContext('2d');
+        thumbCtx.drawImage(img, 0, 0, 175, 175);
+        const thumbnailUrl = thumbCanvas.toDataURL('image/jpeg', 0.9);
+
+        // Create full-size version (preserve original but compress)
+        const fullCanvas = document.createElement('canvas');
+        fullCanvas.width = img.width;
+        fullCanvas.height = img.height;
+        const fullCtx = fullCanvas.getContext('2d');
+        fullCtx.drawImage(img, 0, 0);
+        const fullUrl = fullCanvas.toDataURL('image/jpeg', 0.9);
+
+        // Save both to server
+        try {
+          const res = await fetch(`/api/checklist/${eventId}/backdrop-image`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: thumbnailUrl, imageFull: fullUrl })
+          });
+          
+          if (res.ok) {
+            displayBackdropImage(eventId, thumbnailUrl, fullUrl);
+            console.log('Backdrop image saved');
+          }
+        } catch (error) {
+          console.error('Error saving backdrop image:', error);
+        }
+      };
+
+      img.src = URL.createObjectURL(file);
+      input.value = ''; // Reset input
+    }
+
+    // Remove backdrop image
+    async function removeBackdropImage(eventId) {
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/backdrop-image`, {
+          method: 'DELETE'
+        });
+        
+        if (res.ok) {
+          const container = document.getElementById(`backdrop-image-${eventId}`);
+          if (container) {
+            container.innerHTML = '';
+          }
+          console.log('Backdrop image removed');
+        }
+      } catch (error) {
+        console.error('Error removing backdrop image:', error);
+      }
+    }
+
+    // Load backdrop image for an event
+    async function loadBackdropImage(eventId) {
+      try {
+        const res = await fetch(`/api/checklist/${eventId}`);
+        const data = await res.json();
+        
+        if (data.backdropImage) {
+          displayBackdropImage(eventId, data.backdropImage, data.backdropImageFull);
+        }
+        
+        if (data.backdropText) {
+          const input = document.getElementById(`backdrop-text-${eventId}`);
+          if (input) {
+            input.value = data.backdropText;
+          }
+        }
+        
+        // Auto-resize for VSCO content (don't overwrite VSCO data with saved notes)
+        // VSCO data from "3: Internal Notes(for Attendants)" is already in the textarea
+        const kurtisTextarea = document.getElementById(`kurtis-notes-${eventId}`);
+        if (kurtisTextarea && kurtisTextarea.value) {
+          autoResizeTextarea(kurtisTextarea);
+        }
+      } catch (error) {
+        // Silently fail
+      }
+    }
+
+    // Update packer notes display in pickup checklist
+    function updatePackerNotesDisplay(eventId, notes) {
+      const displayDiv = document.getElementById(`packer-notes-display-${eventId}`);
+      const contentDiv = document.getElementById(`packer-notes-content-${eventId}`);
+      
+      if (displayDiv && contentDiv) {
+        if (notes && notes.trim()) {
+          contentDiv.textContent = notes;
+          displayDiv.style.display = 'block';
+        } else {
+          displayDiv.style.display = 'none';
+        }
+      }
+    }
+
+    // Load staff dropdown
+    // Cache for staff lists to avoid repeated API calls
+    let staffListCache = { packer: null, attendant: null };
+    
+    async function loadStaffDropdown(eventId, type) {
+      try {
+        // Use cached staff list if available
+        if (!staffListCache[type]) {
+          const res = await fetch(`/api/staff-list/${type}`);
+          staffListCache[type] = await res.json();
+        }
+        const staff = staffListCache[type];
+        
+        const select = document.getElementById(`${type}-staff-${eventId}`);
+        if (select && select.options.length <= 1) { // Only populate if not already done
+          select.innerHTML = '<option value="">Select staff member...</option>';
+          staff.forEach(person => {
+            const option = document.createElement('option');
+            option.value = person.name;
+            option.textContent = person.name;
+            select.appendChild(option);
+          });
+          // Add "Other" option
+          const otherOption = document.createElement('option');
+          otherOption.value = '__other__';
+          otherOption.textContent = '✏️ Other (type name)';
+          select.appendChild(otherOption);
+        }
+      } catch (error) {
+        console.error('Failed to load staff list:', error);
+      }
+    }
+    
+    // Pre-load all staff dropdowns when page loads
+    async function loadAllChecklistStaffDropdowns(events) {
+      // Pre-fetch both staff lists
+      try {
+        const [packerRes, attendantRes] = await Promise.all([
+          fetch('/api/staff-list/packer'),
+          fetch('/api/staff-list/attendant')
+        ]);
+        staffListCache.packer = await packerRes.json();
+        staffListCache.attendant = await attendantRes.json();
+        
+        // Populate all dropdowns for all events
+        for (const event of events) {
+          loadStaffDropdown(event.id, 'packer');
+          loadStaffDropdown(event.id, 'attendant');
+        }
+      } catch (error) {
+        console.error('Failed to pre-load staff dropdowns:', error);
+      }
+    }
+
+    // Handle staff selection (show/hide other input)
+    function handleStaffSelect(id, value) {
+      const otherInput = document.getElementById(`${id.split('-')[0]}-staff-other-${id.split('-').slice(1).join('-')}`);
+      if (otherInput) {
+        if (value === '__other__') {
+          otherInput.style.display = 'block';
+          otherInput.focus();
+        } else {
+          otherInput.style.display = 'none';
+          otherInput.value = '';
+        }
+      }
+    }
+
+    // Submit checklist
+    // Global variables for signature functionality
+    let currentSignatureData = null;
+    let signatureCanvas = null;
+    let signatureCtx = null;
+    let isDrawing = false;
+    let hasSignature = false;
+    
+    // Track initialized inline signatures
+    const inlineSignatures = {};
+    
+    // Initialize inline signature canvas
+    function initInlineSignature(canvasId) {
+      const canvas = document.getElementById('sig-' + canvasId);
+      if (!canvas) return;
+      
+      // Check if already initialized with the SAME canvas element
+      if (inlineSignatures[canvasId] && inlineSignatures[canvasId].canvas === canvas) return;
+      
+      const ctx = canvas.getContext('2d');
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#000';
+      
+      let drawing = false;
+      
+      function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        if (e.touches) {
+          return {
+            x: (e.touches[0].clientX - rect.left) * scaleX,
+            y: (e.touches[0].clientY - rect.top) * scaleY
+          };
+        }
+        return {
+          x: (e.clientX - rect.left) * scaleX,
+          y: (e.clientY - rect.top) * scaleY
+        };
+      }
+      
+      function startDraw(e) {
+        e.preventDefault();
+        drawing = true;
+        const pos = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+      }
+      
+      function draw(e) {
+        if (!drawing) return;
+        e.preventDefault();
+        const pos = getPos(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        inlineSignatures[canvasId].hasSignature = true;
+      }
+      
+      function stopDraw() {
+        drawing = false;
+      }
+      
+      canvas.addEventListener('mousedown', startDraw);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDraw);
+      canvas.addEventListener('mouseleave', stopDraw);
+      canvas.addEventListener('touchstart', startDraw, { passive: false });
+      canvas.addEventListener('touchmove', draw, { passive: false });
+      canvas.addEventListener('touchend', stopDraw, { passive: false });
+      
+      inlineSignatures[canvasId] = { canvas, ctx, hasSignature: false };
+    }
+    
+    // Clear inline signature
+    function clearInlineSignature(canvasId) {
+      const sig = inlineSignatures[canvasId];
+      if (sig) {
+        sig.ctx.clearRect(0, 0, sig.canvas.width, sig.canvas.height);
+        sig.hasSignature = false;
+      }
+    }
+
+    // Add custom item to packer list
+    async function addCustomItem(eventId) {
+      const input = document.getElementById(`custom-item-input-${eventId}`);
+      const text = input?.value?.trim();
+      
+      if (!text) {
+        alert('Please enter an item to add');
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/custom-item`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, required: true })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          // Update cache
+          if (checklistCache[eventId]) {
+            checklistCache[eventId].packer = data.packer;
+          }
+          // Clear input
+          input.value = '';
+          // Re-render checklist
+          renderChecklist(eventId, 'packer', data.packer);
+        } else {
+          const err = await res.json();
+          alert(err.error || 'Failed to add item');
+        }
+      } catch (error) {
+        console.error('Error adding custom item:', error);
+        alert('Failed to add item');
+      }
+    }
+
+    // Remove any packer item (admin mode)
+    async function removePackerItem(eventId, itemId, itemText) {
+      if (!confirm(`Remove "${itemText}" from packer list?`)) return;
+
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/packer-item/${itemId}`, {
+          method: 'DELETE'
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          // Update cache
+          if (checklistCache[eventId]) {
+            checklistCache[eventId].packer = data.packer;
+          }
+          // Re-render checklist
+          renderChecklist(eventId, 'packer', data.packer);
+        } else {
+          alert('Failed to remove item');
+        }
+      } catch (error) {
+        console.error('Error removing item:', error);
+        alert('Failed to remove item');
+      }
+    }
+
+    // Edit packer item (admin mode)
+    async function editPackerItem(eventId, itemId, currentText) {
+      const newText = prompt('Edit item text:', currentText);
+      if (newText === null || newText.trim() === '' || newText.trim() === currentText) return;
+
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/packer-item/${itemId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: newText.trim() })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          // Update cache
+          if (checklistCache[eventId]) {
+            checklistCache[eventId].packer = data.packer;
+          }
+          // Re-render checklist
+          renderChecklist(eventId, 'packer', data.packer);
+        } else {
+          alert('Failed to edit item');
+        }
+      } catch (error) {
+        console.error('Error editing item:', error);
+        alert('Failed to edit item');
+      }
+    }
+
+    // Keep old function for backwards compatibility
+    async function removeCustomItem(eventId, itemId) {
+      removePackerItem(eventId, itemId, 'this custom item');
+    }
+
+    // Reset a submitted checklist (admin only)
+    async function resetChecklist(eventId, type) {
+      const typeName = type === 'packer' ? 'Packer' : 'Pickup';
+      if (!confirm(`Reset the ${typeName} checklist? This will:\n• Remove the completion status\n• Uncheck all items\n• Allow the checklist to be edited again`)) return;
+
+      try {
+        const headers = { 'Content-Type': 'application/json' };
+        if (adminPassword) {
+          headers['Authorization'] = `Bearer ${adminPassword}`;
+        }
+        
+        const res = await fetch(`/api/checklist/${eventId}/${type}/reset`, {
+          method: 'POST',
+          headers
+        });
+
+        if (res.ok) {
+          // Clear cache and reload checklist
+          delete checklistCache[eventId];
+          
+          // Reload checklist data
+          const dataRes = await fetch(`/api/checklist/${eventId}`);
+          if (dataRes.ok) {
+            const data = await dataRes.json();
+            checklistCache[eventId] = data;
+            
+            // Re-render the checklist
+            renderChecklist(eventId, type, data[type]);
+            
+            // Update button state
+            const checklistButton = document.getElementById(`${type}-btn-${eventId}`);
+            if (checklistButton) {
+              checklistButton.classList.remove('completed');
+            }
+            
+            // Clear completion info
+            const completionInfo = document.getElementById(`${type}-completion-${eventId}`);
+            if (completionInfo) {
+              completionInfo.textContent = '';
+            }
+            
+            alert(`${typeName} checklist has been reset.`);
+          }
+        } else {
+          const err = await res.json();
+          alert(err.error || 'Failed to reset checklist');
+        }
+      } catch (error) {
+        console.error('Error resetting checklist:', error);
+        alert('Failed to reset checklist');
+      }
+    }
+
+    // Regenerate packer list from event services
+    async function regeneratePackerList(eventId) {
+      if (!confirm('Regenerate packer list from booked services? This will refresh auto-generated items but keep your custom items and completion status where possible.')) return;
+
+      const infoDiv = document.getElementById(`packer-list-info-${eventId}`);
+      if (infoDiv) infoDiv.textContent = 'Regenerating...';
+
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/regenerate-packer`, {
+          method: 'POST'
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          // Update cache
+          if (checklistCache[eventId]) {
+            checklistCache[eventId].packer = data.packer;
+            checklistCache[eventId].eventType = data.eventType;
+            checklistCache[eventId].isCorporate = data.isCorporate;
+          }
+          // Re-render checklist
+          renderChecklist(eventId, 'packer', data.packer);
+          
+          // Show info
+          if (infoDiv) {
+            const listType = data.isCorporate ? '✅ Corporate' : '🎉 Non-Corporate';
+            infoDiv.innerHTML = `${listType} list • ${data.servicesMatched} items auto-generated from booked services`;
+          }
+        } else {
+          const err = await res.json();
+          if (infoDiv) infoDiv.textContent = err.error || 'Failed to regenerate';
+          alert(err.error || 'Failed to regenerate list');
+        }
+      } catch (error) {
+        console.error('Error regenerating packer list:', error);
+        if (infoDiv) infoDiv.textContent = 'Error regenerating list';
+        alert('Failed to regenerate list');
+      }
+    }
+    
+    // Direct submit without modal
+    async function submitChecklistDirect(eventId, type, eventTitle, eventDate) {
+      const sigId = type + '-' + eventId;
+      
+      // Initialize signature if not done
+      initInlineSignature(sigId);
+      
+      const staffSelect = document.getElementById(`${type}-staff-${eventId}`);
+      if (!staffSelect) {
+        alert('Please expand the checklist first');
+        return;
+      }
+      
+      let staffMember = staffSelect.value;
+      
+      // Handle "Other" option - get name from text input
+      if (staffMember === '__other__') {
+        const otherInput = document.getElementById(`${type}-staff-other-${eventId}`);
+        staffMember = otherInput ? otherInput.value.trim() : '';
+      }
+      
+      if (!staffMember) {
+        alert('Please select or enter who completed this checklist');
+        return;
+      }
+      
+      // Check required items
+      const data = checklistCache[eventId];
+      if (!data || !data[type]) {
+        alert('Checklist data not loaded. Please refresh.');
+        return;
+      }
+      
+      const checklist = data[type];
+      const required = checklist.filter(i => i.required);
+      const completedRequired = required.filter(i => i.completed);
+      
+      if (completedRequired.length < required.length) {
+        const missing = required.filter(i => !i.completed).map(i => i.text);
+        alert('Complete all required items first:\\n\\n• ' + missing.join('\\n• '));
+        return;
+      }
+      
+      // Check signature
+      const sig = inlineSignatures[sigId];
+      if (!sig || !sig.hasSignature) {
+        alert('Please sign above before submitting');
+        return;
+      }
+      
+      const signatureDataURL = sig.canvas.toDataURL('image/png');
+      const sendEmail = !isAdmin || document.getElementById('emailToggle').checked;
+      
+      const button = document.querySelector(`#${type}-footer-${eventId} .done-button`);
+      const footer = document.getElementById(`${type}-footer-${eventId}`);
+      
+      if (button) {
+        button.disabled = true;
+        button.textContent = '⏳ Submitting...';
+      }
+      
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/${type}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            staffMember,
+            eventTitle,
+            eventDate,
+            signature: signatureDataURL,
+            checklistScreenshot: null,
+            sendEmail
+          })
+        });
+        
+        const result = await res.json();
+        
+        if (res.ok) {
+          const completionTime = new Date().toLocaleString();
+          footer.innerHTML = '<div class="submitted-badge">✓ Completed by ' + staffMember + ' on ' + completionTime + '</div>';
+          
+          const checklistButton = document.getElementById(`${type}-btn-${eventId}`);
+          if (checklistButton) checklistButton.classList.add('completed');
+          
+          // Update completion info next to button
+          const completionInfo = document.getElementById(`${type}-completion-${eventId}`);
+          if (completionInfo) {
+            completionInfo.textContent = `${staffMember} • ${completionTime}`;
+          }
+          
+          if (checklistCache[eventId]) {
+            checklistCache[eventId][`${type}_submitted`] = {
+              submittedBy: staffMember,
+              submittedAt: new Date().toISOString()
+            };
+          }
+          
+          // Refresh checklist data from server to get updated attendant items (after packer submit)
+          if (type === 'packer') {
+            try {
+              const refreshRes = await fetch(`/api/checklist/${eventId}`);
+              if (refreshRes.ok) {
+                const refreshData = await refreshRes.json();
+                checklistCache[eventId] = refreshData;
+                // Re-render attendant checklist with new items
+                renderChecklist(eventId, 'attendant', refreshData.attendant);
+              }
+            } catch (e) {
+              console.error('Failed to refresh checklist after packer submit:', e);
+            }
+          }
+        } else {
+          throw new Error(result.error || 'Submission failed');
+        }
+      } catch (error) {
+        console.error('Submit error:', error);
+        if (button) {
+          button.disabled = false;
+          button.textContent = '✓ DONE';
+        }
+        alert('Failed: ' + error.message);
+      }
+    }
+
+    function initializeSignatureCanvas() {
+      try {
+        signatureCanvas = document.getElementById('signatureCanvas');
+        if (!signatureCanvas) {
+          console.error('Signature canvas not found');
+          return false;
+        }
+        
+        signatureCtx = signatureCanvas.getContext('2d');
+        if (!signatureCtx) {
+          console.error('Could not get canvas context');
+          return false;
+        }
+        
+        // Set up drawing properties
+        signatureCtx.lineWidth = 2;
+        signatureCtx.lineCap = 'round';
+        signatureCtx.strokeStyle = '#000';
+        
+        // Mouse events
+        signatureCanvas.addEventListener('mousedown', startDrawing);
+        signatureCanvas.addEventListener('mousemove', draw);
+        signatureCanvas.addEventListener('mouseup', stopDrawing);
+        
+        // Touch events for mobile (passive: false to prevent scrolling)
+        signatureCanvas.addEventListener('touchstart', handleTouch, { passive: false });
+        signatureCanvas.addEventListener('touchmove', handleTouch, { passive: false });
+        signatureCanvas.addEventListener('touchend', stopDrawing, { passive: false });
+        
+        return true;
+      } catch (error) {
+        console.error('Failed to initialize signature canvas:', error);
+        return false;
+      }
+    }
+
+    function handleTouch(e) {
+      e.preventDefault();
+      const rect = signatureCanvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 
+                                      e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+      signatureCanvas.dispatchEvent(mouseEvent);
+    }
+
+    function startDrawing(e) {
+      isDrawing = true;
+      const rect = signatureCanvas.getBoundingClientRect();
+      signatureCtx.beginPath();
+      signatureCtx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const rect = signatureCanvas.getBoundingClientRect();
+      signatureCtx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      signatureCtx.stroke();
+      hasSignature = true;
+      document.getElementById('submitSignature').disabled = false;
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+    }
+
+    function clearSignature() {
+      if (signatureCtx && signatureCanvas) {
+        signatureCtx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+      }
+      hasSignature = false;
+      const submitBtn = document.getElementById('submitSignature');
+      if (submitBtn) submitBtn.disabled = true;
+    }
+
+    function cancelSignature() {
+      document.getElementById('signatureModal').classList.remove('show');
+      clearSignature();
+      currentSignatureData = null;
+    }
+
+    async function submitChecklist(eventId, type, eventTitle, eventDate) {
+      console.log('submitChecklist called:', { eventId, type, eventTitle, eventDate });
+      
+      try {
+        const staffSelect = document.getElementById(`${type}-staff-${eventId}`);
+        console.log('staffSelect:', staffSelect);
+        
+        if (!staffSelect) {
+          alert('Staff dropdown not found. Please expand the checklist first.');
+          return;
+        }
+        
+        const staffMember = staffSelect.value;
+        console.log('staffMember:', staffMember);
+
+        if (!staffMember) {
+          alert('Please select who completed this checklist');
+          return;
+        }
+
+      // Check if all required items are completed
+      const checklistData = checklistCache[eventId];
+      if (!checklistData || !checklistData[type]) {
+        alert('Checklist data not loaded. Please refresh and try again.');
+        return;
+      }
+
+      const checklist = checklistData[type];
+      const requiredItems = checklist.filter(item => item.required);
+      const completedRequired = requiredItems.filter(item => item.completed);
+
+      if (completedRequired.length < requiredItems.length) {
+        const missingItems = requiredItems.filter(item => !item.completed).map(item => item.text);
+        alert(`Please complete all required items first:\n\n• ${missingItems.join('\n• ')}`);
+        return;
+      }
+
+      // Store submission data for signature modal
+      currentSignatureData = {
+        eventId,
+        type,
+        staffMember,
+        eventTitle,
+        eventDate
+      };
+
+      // Show signature modal
+      const modal = document.getElementById('signatureModal');
+      modal.classList.add('show');
+      
+      // Initialize canvas if not already done
+      if (!signatureCanvas) {
+        const success = initializeSignatureCanvas();
+        if (!success) {
+          alert('Signature canvas failed to initialize. Please try again.');
+          modal.classList.remove('show');
+          return;
+        }
+      }
+      
+      clearSignature();
+      } catch (error) {
+        console.error('submitChecklist error:', error);
+        alert('Error: ' + error.message);
+      }
+    }
+
+    async function submitWithSignature() {
+      if (!currentSignatureData || !hasSignature) {
+        alert('Please provide a signature before submitting');
+        return;
+      }
+
+      const { eventId, type, staffMember, eventTitle, eventDate } = currentSignatureData;
+      
+      // Capture signature as base64
+      const signatureDataURL = signatureCanvas.toDataURL('image/png');
+      
+      // Capture checklist screenshot
+      const checklistElement = document.getElementById(`${type}-checklist-${eventId}`);
+      const checklistScreenshot = await captureElement(checklistElement);
+
+      // Check if emails should be sent (admin toggle)
+      const sendEmail = !isAdmin || document.getElementById('emailToggle').checked;
+
+      const button = document.querySelector(`#${type}-footer-${eventId} .done-button`);
+      const footer = document.getElementById(`${type}-footer-${eventId}`);
+      
+      // Remove any previous error messages
+      const existingError = footer.querySelector('.submission-error');
+      if (existingError) existingError.remove();
+
+      // Disable button and show loading
+      if (button) {
+        button.disabled = true;
+        button.textContent = '⏳ Submitting...';
+      }
+
+      // Close modal
+      document.getElementById('signatureModal').classList.remove('show');
+
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/${type}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            staffMember, 
+            eventTitle, 
+            eventDate,
+            signature: signatureDataURL,
+            checklistScreenshot: checklistScreenshot,
+            sendEmail: sendEmail
+          })
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          // Success - replace footer with success message
+          footer.innerHTML = `
+            <div class="submitted-badge">
+              ✓ Completed by ${staffMember} on ${new Date().toLocaleString()}
+              ${result.warning ? '<br><small>⚠️ ' + result.warning + '</small>' : ''}
+            </div>
+          `;
+
+          // Also update the staff section to show completion
+          const staffSection = document.querySelector(`#${type}-checklist-${eventId} .checklist-staff-section`);
+          if (staffSection) {
+            staffSection.innerHTML = `
+              <div class="submitted-badge">
+                ✓ Completed by ${staffMember}
+              </div>
+            `;
+          }
+
+          // Add completed tag to button
+          const checklistButton = document.getElementById(`${type}-btn-${eventId}`);
+          if (checklistButton) {
+            checklistButton.classList.add('completed');
+          }
+          
+          // Update completion info next to button
+          const completionTime = new Date().toLocaleString();
+          const completionInfo = document.getElementById(`${type}-completion-${eventId}`);
+          if (completionInfo) {
+            completionInfo.textContent = `${staffMember} • ${completionTime}`;
+          }
+
+          // Update cache to mark as submitted
+          if (checklistCache[eventId]) {
+            checklistCache[eventId][`${type}_submitted`] = {
+              submittedBy: staffMember,
+              submittedAt: new Date().toISOString()
+            };
+          }
+        } else {
+          throw new Error(result.error || 'Submission failed');
+        }
+      } catch (error) {
+        console.error('Submission failed:', error);
+        if (button) {
+          button.disabled = false;
+          button.textContent = '✓ DONE';
+        }
+
+        // Show error message
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'submission-error';
+        errorDiv.innerHTML = `Failed to submit: ${error.message}`;
+        footer.appendChild(errorDiv);
+      }
+
+      // Reset signature data
+      currentSignatureData = null;
+    }
+
+    // Function to capture element as screenshot
+    async function captureElement(element) {
+      // For now, return a simple placeholder since html2canvas isn't loaded
+      try {
+        // Create a simple text-based screenshot alternative
+        const items = element.querySelectorAll('.checklist-item');
+        let screenshotText = `Checklist Completed:\n\n`;
+        
+        items.forEach((item, index) => {
+          const checkbox = item.querySelector('input[type="checkbox"]');
+          const text = item.querySelector('.checklist-text').textContent.trim();
+          const status = checkbox && checkbox.checked ? '✓' : '○';
+          screenshotText += `${status} ${text}\n`;
+        });
+        
+        screenshotText += `\nCompleted: ${new Date().toLocaleString()}`;
+        
+        // Return as base64 text file
+        return `data:text/plain;base64,${btoa(screenshotText)}`;
+      } catch (error) {
+        console.error('Screenshot capture failed:', error);
+        return `data:text/plain;base64,${btoa('Checklist completed - screenshot capture error')}`;
+      }
+    }
+
+    async function loadChecklist(eventId) {
+      try {
+        const res = await fetch(`/api/checklist/${eventId}`);
+        const data = await res.json();
+        checklistCache[eventId] = data;
+        
+        renderChecklist(eventId, 'packer', data.packer);
+        renderChecklist(eventId, 'attendant', data.attendant);
+        
+        // Load subcontractor data if it exists
+        if (data.subcontractor) {
+          const checkbox = document.getElementById(`subcontract-${eventId}`);
+          const nameInput = document.getElementById(`subcontractor-input-${eventId}`);
+          if (checkbox && nameInput) {
+            checkbox.checked = true;
+            nameInput.value = data.subcontractor;
+            toggleSubcontractor(eventId, true);
+          }
+        }
+        
+      } catch (error) {
+        console.error('Failed to load checklist:', error);
+        document.getElementById(`packer-items-${eventId}`).innerHTML = '<p style="color:#c62828;">Failed to load checklist</p>';
+        document.getElementById(`attendant-items-${eventId}`).innerHTML = '<p style="color:#c62828;">Failed to load checklist</p>';
+      }
+    }
+
+    function updateDoneButtonState(eventId, type) {
+      const checklistData = checklistCache[eventId];
+      if (!checklistData || !checklistData[type]) return;
+
+      const checklist = checklistData[type];
+      const requiredItems = checklist.filter(item => item.required);
+      const completedRequired = requiredItems.filter(item => item.completed);
+      const allRequiredDone = completedRequired.length >= requiredItems.length;
+
+      const doneButton = document.querySelector(`#${type}-footer-${eventId} .done-button`);
+      if (doneButton) {
+        doneButton.disabled = !allRequiredDone;
+        if (allRequiredDone) {
+          doneButton.textContent = '✓ DONE';
+          doneButton.style.background = '#28a745';
+        } else {
+          doneButton.textContent = `✓ DONE (${completedRequired.length}/${requiredItems.length} required)`;
+          doneButton.style.background = '#6c757d';
+        }
+      }
+    }
+
+    function renderChecklist(eventId, type, items) {
+      const container = document.getElementById(`${type}-items-${eventId}`);
+      const progressContainer = document.getElementById(`${type}-progress-${eventId}`);
+      
+      // Handle empty pickup checklist (packer hasn't completed anything yet)
+      if (type === 'attendant' && (!items || items.length === 0)) {
+        progressContainer.innerHTML = 'Waiting for packer...';
+        container.innerHTML = `
+          <div style="padding: 20px; text-align: center; color: #666; background: #f8f9fa; border-radius: 8px;">
+            <p style="margin: 0; font-size: 1.1rem;">📦 No items packed yet</p>
+            <p style="margin: 10px 0 0 0; font-size: 0.9rem;">The packer needs to complete their checklist first.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      const completed = items.filter(item => item.completed).length;
+      const total = items.length;
+      const required = items.filter(item => item.required).length;
+      const requiredCompleted = items.filter(item => item.required && item.completed).length;
+      
+      progressContainer.innerHTML = `${completed}/${total} verified ${required > 0 ? `(${requiredCompleted}/${required} required)` : ''}`;
+      
+      // Check if checklist is already submitted
+      const isSubmitted = checklistCache[eventId]?.[`${type}_submitted`];
+      
+      container.innerHTML = items.map(item => {
+        // For pickup/attendant items, show who packed it
+        const isPickupItem = type === 'attendant' && item.packedBy;
+        const packedInfo = isPickupItem ? `📦 Packed by ${item.packedBy} on ${new Date(item.packedAt).toLocaleString()}` : '';
+        const verifiedInfo = item.completed && item.completedAt ? 
+          (isPickupItem ? `✓ Verified on ${new Date(item.completedAt).toLocaleString()}` : `✓ Packed on ${new Date(item.completedAt).toLocaleString()}`) : '';
+        
+        // For packer items, show source service if auto-generated, or delete button if custom
+        const isCustomItem = item.isCustom || (item.id && item.id.startsWith('custom_'));
+        const isAutoGenerated = item.autoGenerated || (item.id && item.id.startsWith('auto_'));
+        const sourceInfo = type === 'packer' && isAutoGenerated && item.source ? 
+          `<span style="font-size: 11px; color: #888; margin-left: 8px;">from: ${item.source}</span>` : '';
+        const customBadge = type === 'packer' && isCustomItem ? 
+          `<span style="font-size: 10px; background: #667eea; color: white; padding: 2px 6px; border-radius: 3px; margin-left: 8px;">CUSTOM</span>` : '';
+        const editedBadge = type === 'packer' && item.edited ? 
+          `<span style="font-size: 10px; background: #ffc107; color: #000; padding: 2px 6px; border-radius: 3px; margin-left: 8px;">EDITED</span>` : '';
+        
+        // Admin can edit/delete any item, others can only delete custom items
+        const canEditDelete = type === 'packer' && !isSubmitted && (isAdmin || isCustomItem);
+        const editBtn = canEditDelete && isAdmin ? 
+          `<button onclick="editPackerItem('${eventId}', '${item.id}', '${item.text.replace(/'/g, "\\'")}')" style="margin-left: 8px; background: none; border: none; color: #667eea; cursor: pointer; font-size: 12px;" title="Edit item">✏️</button>` : '';
+        const deleteBtn = canEditDelete ? 
+          `<button onclick="removePackerItem('${eventId}', '${item.id}', '${item.text.replace(/'/g, "\\'")}')" style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 14px;" title="Remove item">✕</button>` : '';
+        
+        return `
+          <div class="checklist-item ${item.completed ? 'completed' : ''} ${item.required ? 'required' : ''}" style="${isCustomItem ? 'background: #f0f4ff;' : ''}">
+            <input 
+              type="checkbox" 
+              class="checklist-checkbox" 
+              ${item.completed ? 'checked' : ''} 
+              ${isSubmitted ? 'disabled' : ''}
+              onchange="toggleChecklistItem('${eventId}', '${type}', '${item.id}', this.checked, this)"
+            >
+            <div class="checklist-text" style="flex: 1;">
+              ${item.text}
+              ${item.required ? '<span class="required-badge">REQUIRED</span>' : ''}
+              ${customBadge}
+              ${editedBadge}
+              ${sourceInfo}
+              ${editBtn}
+              ${deleteBtn}
+              ${packedInfo ? `<div class="checklist-meta packed-info">${packedInfo}</div>` : ''}
+              ${verifiedInfo ? `<div class="checklist-meta">${verifiedInfo}</div>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      // Update packer list info if this is packer checklist
+      if (type === 'packer') {
+        const infoDiv = document.getElementById(`packer-list-info-${eventId}`);
+        if (infoDiv && checklistCache[eventId]) {
+          const autoItems = items.filter(i => i.autoGenerated || (i.id && i.id.startsWith('auto_'))).length;
+          const customItems = items.filter(i => i.isCustom || (i.id && i.id.startsWith('custom_'))).length;
+          const isCorp = checklistCache[eventId].isCorporate;
+          const listType = isCorp === true ? '✅ Corporate' : (isCorp === false ? '🎉 Non-Corporate' : '📦');
+          infoDiv.innerHTML = `${listType} list • ${autoItems} auto-generated${customItems > 0 ? ` • ${customItems} custom` : ''}`;
+        }
+      }
+
+      // Load saved notes from cache or server data
+      const notesTextarea = document.querySelector(`#${type}-checklist-${eventId} .notes-textarea`);
+      if (notesTextarea) {
+        const savedNotes = checklistCache[eventId]?.notes?.[type] || '';
+        notesTextarea.value = savedNotes;
+      }
+
+      // Load packer notes if this is the packer checklist
+      if (type === 'packer') {
+        const packerNotesTextarea = document.getElementById(`packer-notes-${eventId}`);
+        if (packerNotesTextarea) {
+          const savedPackerNotes = checklistCache[eventId]?.notes?.['packer-notes'] || '';
+          packerNotesTextarea.value = savedPackerNotes;
+        }
+      }
+
+      // Update packer notes display if this is the attendant checklist
+      if (type === 'attendant') {
+        const packerNotes = checklistCache[eventId]?.notes?.['packer-notes'] || '';
+        updatePackerNotesDisplay(eventId, packerNotes);
+      }
+
+      // Check if already submitted
+      const submitted = checklistCache[eventId]?.[`${type}_submitted`];
+      if (submitted) {
+        const footer = document.getElementById(`${type}-footer-${eventId}`);
+        const staffSection = document.querySelector(`#${type}-checklist-${eventId} .checklist-staff-section`);
+        const completionTime = new Date(submitted.submittedAt).toLocaleString();
+        
+        // Admin reset button
+        const resetBtn = isAdmin ? `
+          <button onclick="resetChecklist('${eventId}', '${type}')" 
+            style="margin-left: 15px; padding: 6px 12px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;"
+            title="Reset this checklist to allow re-editing">
+            🔄 Reset
+          </button>
+        ` : '';
+        
+        if (footer) {
+          footer.innerHTML = `
+            <div class="submitted-badge" style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <span>✓ Completed by ${submitted.submittedBy} on ${completionTime}</span>
+              ${resetBtn}
+            </div>
+          `;
+        }
+        
+        if (staffSection) {
+          staffSection.innerHTML = `
+            <div class="submitted-badge" style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <span>✓ Completed by ${submitted.submittedBy}</span>
+              ${resetBtn}
+            </div>
+          `;
+        }
+        
+        // Update completion info next to button
+        const completionInfo = document.getElementById(`${type}-completion-${eventId}`);
+        if (completionInfo) {
+          completionInfo.textContent = `${submitted.submittedBy} • ${completionTime}`;
+        }
+        
+        // Add completed tag to button if submitted
+        const checklistButton = document.getElementById(`${type}-btn-${eventId}`);
+        if (checklistButton) {
+          checklistButton.classList.add('completed');
+        }
+      }
+      
+      // Update done button state
+      updateDoneButtonState(eventId, type);
+      
+      // Initialize inline signature
+      setTimeout(() => initInlineSignature(type + '-' + eventId), 100);
+    }
+
+    async function toggleChecklistItem(eventId, type, itemId, completed, checkboxElement) {
+      // Require staff name to be selected first
+      const staffSelect = document.getElementById(`${type}-staff-${eventId}`);
+      let staffName = staffSelect?.value || '';
+      
+      if (staffName === '__other__') {
+        const otherInput = document.getElementById(`${type}-staff-other-${eventId}`);
+        staffName = otherInput?.value?.trim() || '';
+      }
+      
+      if (!staffName) {
+        alert('Please select your name first before checking items.');
+        checkboxElement.checked = !completed; // Reset checkbox
+        return;
+      }
+      
+      try {
+        const res = await fetch(`/api/checklist/${eventId}/${type}/${itemId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ completed, completedBy: staffName })
+        });
+
+        if (res.ok) {
+          // Update cache and re-render
+          if (checklistCache[eventId]) {
+            const item = checklistCache[eventId][type].find(i => i.id === itemId);
+            if (item) {
+              item.completed = completed;
+              item.completedBy = completed ? staffName : null;
+              item.completedAt = completed ? new Date().toISOString() : null;
+            }
+          }
+          
+          // Re-render this checklist
+          renderChecklist(eventId, type, checklistCache[eventId][type]);
+          
+          // Update done button state
+          updateDoneButtonState(eventId, type);
+        } else {
+          throw new Error('Failed to update checklist');
+        }
+      } catch (error) {
+        console.error('Error updating checklist:', error);
+        alert('Failed to update checklist item');
+        // Reset checkbox on error
+        checkboxElement.checked = !completed;
+      }
+    }
+
+    function toggleMobileHeader() {
+      const controls = document.getElementById('headerControls');
+      const toggle = document.getElementById('mobileToggle');
+      
+      if (controls.classList.contains('expanded')) {
+        controls.classList.remove('expanded');
+        toggle.classList.remove('active');
+      } else {
+        controls.classList.add('expanded');
+        toggle.classList.add('active');
+      }
+    }
+
+    function toggleAdmin() {
+      const pwInput = document.getElementById('adminPassword');
+      const loginBtn = document.getElementById('loginBtn');
+      const emailToggleContainer = document.getElementById('emailToggleContainer');
+      const packerConfigBtn = document.getElementById('packerConfigBtn');
+      
+      if (isAdmin) {
+        // Logout
+        isAdmin = false;
+        adminPassword = '';
+        pwInput.value = '';
+        pwInput.style.display = 'inline-block';
+        loginBtn.textContent = '🔐 Login';
+        document.getElementById('adminBadge').style.display = 'none';
+        emailToggleContainer.style.display = 'none';
+        if (packerConfigBtn) packerConfigBtn.style.display = 'none';
+        // Clear localStorage
+        localStorage.removeItem('kande_admin_password');
+        // Re-render with non-admin view
+        renderEvents(allEvents);
+      } else {
+        // Login attempt
+        adminPassword = pwInput.value;
+        loadEvents();
+      }
+    }
+
+    function updateAdminUI() {
+      const pwInput = document.getElementById('adminPassword');
+      const loginBtn = document.getElementById('loginBtn');
+      const emailToggleContainer = document.getElementById('emailToggleContainer');
+      const packerConfigBtn = document.getElementById('packerConfigBtn');
+      
+      if (isAdmin) {
+        pwInput.style.display = 'none';
+        loginBtn.textContent = '🔓 Logout';
+        document.getElementById('adminBadge').style.display = 'inline';
+        emailToggleContainer.style.display = 'flex';
+        if (packerConfigBtn) packerConfigBtn.style.display = 'inline-block';
+      } else {
+        pwInput.style.display = 'inline-block';
+        loginBtn.textContent = '🔐 Login';
+        document.getElementById('adminBadge').style.display = 'none';
+        emailToggleContainer.style.display = 'none';
+        if (packerConfigBtn) packerConfigBtn.style.display = 'none';
+      }
+    }
+
+    async function loadEvents() {
+      const eventList = document.getElementById('eventList');
+      eventList.innerHTML = '<div class="loading">Loading events...</div>';
+
+      // Use stored password if we have one, otherwise check input
+      const password = adminPassword || document.getElementById('adminPassword').value;
+      const staffId = document.getElementById('staffFilter').value;
+
+      try {
+        const headers = {};
+        if (password) {
+          headers['Authorization'] = `Bearer ${password}`;
+        }
+
+        const url = staffId ? `/api/events?staffId=${encodeURIComponent(staffId)}` : '/api/events';
+        const res = await fetch(url, { headers });
+        const data = await res.json();
+
+        if (data.error) throw new Error(data.message || data.error);
+
+        allEvents = data.events;
+        isAdmin = data.isAdmin;
+        
+        // Store password if login succeeded
+        if (isAdmin && password) {
+          adminPassword = password;
+          // Save to localStorage for other pages (packer config)
+          localStorage.setItem('kande_admin_password', password);
+        } else {
+          localStorage.removeItem('kande_admin_password');
+        }
+
+        updateAdminUI();
+        document.getElementById('lastUpdated').textContent = `Last updated: ${new Date(data.lastUpdated).toLocaleString()}`;
+
+        updateStats(allEvents);
+        renderEvents(allEvents);
+        initializeNotePreviews();
+        loadStaffList();
+        loadAllChecklistStaffDropdowns(allEvents);
+        loadAllChecklistCompletionInfo(allEvents);
+      } catch (error) {
+        eventList.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+      }
+    }
+
+    async function loadStaffList() {
+      try {
+        const res = await fetch('/api/staff');
+        const staff = await res.json();
+        const select = document.getElementById('staffFilter');
+        const currentValue = select.value;
+        
+        select.innerHTML = '<option value="">All Events</option>';
+        staff.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.id;
+          opt.textContent = s.name;
+          select.appendChild(opt);
+        });
+        
+        select.value = currentValue;
+      } catch (e) {
+        console.error('Failed to load staff list:', e);
+      }
+    }
+
+    function updateStats(events) {
+      const now = new Date();
+      const weekEnd = new Date(now);
+      weekEnd.setDate(weekEnd.getDate() + 7);
+      const monthEnd = new Date(now);
+      monthEnd.setDate(monthEnd.getDate() + 30);
+
+      document.getElementById('totalEvents').textContent = events.length;
+      document.getElementById('thisWeek').textContent = events.filter(e => new Date(e.eventDate) <= weekEnd).length;
+      document.getElementById('thisMonth').textContent = events.filter(e => new Date(e.eventDate) <= monthEnd).length;
+    }
+
+    function renderEvents(events) {
+      const eventList = document.getElementById('eventList');
+      
+      if (events.length === 0) {
+        eventList.innerHTML = '<div class="loading" style="background:white;border-radius:12px;">No upcoming events found.</div>';
+        return;
+      }
+
+      eventList.innerHTML = events.map(event => {
+        // Parse date without timezone shift (YYYY-MM-DD)
+        const [year, month, day] = event.eventDate.split('-').map(Number);
+        const date = new Date(year, month - 1, day);
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+        const formatTime = (t) => {
+          if (!t) return '';
+          const [h, m] = t.split(':');
+          const hour = parseInt(h);
+          const ampm = hour >= 12 ? 'PM' : 'AM';
+          const h12 = hour % 12 || 12;
+          return `${h12}:${m} ${ampm}`;
+        };
+
+        const formatLoadInTime = (loadInValue, eventDateStr) => {
+          if (!loadInValue) return 'Not set';
+          
+          // Parse the event date
+          const [year, month, day] = eventDateStr.split('-').map(Number);
+          const eventDate = new Date(year, month - 1, day);
+          
+          // Extract time from load-in value (look for patterns like "10:00 AM" or "2:30 PM")
+          const timeMatch = loadInValue.match(/(\d{1,2}):?(\d{0,2})\s*(AM|PM)/i);
+          
+          if (timeMatch) {
+            const [, hours, mins, ampm] = timeMatch;
+            const minutes = mins || '00';
+            const time = `${hours}:${minutes} ${ampm.toUpperCase()}`;
+            
+            // Format: "Day of the week, month, date, - time"
+            const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+            const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            
+            return `${time} - ${weekdays[eventDate.getDay()]}, ${months[eventDate.getMonth()]} ${eventDate.getDate()}, ${eventDate.getFullYear()}`;
+          }
+          
+          // Fallback: show original value if we can't parse the time
+          return loadInValue;
+        };
+
+        // Check if event is distant from Bay Area (>150 miles)
+        const isDistantEvent = (location) => {
+          if (!location || !location.city || !location.state) return false;
+          
+          const city = location.city.toLowerCase().trim();
+          const state = location.state.toLowerCase().trim();
+          
+          // Check if it's outside California (definitely distant) 
+          if (state !== 'ca' && state !== 'california') return true;
+          
+          // Only highlight cities that are DEFINITELY more than 150 miles away
+          // Using exact string matching to avoid false positives
+          const definitivelyDistantCities = [
+            // Southern California metro areas (350+ miles)
+            'los angeles', 'san diego', 'riverside', 'anaheim', 'santa ana',
+            'long beach', 'huntington beach', 'irvine', 'glendale', 'pasadena',
+            'palmdale', 'lancaster', 'victorville', 'barstow', 'san bernardino',
+            'palm springs', 'indio', 'coachella',
+            
+            // Central Valley - only the far ones (180+ miles)
+            'fresno', 'bakersfield', 'visalia', 
+            
+            // Far Northern California (200+ miles)
+            'redding', 'chico', 'eureka', 'crescent city',
+            
+            // Eastern Sierra (200+ miles)
+            'mammoth lakes', 'bishop', 'ridgecrest'
+          ];
+          
+          // Use exact matching - only flag if city name exactly matches or is clearly contained
+          return definitivelyDistantCities.some(distantCity => {
+            return city === distantCity || 
+                   city.startsWith(distantCity + ' ') || 
+                   city.endsWith(' ' + distantCity) ||
+                   city.includes(' ' + distantCity + ' ');
+          });
+        };
+
+        // Check if event is near Las Vegas (within 100 miles)
+        const isNearLasVegas = (location) => {
+          if (!location || !location.city || !location.state) return false;
+          
+          const city = location.city.toLowerCase().trim();
+          const state = location.state.toLowerCase().trim();
+          
+          // Nevada locations near Las Vegas
+          if (state === 'nv' || state === 'nevada') {
+            const vegasAreaCities = [
+              'las vegas', 'henderson', 'north las vegas', 'boulder city', 
+              'summerlin', 'green valley', 'anthem', 'enterprise',
+              'spring valley', 'paradise', 'whitney', 'sunrise manor'
+            ];
+            
+            if (vegasAreaCities.some(vegasCity => 
+              city === vegasCity || city.includes(vegasCity) || vegasCity.includes(city)
+            )) {
+              return true;
+            }
+          }
+          
+          // Southern California cities near Vegas (within 100 miles)
+          const nearVegasCities = [
+            'barstow', 'victorville', 'needles', 'baker', 'primm',
+            'jean', 'goodsprings', 'searchlight', 'laughlin'
+          ];
+          
+          return nearVegasCities.some(nearCity => 
+            city === nearCity || city.includes(nearCity) || nearCity.includes(city)
+          );
+        };
+
+        // Fields to hide from the dropdown (shown elsewhere or not needed)
+        const hiddenDropdownFields = [
+          'budget', 'package', 'eventtimes', 'load in time', 
+          'backup contact', 'backup contact number',
+          'primary onsite contact', 'primary onsite contact number', 'Primary Onsite Contact', 'Primary Onsite Contact number',
+          'eventhashtag', 'design direction', 'design themes or colors',
+          'template wording', 'template choice', '9. attendant picking up equipment', 'backdrop',
+          'message', 'subject', 'vendor meal', '3: internal notes(for attendants)',
+          '360 booth design choices', '360 music choice',
+          '5: 360 booth design choices', '6: 360 music choice',
+          '5. 360 booth design choices', '6. 360 music choice',
+          'design inspiration links'
+        ];
+        
+        // Also filter fields containing "360" in the name
+        const shouldHideField = (fieldName) => {
+          const lower = fieldName.toLowerCase();
+          if (hiddenDropdownFields.includes(lower)) return true;
+          if (lower.includes('360 booth design') || lower.includes('360 music')) return true;
+          return false;
+        };
+        
+        // Field name renames for display
+        const fieldRenames = {
+          '3: Internal Notes(for Attendants)': "Kurtis' Notes"
+        };
+        
+        const filteredCustomFields = event.customFields 
+          ? Object.entries(event.customFields)
+              .filter(([name]) => !shouldHideField(name))
+              .sort(([a], [b]) => {
+                // Priority order: Load In Instructions first, Parking Instructions second
+                const priority = {
+                  'Load In Instructions': 1,
+                  'Parking Instructions': 2
+                };
+                const aPriority = priority[a] || 999;
+                const bPriority = priority[b] || 999;
+                return aPriority - bPriority;
+              })
+          : [];
+        
+        const customFieldsHtml = filteredCustomFields.length > 0 
+          ? `<details class="custom-fields">
+              <summary>📋 Event Details & Questionnaire (${filteredCustomFields.length} fields)</summary>
+              <div class="custom-fields-grid">
+                ${filteredCustomFields.map(([name, value]) => {
+                  let displayValue = '';
+                  if (!value) {
+                    displayValue = '<em>Not set</em>';
+                  } else if (typeof value === 'object' && value.images) {
+                    // Has images
+                    displayValue = value.text ? escapeHtml(value.text) + '<br>' : '';
+                    displayValue += value.images.map(url => 
+                      '<img src="' + url + '" onclick="openImageModal(\'' + url + '\')" style="width: 175px; height: 175px; object-fit: cover; margin-top: 8px; border-radius: 6px; border: 1px solid #ddd; cursor: pointer;" title="Click to enlarge">'
+                    ).join('');
+                  } else {
+                    displayValue = escapeHtml(String(value));
+                  }
+                  return '<div class="custom-field"><div class="field-name">' + escapeHtml(fieldRenames[name] || name) + '</div><div class="field-value">' + displayValue + '</div></div>';
+                }).join('')}
+              </div>
+            </details>`
+          : '';
+
+        const isDistant = isDistantEvent(event.location);
+        const nearVegas = isNearLasVegas(event.location);
+        // Hide subcontractor for local events - only show for distant events (outside 150mi Bay Area AND 100mi Vegas)
+        const showSubcontractor = isDistant && !nearVegas;
+
+        // Process Kurtis' Notes to handle object/string formats
+        const kurtisNotesRaw = event.customFields?.['3: Internal Notes(for Attendants)'];
+        let kurtisNotesText = '';
+        let kurtisNotesImages = [];
+        if (kurtisNotesRaw) {
+          if (typeof kurtisNotesRaw === 'object') {
+            kurtisNotesText = kurtisNotesRaw.text || '';
+            kurtisNotesImages = kurtisNotesRaw.images || [];
+          } else {
+            kurtisNotesText = String(kurtisNotesRaw);
+          }
+        }
+
+        return `
+          <div class="event-card" style="position: relative;">
+            <button class="copy-link-btn" onclick="copyEventLink('${event.id}', this)" title="Copy shareable link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+            </button>
+            <button class="export-btn" onclick="window.open('https://share.kandedash.com/event/${event.id}', '_blank')" title="Open shareable event page">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </button>
+            ${isDistant ? '<div class="distance-badge">Outside Bay Area</div>' : ''}
+            <div class="event-header ${isDistant ? 'distant' : ''}">
+              <div>
+                <div class="event-title">${escapeHtml(event.title)}</div>
+                <div class="event-date">
+                  <div class="date-box">
+                    <div class="month">${months[date.getMonth()]}</div>
+                    <div class="day">${date.getDate()}</div>
+                    <div class="weekday">${weekdays[date.getDay()]}</div>
+                  </div>
+                  ${event.endDate && event.endDate !== event.eventDate ? (() => {
+                    const [ey, em, ed] = event.endDate.split('-').map(Number);
+                    const endDt = new Date(ey, em - 1, ed);
+                    return `<div style="display:flex;align-items:center;margin:0 10px;color:#667eea;font-weight:bold;">→</div>
+                    <div class="date-box">
+                      <div class="month">${months[endDt.getMonth()]}</div>
+                      <div class="day">${endDt.getDate()}</div>
+                      <div class="weekday">${weekdays[endDt.getDay()]}</div>
+                    </div>`;
+                  })() : ''}
+                  <div class="time-info">
+                    ${event.startTime ? `<div class="time">${formatTime(event.startTime)}${event.endTime ? ' - ' + formatTime(event.endTime) : ''}</div>` : ''}
+                    ${event.guestCount ? `<div>${event.guestCount} guests</div>` : ''}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="event-body">
+              <div class="info-grid">
+                <div class="info-section">
+                  <h4>📍 Location</h4>
+                  ${event.location ? `
+                    <p><strong>${escapeHtml(event.location.name)}</strong></p>
+                    <p>${escapeHtml(event.location.fullAddress)}</p>
+                    <a href="https://maps.google.com/?q=${encodeURIComponent(event.location.fullAddress)}" target="_blank" style="color:#667eea;font-size:0.85rem;">Open in Maps →</a>
+                  ` : `
+                    <p><strong>${event.customFields?.['venue-name'] ? escapeHtml(event.customFields['venue-name']) : 'Venue not set'}</strong></p>
+                  `}
+                    <p style="margin-top: 10px;"><strong>Load In:</strong> <span style="${event.customFields?.['Load In Time'] ? '' : 'color: #999; font-style: italic;'}">${formatLoadInTime(event.customFields?.['Load In Time'], event.eventDate)}</span></p>
+                    <p style="margin-top: 6px;"><strong>Service Times:</strong> <span style="${event.startTime ? '' : 'color: #999; font-style: italic;'}">${event.startTime ? formatTime(event.startTime) + (event.endTime ? ' - ' + formatTime(event.endTime) : '') : 'Not set'}</span></p>
+                    <p style="margin-top: 6px;"><strong>Onsite Contact:</strong> <span style="${(event.customFields?.['primary onsite contact'] || event.customFields?.['Primary Onsite Contact']) ? '' : 'color: #999; font-style: italic;'}">${(event.customFields?.['primary onsite contact'] || event.customFields?.['Primary Onsite Contact']) ? (event.customFields['primary onsite contact'] || event.customFields['Primary Onsite Contact']) + ((event.customFields?.['primary onsite contact number'] || event.customFields?.['Primary Onsite Contact number']) ? ` - <a href="tel:${event.customFields['primary onsite contact number'] || event.customFields['Primary Onsite Contact number']}" style="color: #667eea;">${formatPhone(event.customFields['primary onsite contact number'] || event.customFields['Primary Onsite Contact number'])}</a>` : '') : 'Not set'}</span></p>
+                    <p style="margin-top: 6px;"><strong>Backup Contact:</strong> <span style="${event.customFields?.['Backup Contact'] ? '' : 'color: #999; font-style: italic;'}">${event.customFields?.['Backup Contact'] ? event.customFields['Backup Contact'] + (event.customFields?.['Backup Contact Number'] ? ` - <a href="tel:${event.customFields['Backup Contact Number']}" style="color: #667eea;">${formatPhone(event.customFields['Backup Contact Number'])}</a>` : '') : 'Not set'}</span></p>
+                    <div style="margin-top: 6px;">
+                      <strong>Backdrop:</strong>
+                      <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                        <input 
+                          type="text" 
+                          id="backdrop-text-${event.id}"
+                          value="${escapeHtml(event.customFields?.['Backdrop'] || '')}"
+                          placeholder="Enter backdrop name..."
+                          onchange="saveBackdrop('${event.id}', this.value)"
+                          style="flex: 1; padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.85rem;"
+                        >
+                        <label style="cursor: pointer; background: #667eea; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem;">
+                          📷 Upload
+                          <input type="file" accept="image/*" onchange="uploadBackdropImage('${event.id}', this)" style="display: none;">
+                        </label>
+                      </div>
+                      <div id="backdrop-image-${event.id}" style="margin-top: 8px;"></div>
+                    </div>
+                  </div>
+                
+                <div class="info-section">
+                    <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px;">
+                      <strong style="color: #856404;">🚗 Picking Up Equipment:</strong> <span style="${event.customFields?.['9. Attendant Picking Up Equipment'] ? 'color: #856404; font-weight: 500;' : 'color: #999; font-style: italic;'}">${event.customFields?.['9. Attendant Picking Up Equipment'] || 'Not set'}</span>
+                    </div>
+                    <h4>👥 Staff Assigned</h4>
+                    ${event.staff.length > 0 ? `
+                      <div class="staff-list">
+                        ${event.staff.map(s => `
+                          <div class="staff-badge">
+                            ${escapeHtml(s.name)}
+                            ${s.role ? `<span class="role">(${escapeHtml(s.role)})</span>` : ''}
+                          </div>
+                        `).join('')}
+                      </div>
+                    ` : `<p style="color: #999; font-style: italic;">No staff assigned</p>`}
+                    
+                    ${showSubcontractor ? `
+                      <div class="subcontractor-section">
+                        <div class="subcontractor-checkbox">
+                          <input 
+                            type="checkbox" 
+                            id="subcontract-${event.id}" 
+                            onchange="toggleSubcontractor('${event.id}', this.checked)"
+                          >
+                          <label for="subcontract-${event.id}">🤝 Subcontracted</label>
+                        </div>
+                        <div class="subcontractor-name" id="subcontractor-name-${event.id}">
+                          <input 
+                            type="text" 
+                            placeholder="Subcontractor name..." 
+                            onchange="saveSubcontractor('${event.id}', this.value)"
+                            onblur="saveSubcontractor('${event.id}', this.value)"
+                            id="subcontractor-input-${event.id}"
+                          >
+                        </div>
+                      </div>
+                    ` : ''}
+                  </div>
+
+                ${event.services.length > 0 ? `
+                  <div class="info-section" id="services-section-${event.id}">
+                    <h4 style="font-size: 1rem;">Booked Services</h4>
+                    <div class="services-list" id="services-list-${event.id}">
+                      ${event.services
+                        .filter(s => {
+                          const name = (s.name || '').toLowerCase();
+                          // Hide discounts, extended hours, full day add ons, props, and premium backdrop
+                          if (name.includes('discount')) return false;
+                          if (name.includes('extended hours')) return false;
+                          if (name.includes('full day add on') || name.includes('full day rental add on')) return false;
+                          if (name.includes('props')) return false;
+                          if (name.includes('premium backdrop')) return false;
+                          if (s.price < 0) return false; // Also hide negative price items
+                          return true;
+                        })
+                        .map((s, idx) => `
+                        <div class="service-row" id="service-${event.id}-${idx}" data-service-index="${idx}">
+                          <span class="service-qty">${s.quantity || 1}</span>
+                          <span class="service-name">${escapeHtml(s.name || s)}</span>
+                          ${isAdmin ? `<span class="service-price">${formatCurrency(s.price)}</span>` : ''}
+                          ${showSubcontractor ? `<button class="service-hide-btn" id="hide-btn-${event.id}-${idx}" onclick="toggleServiceVisibility('${event.id}', ${idx}, this)" title="Hide/show for subcontractor">👁</button>` : ''}
+                        </div>
+                      `).join('')}
+                      ${isAdmin && event.servicesTotal ? `
+                        <div class="services-total">
+                          <span class="total-label">Total</span>
+                          <span class="total-amount">${formatCurrency(event.servicesTotal)}</span>
+                        </div>
+                      ` : ''}
+                    </div>
+                  </div>
+                ` : ''}
+              </div>
+
+              <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <strong style="font-size: 1rem;">📝 Kurtis' Notes:</strong>
+                  <button id="notes-edit-btn-${event.id}" onclick="toggleNotesMode('${event.id}')" style="padding: 4px 8px; border: 1px solid #667eea; border-radius: 4px; background: transparent; color: #667eea; cursor: pointer; font-size: 12px;" title="Edit">✏️ Edit</button>
+                </div>
+                <div id="notes-toolbar-${event.id}" style="display: none; gap: 6px; margin-bottom: 8px;">
+                  <button onclick="formatNotes('${event.id}', 'bold')" style="padding: 4px 10px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer; font-weight: bold;" title="Bold (**text**)">B</button>
+                  <button onclick="formatNotes('${event.id}', 'italic')" style="padding: 4px 10px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer; font-style: italic;" title="Italic (_text_)">I</button>
+                  <button onclick="formatNotes('${event.id}', 'underline')" style="padding: 4px 10px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer; text-decoration: underline;" title="Underline (__text__)">U</button>
+                  <button onclick="formatNotes('${event.id}', 'bullet')" style="padding: 4px 10px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;" title="Bullet point">• List</button>
+                  <button onclick="formatNotes('${event.id}', 'link')" style="padding: 4px 10px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;" title="Insert link [text](url)">🔗 Link</button>
+                </div>
+                <textarea 
+                  id="kurtis-notes-${event.id}"
+                  onchange="saveKurtisNotes('${event.id}', this.value)"
+                  onblur="saveKurtisNotes('${event.id}', this.value)"
+                  oninput="autoResizeTextarea(this)"
+                  placeholder="Add notes... Use **bold**, _italic_, __underline__, or • for bullets"
+                  style="display: none; padding: 10px 12px; background: white; border: 1px solid #ddd; border-radius: 6px; width: 100%; box-sizing: border-box; min-height: 60px; resize: none; font-family: inherit; font-size: inherit; line-height: 1.5; overflow: hidden;"
+                >${kurtisNotesText}</textarea>
+                <div id="kurtis-notes-preview-${event.id}" style="padding: 10px 12px; background: white; border: 1px solid #ddd; border-radius: 6px; min-height: 40px; line-height: 1.5;"></div>
+                ${kurtisNotesImages.length > 0 ? '<div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px;">' + kurtisNotesImages.map(url => '<img src="' + url + '" onclick="openImageModal(\'' + url + '\')" style="width: 175px; height: 175px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; cursor: pointer;" title="Click to enlarge">').join('') + '</div>' : ''}
+              </div>
+
+              ${customFieldsHtml}
+
+              <div class="checklist-buttons">
+                <div class="checklist-button-wrapper">
+                  <button class="checklist-button" id="packer-btn-${event.id}" onclick="toggleSingleChecklist('${event.id}', 'packer', this)">
+                    📦 Packer Checklist
+                  </button>
+                  <span class="checklist-completion-info" id="packer-completion-${event.id}"></span>
+                </div>
+                <div class="checklist-button-wrapper">
+                  <button class="checklist-button" id="attendant-btn-${event.id}" onclick="toggleSingleChecklist('${event.id}', 'attendant', this)">
+                    🚚 Pickup Checklist
+                  </button>
+                  <span class="checklist-completion-info" id="attendant-completion-${event.id}"></span>
+                </div>
+              </div>
+
+              <div id="packer-checklist-${event.id}" class="checklists">
+                <div class="checklist-header">
+                  <h4>📦 Packer Checklist</h4>
+                  <div class="checklist-progress" id="packer-progress-${event.id}">Loading...</div>
+                </div>
+                
+                <div class="checklist-staff-section">
+                  <div class="staff-dropdown">
+                    <label for="packer-staff-${event.id}">👤 Completed by: <span class="required-star">*</span></label>
+                    <select id="packer-staff-${event.id}" onchange="handleStaffSelect('packer-${event.id}', this.value)">
+                      <option value="">Select staff member...</option>
+                    </select>
+                    <input type="text" id="packer-staff-other-${event.id}" class="staff-other-input" placeholder="Enter your name..." style="display:none;">
+                  </div>
+                </div>
+
+                <div class="notes-section">
+                  <h5>📝 Kurtis' Notes</h5>
+                  <textarea 
+                    class="notes-textarea" 
+                    placeholder="Add packing notes, special instructions, or reminders..."
+                    onchange="saveNotes('${event.id}', 'packer', this.value)"
+                  ></textarea>
+                </div>
+
+                <div class="notes-section">
+                  <h5>📦 Packer Notes (for Pickup Team)</h5>
+                  <textarea 
+                    class="notes-textarea" 
+                    placeholder="Leave notes for the pickup team about packing details, special items, or issues..."
+                    onchange="savePackerNotes('${event.id}', this.value)"
+                    id="packer-notes-${event.id}"
+                  ></textarea>
+                </div>
+
+                <div class="custom-item-controls" style="margin: 15px 0; padding: 12px; background: #f8f9fa; border-radius: 8px; border: 1px dashed #ddd;">
+                  <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <input 
+                      type="text" 
+                      id="custom-item-input-${event.id}" 
+                      placeholder="Add custom item to pack..."
+                      style="flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;"
+                      onkeypress="if(event.key==='Enter') addCustomItem('${event.id}')"
+                    >
+                    <button 
+                      onclick="addCustomItem('${event.id}')"
+                      style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; white-space: nowrap;"
+                    >+ Add Item</button>
+                    <button 
+                      onclick="regeneratePackerList('${event.id}')"
+                      style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; white-space: nowrap;"
+                      title="Regenerate packer list based on booked services"
+                    >🔄 Refresh List</button>
+                  </div>
+                  <div id="packer-list-info-${event.id}" style="margin-top: 8px; font-size: 12px; color: #666;"></div>
+                </div>
+                
+                <div id="packer-items-${event.id}">Loading checklist...</div>
+                
+                <div class="checklist-footer" id="packer-footer-${event.id}">
+                  <div class="signature-section">
+                    <label>✍️ Sign below to confirm:</label>
+                    <canvas id="sig-packer-${event.id}" class="inline-signature" width="300" height="100"></canvas>
+                    <button type="button" class="clear-sig-btn" onclick="clearInlineSignature('packer-${event.id}')">Clear</button>
+                  </div>
+                  <button class="done-button" data-event-id="${event.id}" data-type="packer" data-title="${event.title.replace(/"/g, '&quot;')}" data-date="${event.eventDate}" onclick="submitChecklistDirect(this.dataset.eventId, this.dataset.type, this.dataset.title, this.dataset.date)">
+                    ✓ DONE
+                  </button>
+                </div>
+              </div>
+
+              <div id="attendant-checklist-${event.id}" class="checklists">
+                <div class="checklist-header">
+                  <h4>🚚 Attendant Pickup Checklist</h4>
+                  <div class="checklist-progress" id="attendant-progress-${event.id}">Loading...</div>
+                </div>
+                
+                <div class="checklist-staff-section">
+                  <div class="staff-dropdown">
+                    <label for="attendant-staff-${event.id}">👤 Completed by: <span class="required-star">*</span></label>
+                    <select id="attendant-staff-${event.id}" onchange="handleStaffSelect('attendant-${event.id}', this.value)">
+                      <option value="">Select staff member...</option>
+                    </select>
+                    <input type="text" id="attendant-staff-other-${event.id}" class="staff-other-input" placeholder="Enter your name..." style="display:none;">
+                  </div>
+                </div>
+
+                <div id="packer-notes-display-${event.id}" class="packer-notes-display" style="display: none;">
+                  <h5>📦 Notes from Packer</h5>
+                  <div class="packer-notes-content" id="packer-notes-content-${event.id}"></div>
+                </div>
+
+                <div class="notes-section">
+                  <h5>📝 Kurtis' Notes</h5>
+                  <textarea 
+                    class="notes-textarea" 
+                    placeholder="Add pickup notes, directions, special instructions..."
+                    onchange="saveNotes('${event.id}', 'attendant', this.value)"
+                  ></textarea>
+                </div>
+                
+                <div id="attendant-items-${event.id}">Loading checklist...</div>
+                
+                <div class="checklist-footer" id="attendant-footer-${event.id}">
+                  <div class="signature-section">
+                    <label>✍️ Sign below to confirm:</label>
+                    <canvas id="sig-attendant-${event.id}" class="inline-signature" width="300" height="100"></canvas>
+                    <button type="button" class="clear-sig-btn" onclick="clearInlineSignature('attendant-${event.id}')">Clear</button>
+                  </div>
+                  <button class="done-button" data-event-id="${event.id}" data-type="attendant" data-title="${event.title.replace(/"/g, '&quot;')}" data-date="${event.eventDate}" onclick="submitChecklistDirect(this.dataset.eventId, this.dataset.type, this.dataset.title, this.dataset.date)">
+                    ✓ DONE
+                  </button>
+                </div>
+              </div>
+
+              ${isAdmin && event.vscoLink ? `<a href="${event.vscoLink}" target="_blank" class="vsco-link">Open in VSCO →</a>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      // Load subcontractor, backdrop, and hidden services data for all events after rendering (with delay to ensure DOM is ready)
+      setTimeout(() => {
+        events.forEach(event => {
+          loadSubcontractorData(event.id);
+          loadBackdropImage(event.id);
+          loadHiddenServices(event.id);
+        });
+      }, 100);
+    }
+    
+    // Load subcontractor data for an event
+    async function loadSubcontractorData(eventId) {
+      try {
+        console.log('Loading subcontractor for:', eventId);
+        const res = await fetch(`/api/checklist/${eventId}`);
+        const data = await res.json();
+        console.log('Got data:', data.subcontractor);
+        
+        if (data.subcontractor) {
+          const checkbox = document.getElementById(`subcontract-${eventId}`);
+          const nameInput = document.getElementById(`subcontractor-input-${eventId}`);
+          const nameField = document.getElementById(`subcontractor-name-${eventId}`);
+          
+          console.log('Elements found:', !!checkbox, !!nameInput, !!nameField);
+          
+          if (checkbox && nameInput && nameField) {
+            checkbox.checked = true;
+            nameInput.value = data.subcontractor;
+            nameField.classList.add('visible');
+            console.log('Set subcontractor value:', data.subcontractor);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading subcontractor:', error);
+      }
+    }
+
+    // Copy event link to clipboard
+    function copyEventLink(eventId, button) {
+      const url = 'https://share.kandedash.com/event/' + eventId;
+      navigator.clipboard.writeText(url).then(() => {
+        button.classList.add('copied');
+        button.innerHTML = '✓';
+        setTimeout(() => {
+          button.classList.remove('copied');
+          button.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+        }, 2000);
+      });
+    }
+
+    // Export event to standalone page
+    function exportEvent(eventId) {
+      const event = allEvents.find(e => e.id === eventId);
+      if (!event) return;
+
+      // Parse date
+      const [year, month, day] = event.eventDate.split('-').map(Number);
+      const date = new Date(year, month - 1, day);
+      const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+      const formatTime = (t) => {
+        if (!t) return '';
+        const [h, m] = t.split(':');
+        const hour = parseInt(h);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const h12 = hour % 12 || 12;
+        return `${h12}:${m} ${ampm}`;
+      };
+
+      // Build staff list
+      const staffHtml = event.staff.length > 0 
+        ? event.staff.map(s => `<span style="display:inline-block;background:#667eea;color:white;padding:4px 12px;border-radius:20px;margin:4px 4px 4px 0;font-size:0.9rem;">${s.name}${s.role ? ' (' + s.role + ')' : ''}</span>`).join('')
+        : '<span style="color:#999;font-style:italic;">No staff assigned</span>';
+
+      // Build services list
+      const servicesHtml = event.services.length > 0 
+        ? event.services
+            .filter(s => {
+              const name = (s.name || '').toLowerCase();
+              if (name.includes('discount')) return false;
+              if (name.includes('extended hours')) return false;
+              if (name.includes('full day add on') || name.includes('full day rental add on')) return false;
+              if (name.includes('props')) return false;
+              if (name.includes('premium backdrop')) return false;
+              if (s.price < 0) return false;
+              return true;
+            })
+            .map(s => `<div style="padding:8px 0;border-bottom:1px solid #eee;"><span style="font-weight:500;">${s.quantity || 1}x</span> ${s.name || s}</div>`).join('')
+        : '<span style="color:#999;font-style:italic;">No services listed</span>';
+
+      // Get custom fields
+      const kurtisNotes = event.customFields?.['3: Internal Notes(for Attendants)'];
+      let notesText = '';
+      if (kurtisNotes) {
+        notesText = typeof kurtisNotes === 'object' ? kurtisNotes.text || '' : String(kurtisNotes);
+      }
+
+      const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${event.title} - Kande Photo Booths</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #333; line-height: 1.6; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden; }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; }
+    .header h1 { font-size: 1.8rem; margin-bottom: 10px; }
+    .date-badge { display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 10px; margin-top: 15px; }
+    .date-box { text-align: center; }
+    .date-box .month { font-size: 0.8rem; text-transform: uppercase; opacity: 0.9; }
+    .date-box .day { font-size: 2rem; font-weight: bold; line-height: 1; }
+    .date-box .weekday { font-size: 0.75rem; opacity: 0.8; }
+    .time { margin-left: 15px; font-size: 1.1rem; }
+    .body { padding: 30px; }
+    .section { margin-bottom: 25px; }
+    .section h3 { font-size: 1rem; color: #667eea; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section p { color: #555; }
+    .info-box { background: #f8f9fa; border-radius: 10px; padding: 15px; margin-top: 10px; }
+    .map-link { display: inline-block; margin-top: 10px; color: #667eea; text-decoration: none; }
+    .map-link:hover { text-decoration: underline; }
+    .notes-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: 10px; padding: 15px; margin-top: 10px; }
+    .print-btn { position: fixed; bottom: 20px; right: 20px; background: #667eea; color: white; border: none; padding: 12px 24px; border-radius: 30px; cursor: pointer; font-size: 1rem; box-shadow: 0 4px 15px rgba(102,126,234,0.4); }
+    .print-btn:hover { background: #5a6fd6; }
+    @media print { .print-btn { display: none; } body { padding: 0; } .container { box-shadow: none; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>${event.title}</h1>
+      ${event.guestCount ? '<p style="opacity:0.9;">' + event.guestCount + ' guests</p>' : ''}
+      <div class="date-badge">
+        <div class="date-box">
+          <div class="month">${months[date.getMonth()]}</div>
+          <div class="day">${date.getDate()}</div>
+          <div class="weekday">${weekdays[date.getDay()]}</div>
+        </div>
+        ${event.startTime ? '<div class="time">' + formatTime(event.startTime) + (event.endTime ? ' - ' + formatTime(event.endTime) : '') + '</div>' : ''}
+      </div>
+    </div>
+    <div class="body">
+      <div class="section">
+        <h3>📍 Location</h3>
+        <div class="info-box">
+          ${event.location ? '<p><strong>' + event.location.name + '</strong></p><p>' + event.location.fullAddress + '</p><a href="https://maps.google.com/?q=' + encodeURIComponent(event.location.fullAddress) + '" target="_blank" class="map-link">Open in Google Maps →</a>' : '<p>Venue not set</p>'}
+        </div>
+      </div>
+      
+      <div class="section">
+        <h3>⏰ Times</h3>
+        <div class="info-box">
+          <p><strong>Load In:</strong> ${event.customFields?.['Load In Time'] || 'Not set'}</p>
+          <p><strong>Service:</strong> ${event.startTime ? formatTime(event.startTime) + (event.endTime ? ' - ' + formatTime(event.endTime) : '') : 'Not set'}</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>📞 Contacts</h3>
+        <div class="info-box">
+          <p><strong>Onsite Contact:</strong> ${event.customFields?.['primary onsite contact'] || event.customFields?.['Primary Onsite Contact'] || 'Not set'} ${(event.customFields?.['primary onsite contact number'] || event.customFields?.['Primary Onsite Contact number']) ? '- ' + (event.customFields['primary onsite contact number'] || event.customFields['Primary Onsite Contact number']) : ''}</p>
+          <p><strong>Backup Contact:</strong> ${event.customFields?.['Backup Contact'] || 'Not set'} ${event.customFields?.['Backup Contact Number'] ? '- ' + event.customFields['Backup Contact Number'] : ''}</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>👥 Staff Assigned</h3>
+        <div class="info-box">
+          ${staffHtml}
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>🚗 Equipment Pickup</h3>
+        <div class="info-box">
+          <p>${event.customFields?.['9. Attendant Picking Up Equipment'] || 'Not set'}</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>📦 Booked Services</h3>
+        <div class="info-box">
+          ${servicesHtml}
+        </div>
+      </div>
+
+      ${notesText ? '<div class="section"><h3>📝 Notes</h3><div class="notes-box">' + notesText.replace(/\\n/g, '<br>') + '</div></div>' : ''}
+    </div>
+  </div>
+  <button class="print-btn" onclick="window.print()">🖨️ Print</button>
+</body>
+</html>`;
+
+      // Open in new window
+      const newWindow = window.open('', '_blank');
+      newWindow.document.write(html);
+      newWindow.document.close();
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatCurrency(cents) {
+      if (!cents && cents !== 0) return '';
+      const dollars = cents / 100;
+      return dollars.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    }
+
+    function formatPhone(phone) {
+      if (!phone) return '';
+      // Strip all non-digits
+      const digits = phone.replace(/\D/g, '');
+      // Handle 10-digit numbers
+      if (digits.length === 10) {
+        return `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`;
+      }
+      // Handle 11-digit (1 + 10)
+      if (digits.length === 11 && digits[0] === '1') {
+        return `(${digits.slice(1,4)}) ${digits.slice(4,7)}-${digits.slice(7)}`;
+      }
+      // Return original if can't format
+      return phone;
+    }
+
+    // Load on page load
+    loadEvents();
+
+    // Reload when staff filter changes
+    document.getElementById('staffFilter').addEventListener('change', loadEvents);
+
+    // Allow enter key to login
+    document.getElementById('adminPassword').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') toggleAdmin();
+    });
+
+    // Image modal functions
+    function openImageModal(url) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      modalImg.src = url;
+      modal.classList.add('active');
+    }
+
+    function closeImageModal() {
+      const modal = document.getElementById('imageModal');
+      modal.classList.remove('active');
+    }
+  </script>
+
+  <!-- Image Modal -->
+  <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+    <span class="image-modal-close">&times;</span>
+    <img id="modalImage" src="" alt="Full size image">
+  </div>
+</body>
+</html>
