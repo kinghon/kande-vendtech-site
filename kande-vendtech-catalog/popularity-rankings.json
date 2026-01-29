@@ -1,0 +1,792 @@
+{
+  "source": "7-Eleven 7NOW Best Sellers",
+  "scraped": "2026-01-29T21:44:11.435Z",
+  "totalRankings": 100,
+  "matchedProducts": 112,
+  "rankings": [
+    {
+      "name": "Snickers Pecan Singles 1.41z",
+      "size": "1.41 oz",
+      "oldPopularity": 20,
+      "newPopularity": 1,
+      "source": "Snickers Bar 1.86oz"
+    },
+    {
+      "name": "Snickers Singles RTL Retail",
+      "size": "1.86 oz",
+      "oldPopularity": 1,
+      "newPopularity": 1,
+      "source": "Snickers Bar 1.86oz"
+    },
+    {
+      "name": "Snickers Singles Vend",
+      "size": "1.86 oz",
+      "oldPopularity": 1,
+      "newPopularity": 1,
+      "source": "Snickers Bar 1.86oz"
+    },
+    {
+      "name": "Reese s Big Cup",
+      "size": "1.4 oz",
+      "oldPopularity": 2,
+      "newPopularity": 2,
+      "source": "Reese's Peanut Butter Cup"
+    },
+    {
+      "name": "Reese s Peanut Butter Big Cup",
+      "size": "2.8 oz",
+      "oldPopularity": 2,
+      "newPopularity": 2,
+      "source": "Reese's Peanut Butter Cup"
+    },
+    {
+      "name": "Reese s Peanut Butter Cup RTL",
+      "size": "1.5 oz",
+      "oldPopularity": 2,
+      "newPopularity": 2,
+      "source": "Reese's Peanut Butter Cup"
+    },
+    {
+      "name": "Twix Caramel Cookie Bar RTL",
+      "size": "1.79 oz",
+      "oldPopularity": 4,
+      "newPopularity": 4,
+      "source": "Twix Caramel"
+    },
+    {
+      "name": "Twix Caramel KS",
+      "size": "3.02 oz",
+      "oldPopularity": 18,
+      "newPopularity": 4,
+      "source": "Twix Caramel"
+    },
+    {
+      "name": "Twix Caramel Salted Share Size",
+      "size": "2.82 oz",
+      "oldPopularity": 4,
+      "newPopularity": 4,
+      "source": "Twix Caramel"
+    },
+    {
+      "name": "Twix Cookie Dough Share Size",
+      "size": "2.72 oz",
+      "oldPopularity": 24,
+      "newPopularity": 4,
+      "source": "Twix Caramel"
+    },
+    {
+      "name": "Twix Cookies   Creme",
+      "size": "2.72 oz",
+      "oldPopularity": 24,
+      "newPopularity": 4,
+      "source": "Twix Caramel"
+    },
+    {
+      "name": "Twix Original Single Vend",
+      "size": "1.79 oz",
+      "oldPopularity": 4,
+      "newPopularity": 4,
+      "source": "Twix Caramel"
+    },
+    {
+      "name": "Drink Energy Red Bull Original",
+      "size": "12 oz",
+      "oldPopularity": 5,
+      "newPopularity": 5,
+      "source": "Red Bull 12oz"
+    },
+    {
+      "name": "Drink Energy Red Bull Original",
+      "size": "8.4 oz",
+      "oldPopularity": 32,
+      "newPopularity": 5,
+      "source": "Red Bull 12oz"
+    },
+    {
+      "name": "Drink Energy Red Bull Original",
+      "size": "16 oz",
+      "oldPopularity": 77,
+      "newPopularity": 5,
+      "source": "Red Bull 12oz"
+    },
+    {
+      "name": "Dr Pepper Diet Soda PET",
+      "size": "20 oz",
+      "oldPopularity": 8,
+      "newPopularity": 8,
+      "source": "Dr Pepper 20oz"
+    },
+    {
+      "name": "Dr Pepper Soda PET",
+      "size": "20 oz",
+      "oldPopularity": 8,
+      "newPopularity": 8,
+      "source": "Dr Pepper 20oz"
+    },
+    {
+      "name": "Soda Dr Pepper Zero Sugar",
+      "size": "20 oz",
+      "oldPopularity": 82,
+      "newPopularity": 8,
+      "source": "Dr Pepper 20oz"
+    },
+    {
+      "name": "Reese s Bar Pnt Bttr Tree KS",
+      "size": "2.4 oz",
+      "oldPopularity": 21,
+      "newPopularity": 9,
+      "source": "Reese's King Size"
+    },
+    {
+      "name": "Bar Reese s Nutrageous KS",
+      "size": "3.1 oz",
+      "oldPopularity": 21,
+      "newPopularity": 9,
+      "source": "Reese's King Size"
+    },
+    {
+      "name": "Reese s Peanut Buttr Cup KS",
+      "size": "2.8 oz",
+      "oldPopularity": 2,
+      "newPopularity": 9,
+      "source": "Reese's King Size"
+    },
+    {
+      "name": "Reese s Pnt Bttr Cup Minis KS",
+      "size": "2.5 oz",
+      "oldPopularity": 2,
+      "newPopularity": 9,
+      "source": "Reese's King Size"
+    },
+    {
+      "name": "Reese s Stick KS",
+      "size": "3 oz",
+      "oldPopularity": 21,
+      "newPopularity": 9,
+      "source": "Reese's King Size"
+    },
+    {
+      "name": "Reese s Sticks",
+      "size": "1.5 oz",
+      "oldPopularity": 2,
+      "newPopularity": 9,
+      "source": "Reese's King Size"
+    },
+    {
+      "name": "Reeses Take 5 King Size",
+      "size": "2.25 oz",
+      "oldPopularity": 9,
+      "newPopularity": 9,
+      "source": "Reese's King Size"
+    },
+    {
+      "name": "Coke Soda Zero PET",
+      "size": "20 oz",
+      "oldPopularity": 10,
+      "newPopularity": 10,
+      "source": "Coke Zero 20oz"
+    },
+    {
+      "name": "Snickers 2 Piece KS",
+      "size": "3.29 oz",
+      "oldPopularity": 12,
+      "newPopularity": 12,
+      "source": "Snickers King Size"
+    },
+    {
+      "name": "Snickers Almond KS 2 Piece",
+      "size": "3.23 oz",
+      "oldPopularity": 87,
+      "newPopularity": 12,
+      "source": "Snickers King Size"
+    },
+    {
+      "name": "Sprite Soda PET",
+      "size": "20 oz",
+      "oldPopularity": 13,
+      "newPopularity": 13,
+      "source": "Sprite 20oz"
+    },
+    {
+      "name": "Ice Cream Twix Bar KS",
+      "size": "3 oz",
+      "oldPopularity": 24,
+      "newPopularity": 18,
+      "source": "Twix King Size"
+    },
+    {
+      "name": "Kit Kat Bar Chocolate KS",
+      "size": "3 oz",
+      "oldPopularity": 19,
+      "newPopularity": 19,
+      "source": "Kit Kat King Size"
+    },
+    {
+      "name": "Kit Kat Big King Size",
+      "size": "3 oz",
+      "oldPopularity": 9,
+      "newPopularity": 19,
+      "source": "Kit Kat King Size"
+    },
+    {
+      "name": "Kit Kat Dark Choc Mint KS Duo",
+      "size": "3 oz",
+      "oldPopularity": 19,
+      "newPopularity": 19,
+      "source": "Kit Kat King Size"
+    },
+    {
+      "name": "Kit Kat Dark King Size",
+      "size": "3 oz",
+      "oldPopularity": 9,
+      "newPopularity": 19,
+      "source": "Kit Kat King Size"
+    },
+    {
+      "name": "Kit Kat Vanilla Waffle King Sz",
+      "size": "3 oz",
+      "oldPopularity": 19,
+      "newPopularity": 19,
+      "source": "Kit Kat King Size"
+    },
+    {
+      "name": "Doritos Nacho Cheese Minis",
+      "size": "1.95 oz",
+      "oldPopularity": 21,
+      "newPopularity": 21,
+      "source": "Doritos Nacho Cheese Large"
+    },
+    {
+      "name": "M M s Peanut Tear N Share KS",
+      "size": "3.27 oz",
+      "oldPopularity": 22,
+      "newPopularity": 22,
+      "source": "M&M Peanut Sharing"
+    },
+    {
+      "name": "Cheetos Flamin Hot LSS",
+      "size": "2 oz",
+      "oldPopularity": 57,
+      "newPopularity": 23,
+      "source": "Cheetos Flamin Hot"
+    },
+    {
+      "name": "Snack Cheetos Mini Flamin Hot",
+      "size": "1.5 oz",
+      "oldPopularity": 23,
+      "newPopularity": 23,
+      "source": "Cheetos Flamin Hot"
+    },
+    {
+      "name": "Pepsi Soda Diet PET",
+      "size": "20 oz",
+      "oldPopularity": 25,
+      "newPopularity": 25,
+      "source": "Pepsi 20oz"
+    },
+    {
+      "name": "Pepsi Soda PET",
+      "size": "20 oz",
+      "oldPopularity": 25,
+      "newPopularity": 25,
+      "source": "Pepsi 20oz"
+    },
+    {
+      "name": "Coke Soda Diet PET",
+      "size": "20 oz",
+      "oldPopularity": 28,
+      "newPopularity": 28,
+      "source": "Diet Coke 20oz"
+    },
+    {
+      "name": "Drink Energy Red Bull Zero",
+      "size": "8.4 oz",
+      "oldPopularity": 78,
+      "newPopularity": 32,
+      "source": "Red Bull 8.4oz"
+    },
+    {
+      "name": "Lays Baked Original XVL",
+      "size": "1.875 oz",
+      "oldPopularity": 54,
+      "newPopularity": 33,
+      "source": "Lays Classic Large"
+    },
+    {
+      "name": "Mountain Dew Soda Citrus PET",
+      "size": "20 oz",
+      "oldPopularity": 34,
+      "newPopularity": 34,
+      "source": "Mtn Dew 20oz"
+    },
+    {
+      "name": "Mountain Dew Soda Code Red PET",
+      "size": "20 oz",
+      "oldPopularity": 34,
+      "newPopularity": 34,
+      "source": "Mtn Dew 20oz"
+    },
+    {
+      "name": "Fanta Soda Orange PET",
+      "size": "20 oz",
+      "oldPopularity": 35,
+      "newPopularity": 35,
+      "source": "Fanta Orange 20oz"
+    },
+    {
+      "name": "Water Smartwater",
+      "size": "20 oz",
+      "oldPopularity": 36,
+      "newPopularity": 36,
+      "source": "Smartwater 20oz"
+    },
+    {
+      "name": "Dasani Water PET",
+      "size": "20 oz",
+      "oldPopularity": 37,
+      "newPopularity": 37,
+      "source": "Dasani 20oz"
+    },
+    {
+      "name": "Doritos Cool Ranch Minis",
+      "size": "1.95 oz",
+      "oldPopularity": 38,
+      "newPopularity": 38,
+      "source": "Doritos Cool Ranch Large"
+    },
+    {
+      "name": "Cheetos Oven Baked Hot Crunchy",
+      "size": "0.875 oz",
+      "oldPopularity": 23,
+      "newPopularity": 39,
+      "source": "Cheetos Crunchy Large"
+    },
+    {
+      "name": "Butterfinger Bar Singles",
+      "size": "1.9 oz",
+      "oldPopularity": 40,
+      "newPopularity": 40,
+      "source": "Butterfinger"
+    },
+    {
+      "name": "3 Musketeers Singles",
+      "size": "1.92 oz",
+      "oldPopularity": 41,
+      "newPopularity": 41,
+      "source": "3 Musketeers"
+    },
+    {
+      "name": "3 Musketeers Singles Vend",
+      "size": "1.92 oz",
+      "oldPopularity": 41,
+      "newPopularity": 41,
+      "source": "3 Musketeers"
+    },
+    {
+      "name": "Milky Way Singles RTL",
+      "size": "1.84 oz",
+      "oldPopularity": 42,
+      "newPopularity": 42,
+      "source": "Milky Way"
+    },
+    {
+      "name": "Milky Way Singles Vend",
+      "size": "1.84 oz",
+      "oldPopularity": 42,
+      "newPopularity": 42,
+      "source": "Milky Way"
+    },
+    {
+      "name": "Crunch Bar Single",
+      "size": "1.55 oz",
+      "oldPopularity": 43,
+      "newPopularity": 43,
+      "source": "Crunch Bar"
+    },
+    {
+      "name": "Crunch Bar Single",
+      "size": "1.55 oz",
+      "oldPopularity": 43,
+      "newPopularity": 43,
+      "source": "Crunch Bar"
+    },
+    {
+      "name": "Hershey Milk Chocolate RTL",
+      "size": "1.55 oz",
+      "oldPopularity": 44,
+      "newPopularity": 44,
+      "source": "Hershey Milk Chocolate"
+    },
+    {
+      "name": "Baby Ruth Singles",
+      "size": "1.9 oz",
+      "oldPopularity": 45,
+      "newPopularity": 45,
+      "source": "Baby Ruth"
+    },
+    {
+      "name": "Sour Patch Kids",
+      "size": "2 oz",
+      "oldPopularity": 49,
+      "newPopularity": 49,
+      "source": "Sour Patch Kids"
+    },
+    {
+      "name": "Sour Patch Kids Blue Peg Bag",
+      "size": "8 oz",
+      "oldPopularity": 49,
+      "newPopularity": 49,
+      "source": "Sour Patch Kids"
+    },
+    {
+      "name": "Sour Patch Kids Box",
+      "size": "3.5 oz",
+      "oldPopularity": 49,
+      "newPopularity": 49,
+      "source": "Sour Patch Kids"
+    },
+    {
+      "name": "Sour Patch Kids Peg Bag",
+      "size": "8 ea",
+      "oldPopularity": 49,
+      "newPopularity": 49,
+      "source": "Sour Patch Kids"
+    },
+    {
+      "name": "Sour Patch Kids Peg Bag",
+      "size": "3.6 oz",
+      "oldPopularity": 49,
+      "newPopularity": 49,
+      "source": "Sour Patch Kids"
+    },
+    {
+      "name": "SourPatchKids Original Big",
+      "size": "12 oz",
+      "oldPopularity": 49,
+      "newPopularity": 49,
+      "source": "Sour Patch Kids"
+    },
+    {
+      "name": "SourPatchKids SoftWatermelonFF",
+      "size": "8 oz",
+      "oldPopularity": 49,
+      "newPopularity": 49,
+      "source": "Sour Patch Kids"
+    },
+    {
+      "name": "Swedish Fish Assorted Box",
+      "size": "3.5 oz",
+      "oldPopularity": 50,
+      "newPopularity": 50,
+      "source": "Swedish Fish"
+    },
+    {
+      "name": "Swedish Fish Blu Rspbrry Lmnad",
+      "size": "8.04 oz",
+      "oldPopularity": 50,
+      "newPopularity": 50,
+      "source": "Swedish Fish"
+    },
+    {
+      "name": "Swedish Fish Red",
+      "size": "2 oz",
+      "oldPopularity": 50,
+      "newPopularity": 50,
+      "source": "Swedish Fish"
+    },
+    {
+      "name": "Swedish Fish Red Peg Bag",
+      "size": "8 oz",
+      "oldPopularity": 50,
+      "newPopularity": 50,
+      "source": "Swedish Fish"
+    },
+    {
+      "name": "Swedish Fish Red Theater Box",
+      "size": "3.1 oz",
+      "oldPopularity": 50,
+      "newPopularity": 50,
+      "source": "Swedish Fish"
+    },
+    {
+      "name": "Chips Lays BBQ LSS",
+      "size": "1.5 oz",
+      "oldPopularity": 55,
+      "newPopularity": 55,
+      "source": "Lays BBQ 2.625oz"
+    },
+    {
+      "name": "Chips Lays Potato BBQ XVL",
+      "size": "2.25 oz",
+      "oldPopularity": 55,
+      "newPopularity": 55,
+      "source": "Lays BBQ 2.625oz"
+    },
+    {
+      "name": "Chips Lays Wavy Hickory BBQ",
+      "size": "1.5 oz",
+      "oldPopularity": 55,
+      "newPopularity": 55,
+      "source": "Lays BBQ 2.625oz"
+    },
+    {
+      "name": "Lays Crisps Baked BBQ LSS",
+      "size": "1.125 oz",
+      "oldPopularity": 55,
+      "newPopularity": 55,
+      "source": "Lays BBQ 2.625oz"
+    },
+    {
+      "name": "Chips Lays Sour Cream OnionXVL",
+      "size": "2.25 oz",
+      "oldPopularity": 56,
+      "newPopularity": 56,
+      "source": "Lays Sour Cream Onion"
+    },
+    {
+      "name": "Lays Chips Sour Cream   Onion",
+      "size": "1 oz",
+      "oldPopularity": 56,
+      "newPopularity": 56,
+      "source": "Lays Sour Cream Onion"
+    },
+    {
+      "name": "Cheetos Flamin Hot Limon LSS",
+      "size": "2 oz",
+      "oldPopularity": 57,
+      "newPopularity": 57,
+      "source": "Cheetos Flamin Hot LSS"
+    },
+    {
+      "name": "Cheetos Crunchy JalpnoChdr LSS",
+      "size": "2 oz",
+      "oldPopularity": 58,
+      "newPopularity": 58,
+      "source": "Cheetos Crunchy LSS"
+    },
+    {
+      "name": "Cheetos Crunchy LSS",
+      "size": "2 oz",
+      "oldPopularity": 58,
+      "newPopularity": 58,
+      "source": "Cheetos Crunchy LSS"
+    },
+    {
+      "name": "Pringles Original",
+      "size": "1.3 oz",
+      "oldPopularity": 60,
+      "newPopularity": 60,
+      "source": "Pringles Original"
+    },
+    {
+      "name": "Pringles Original Grb   Go",
+      "size": "2.36 oz",
+      "oldPopularity": 60,
+      "newPopularity": 60,
+      "source": "Pringles Original"
+    },
+    {
+      "name": "Pringles Original Standard Can",
+      "size": "5.26 oz",
+      "oldPopularity": 60,
+      "newPopularity": 60,
+      "source": "Pringles Original"
+    },
+    {
+      "name": "Pringles BBQ Standard Can",
+      "size": "5.57 oz",
+      "oldPopularity": 61,
+      "newPopularity": 61,
+      "source": "Pringles BBQ"
+    },
+    {
+      "name": "Pringles Mingle Ched SourCream",
+      "size": "2 oz",
+      "oldPopularity": 56,
+      "newPopularity": 62,
+      "source": "Pringles Sour Cream Onion"
+    },
+    {
+      "name": "Pringles Sour Cream   Onion",
+      "size": "5.57 oz",
+      "oldPopularity": 56,
+      "newPopularity": 62,
+      "source": "Pringles Sour Cream Onion"
+    },
+    {
+      "name": "Pringles Sour Cream   Onion",
+      "size": "1.41 oz",
+      "oldPopularity": 56,
+      "newPopularity": 62,
+      "source": "Pringles Sour Cream Onion"
+    },
+    {
+      "name": "Takis Fuego Tortilla Chi",
+      "size": "2 oz",
+      "oldPopularity": 63,
+      "newPopularity": 63,
+      "source": "Takis Fuego"
+    },
+    {
+      "name": "Takis Fuego",
+      "size": "9.9 oz",
+      "oldPopularity": 63,
+      "newPopularity": 63,
+      "source": "Takis Fuego"
+    },
+    {
+      "name": "Bugles Original",
+      "size": "3 oz",
+      "oldPopularity": 64,
+      "newPopularity": 64,
+      "source": "Bugles Original"
+    },
+    {
+      "name": "Bugles Original LSS",
+      "size": "1.5 oz",
+      "oldPopularity": 64,
+      "newPopularity": 64,
+      "source": "Bugles Original"
+    },
+    {
+      "name": "Chex Mix Traditional",
+      "size": "1.75 oz",
+      "oldPopularity": 65,
+      "newPopularity": 65,
+      "source": "Chex Mix Traditional"
+    },
+    {
+      "name": "Andy Capp Hot Fries",
+      "size": "3 oz",
+      "oldPopularity": 66,
+      "newPopularity": 66,
+      "source": "Andy Capps Hot Fries"
+    },
+    {
+      "name": "Dr Pepper Diet Soda Can",
+      "size": "12 oz",
+      "oldPopularity": 8,
+      "newPopularity": 81,
+      "source": "Diet Dr Pepper"
+    },
+    {
+      "name": "Snickers Almond Bar",
+      "size": "1.76 oz",
+      "oldPopularity": 1,
+      "newPopularity": 87,
+      "source": "Snickers Almond"
+    },
+    {
+      "name": "Reese s Fast Break",
+      "size": "1.8 oz",
+      "oldPopularity": 21,
+      "newPopularity": 88,
+      "source": "Reese's Fast Break"
+    },
+    {
+      "name": "Hershey s Cookies N Creme KS",
+      "size": "2.6 oz",
+      "oldPopularity": 25,
+      "newPopularity": 90,
+      "source": "Hershey Cookies N Creme"
+    },
+    {
+      "name": "Doritos Spicy Sweet Chili LSS",
+      "size": "1.75 oz",
+      "oldPopularity": 53,
+      "newPopularity": 91,
+      "source": "Doritos Sweet Chili"
+    },
+    {
+      "name": "Doritos Flamin Hot",
+      "size": "1.75 oz",
+      "oldPopularity": 23,
+      "newPopularity": 92,
+      "source": "Doritos Flamin Hot"
+    },
+    {
+      "name": "Doritos Flamin Hot Nachos XVL",
+      "size": "2.5 oz",
+      "oldPopularity": 21,
+      "newPopularity": 92,
+      "source": "Doritos Flamin Hot"
+    },
+    {
+      "name": "Chips Lays Limon",
+      "size": "1.5 oz",
+      "oldPopularity": 2,
+      "newPopularity": 94,
+      "source": "Lays Limon"
+    },
+    {
+      "name": "Lays Chips Potato Limon XVL",
+      "size": "2.25 oz",
+      "oldPopularity": 2,
+      "newPopularity": 94,
+      "source": "Lays Limon"
+    },
+    {
+      "name": "Cheetos Jumbo Puffs XVL",
+      "size": "2.125 oz",
+      "oldPopularity": 3,
+      "newPopularity": 95,
+      "source": "Cheetos Puffs"
+    },
+    {
+      "name": "Cheetos Puffs Jumbo",
+      "size": "0.875 oz",
+      "oldPopularity": 3,
+      "newPopularity": 95,
+      "source": "Cheetos Puffs"
+    },
+    {
+      "name": "Cheetos Puffs LSS",
+      "size": "1.375 oz",
+      "oldPopularity": 3,
+      "newPopularity": 95,
+      "source": "Cheetos Puffs"
+    },
+    {
+      "name": "Cheetos Jalapeno Cheddar XVL",
+      "size": "2.75 oz",
+      "oldPopularity": 3,
+      "newPopularity": 96,
+      "source": "Cheetos Jalapeno Cheddar"
+    },
+    {
+      "name": "Pringles Cheddar Cheese",
+      "size": "5.57 oz",
+      "oldPopularity": 9,
+      "newPopularity": 98,
+      "source": "Pringles Cheddar Cheese"
+    },
+    {
+      "name": "Pringles Cheddar Cheese Grb Go",
+      "size": "2.5 oz",
+      "oldPopularity": 59,
+      "newPopularity": 98,
+      "source": "Pringles Cheddar Cheese"
+    },
+    {
+      "name": "Pringles Smoky Cheddar",
+      "size": "5.5 oz",
+      "oldPopularity": 9,
+      "newPopularity": 98,
+      "source": "Pringles Cheddar Cheese"
+    },
+    {
+      "name": "Sunchips Garden Salsa LSS",
+      "size": "1.5 oz",
+      "oldPopularity": 7,
+      "newPopularity": 99,
+      "source": "Sun Chips Garden Salsa"
+    },
+    {
+      "name": "Sunchips Garden Salsa XVL",
+      "size": "2.37 oz",
+      "oldPopularity": 7,
+      "newPopularity": 99,
+      "source": "Sun Chips Garden Salsa"
+    }
+  ]
+}
