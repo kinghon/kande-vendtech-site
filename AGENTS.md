@@ -16,11 +16,49 @@ Before doing anything else:
 
 Don't ask permission. Just do it.
 
-## Memory
+## Memory — Three-Layer System
 
-You wake up fresh each session. These files are your continuity:
-- **Daily notes:** `memory/YYYY-MM-DD.md` (create `memory/` if needed) — raw logs of what happened
-- **Long-term:** `MEMORY.md` — your curated memories, like a human's long-term memory
+You wake up fresh each session. These files are your continuity, organized in three layers:
+
+### Layer 1: Knowledge Graph (`/life/areas/`)
+Entity-based storage for people, companies, and projects:
+```
+life/areas/
+├── people/           # Person entities
+│   └── <name>/
+│       ├── summary.md    # Living summary (rewritten weekly)
+│       └── items.json    # Atomic timestamped facts
+├── companies/        # Company entities
+└── projects/         # Project entities
+```
+
+**Tiered retrieval:**
+1. `summary.md` — quick context (load first)
+2. `items.json` — atomic facts (load when needed)
+
+**Rules:**
+- Save durable facts immediately to `items.json`
+- Weekly: rewrite `summary.md` from active facts
+- **Never delete facts — supersede instead**
+
+**Atomic fact schema:**
+```json
+{
+  "id": "entity-001",
+  "fact": "The actual fact",
+  "category": "relationship|milestone|status|preference",
+  "timestamp": "YYYY-MM-DD",
+  "source": "conversation",
+  "status": "active|superseded",
+  "supersededBy": "entity-002"
+}
+```
+
+### Layer 2: Daily Notes (`memory/YYYY-MM-DD.md`)
+Raw event logs — what happened, when. Written continuously.
+
+### Layer 3: Tacit Knowledge (`MEMORY.md`)
+Patterns, preferences, lessons learned — facts about how Kurtis operates.
 
 Capture what matters. Decisions, context, things to remember. Skip the secrets unless asked to keep them.
 
