@@ -3,6 +3,8 @@
 /**
  * Updates products.js with competitive vending prices based on 7-Eleven pricing
  * Strategy: 7-Eleven price + $0.25
+ * 
+ * SAFETY CHECK: Only updates if vending price > wholesale cost (unitPrice)
  */
 
 const fs = require('fs');
@@ -155,14 +157,31 @@ function matchProduct(product, sevenItem) {
 // Find best match for each product
 let updatedCount = 0;
 const updates = [];
+const marginAlerts = [];
 
 products.forEach((product, index) => {
+  // Remove any existing vendingPriceOverride to start fresh
+  delete products[index].vendingPriceOverride;
+  
   for (const [key, sevenItem] of Object.entries(sevenElevenPrices)) {
     if (matchProduct(product, sevenItem)) {
       const vendingPrice = Math.round((sevenItem.price + 0.25) * 100) / 100;
+      const wholesaleCost = product.unitPrice;
       
-      // Only update if there's a meaningful difference and vending price > unit cost
-      if (vendingPrice > product.unitPrice * 1.2) {
+      // SAFETY CHECK: Vending price must be greater than wholesale cost
+      if (vendingPrice <= wholesaleCost) {
+        // MARGIN ALERT - 7-Eleven price is too low!
+        marginAlerts.push({
+          name: product.name,
+          size: product.size,
+          wholesaleCost,
+          sevenElevenPrice: sevenItem.price,
+          wouldBeVendingPrice: vendingPrice,
+          loss: Math.round((wholesaleCost - vendingPrice) * 100) / 100,
+          matched: key
+        });
+      } else {
+        // Safe to update - there's positive margin
         updates.push({
           index,
           name: product.name,
@@ -185,12 +204,28 @@ products.forEach((product, index) => {
 
 // Sort updates by name for readability
 updates.sort((a, b) => a.name.localeCompare(b.name));
+marginAlerts.sort((a, b) => a.name.localeCompare(b.name));
 
-console.log(`\n=== UPDATED ${updatedCount} PRODUCTS ===\n`);
+console.log(`\n${'='.repeat(60)}`);
+console.log(`✅ UPDATED ${updatedCount} PRODUCTS (Safe margin)`);
+console.log(`${'='.repeat(60)}\n`);
+
 updates.forEach(u => {
   console.log(`✓ ${u.name} (${u.size})`);
-  console.log(`  Unit Cost: $${u.unitCost.toFixed(2)} | 7-Eleven: $${u.sevenElevenPrice.toFixed(2)} | Vending: $${u.vendingPrice.toFixed(2)} | Margin: $${u.margin.toFixed(2)}`);
+  console.log(`  Wholesale: $${u.unitCost.toFixed(2)} | 7-Eleven: $${u.sevenElevenPrice.toFixed(2)} | Vending: $${u.vendingPrice.toFixed(2)} | Margin: $${u.margin.toFixed(2)}`);
 });
+
+if (marginAlerts.length > 0) {
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`⚠️  MARGIN ALERTS: ${marginAlerts.length} PRODUCTS SKIPPED`);
+  console.log(`   (7-Eleven price + $0.25 is BELOW our wholesale cost)`);
+  console.log(`${'='.repeat(60)}\n`);
+
+  marginAlerts.forEach(a => {
+    console.log(`✗ ${a.name} (${a.size})`);
+    console.log(`  Wholesale: $${a.wholesaleCost.toFixed(2)} | 7-Eleven: $${a.sevenElevenPrice.toFixed(2)} | Would be: $${a.wouldBeVendingPrice.toFixed(2)} | LOSS: -$${a.loss.toFixed(2)}`);
+  });
+}
 
 // Write updated products back to file
 const newContent = `const PRODUCTS = ${JSON.stringify(products, null, 2)};`;
@@ -198,3 +233,9 @@ fs.writeFileSync(productsPath, newContent);
 
 console.log(`\n✅ Successfully updated ${productsPath}`);
 console.log(`   ${updatedCount} products now have vendingPriceOverride field`);
+console.log(`   ${marginAlerts.length} products flagged as margin alerts (NOT updated)`);
+
+// Export margin alerts for use in reports
+const alertsPath = path.join(__dirname, 'margin-alerts.json');
+fs.writeFileSync(alertsPath, JSON.stringify(marginAlerts, null, 2));
+console.log(`   Margin alerts saved to ${alertsPath}`);
