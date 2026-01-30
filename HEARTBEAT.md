@@ -36,6 +36,10 @@ Log answers to `memory/self-review.md` using this format:
 TAG: confidence | uncertainty | speed | depth
 MISS: what went wrong
 FIX: how to catch it next time
+
+TAG: depth
+HIT: what worked well
+WHY: why it worked (reinforce the pattern)
 ```
 
 **Track last self-check** in `memory/heartbeat-state.json`:
