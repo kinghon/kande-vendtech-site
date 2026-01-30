@@ -1,0 +1,34 @@
+[
+  {
+    "id": "kurtis-001",
+    "fact": "Runs Kande Photo Booths - photo booth rental company",
+    "category": "status",
+    "timestamp": "2026-01-29",
+    "source": "USER.md",
+    "status": "active"
+  },
+  {
+    "id": "kurtis-002",
+    "fact": "Launched Kande VendTech - AI smart vending machine company",
+    "category": "milestone",
+    "timestamp": "2026-01-29",
+    "source": "USER.md",
+    "status": "active"
+  },
+  {
+    "id": "kurtis-003",
+    "fact": "Based in Bay Area, timezone America/Los_Angeles",
+    "category": "status",
+    "timestamp": "2026-01-29",
+    "source": "config",
+    "status": "active"
+  },
+  {
+    "id": "kurtis-004",
+    "fact": "Prefers Telegram over WhatsApp for Jarvis communication",
+    "category": "preference",
+    "timestamp": "2026-01-29",
+    "source": "conversation",
+    "status": "active"
+  }
+]
