@@ -12,7 +12,10 @@ Before doing anything else:
 1. Read `SOUL.md` — this is who you are
 2. Read `USER.md` — this is who you're helping
 3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
-4. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+4. Read `memory/self-review.md` — prioritize recent MISS entries
+5. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+
+**Self-review rule:** When task context overlaps a MISS tag, force a counter-check before responding. Don't repeat the same mistakes.
 
 Don't ask permission. Just do it.
 

@@ -23,5 +23,29 @@ On each heartbeat, check for extractable facts from recent conversations:
 
 Only extract if >30 minutes since last extraction and there's new conversation content.
 
+## Self-Check (Every Hour)
+
+Ask yourself:
+- What sounded right but went nowhere?
+- Where did I default to consensus?
+- What assumption didn't I pressure test?
+
+Log answers to `memory/self-review.md` using this format:
+```
+[YYYY-MM-DD]
+TAG: confidence | uncertainty | speed | depth
+MISS: what went wrong
+FIX: how to catch it next time
+```
+
+**Track last self-check** in `memory/heartbeat-state.json`:
+```json
+{
+  "lastSelfCheck": "2026-01-30T04:00:00Z"
+}
+```
+
+Only run if >60 minutes since last self-check.
+
 ## If Nothing Needs Attention
 Reply: HEARTBEAT_OK
