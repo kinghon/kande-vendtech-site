@@ -267,6 +267,17 @@ Description of what needs to be done.
 
 The system picks the first `pending` task each night. Reorder to change priorities.
 
+### Mid-Session Capture (Don't Wait!)
+
+The nightly review is a safety net, not the primary capture mechanism. **Write learnings as they happen:**
+
+- Hit a gotcha? Log it to `memory/YYYY-MM-DD.md` immediately
+- Figured out a pattern? Update AGENTS.md now, not tonight
+- Made a decision with context? Write it before the context fades
+- Learned something about a tool? Update TOOLS.md or the skill
+
+**Rule:** If you'd want future-you to know it, write it down *now*. The compound-review catches what slipped through — it shouldn't be your first line of defense.
+
 ### The Compound Effect
 
 - Monday's learnings inform Tuesday's work
@@ -274,7 +285,7 @@ The system picks the first `pending` task each night. Reorder to change prioriti
 - AGENTS.md becomes institutional memory
 - Every night, you get a little smarter and ship a little more
 
-**Key insight:** The review runs *before* auto-compound, so fresh learnings from today's work feed directly into tonight's implementation.
+**Key insight:** The review runs *before* auto-compound, so fresh learnings from today's work feed directly into tonight's implementation. Mid-session writes compound even faster.
 
 ## Make It Yours
 
