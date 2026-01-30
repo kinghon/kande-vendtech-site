@@ -224,6 +224,58 @@ Think of it like a human reviewing their journal and updating their mental model
 
 The goal: Be helpful without being annoying. Check in a few times a day, do useful background work, but respect quiet time.
 
+## 🔄 Compound Engineering - Learn and Ship While You Sleep
+
+Two nightly jobs that make you smarter and more productive every day:
+
+### 10:30 PM - Compound Review (`compound-review`)
+**Purpose:** Extract learnings from the day's work.
+
+1. Review all sessions from the last 24 hours
+2. For meaningful sessions, extract:
+   - Patterns discovered (what worked well)
+   - Gotchas hit (mistakes to avoid)
+   - Decisions made (context for future)
+   - Tools/techniques that proved useful
+3. Update this file (AGENTS.md) with workflow improvements
+4. Update MEMORY.md with important context
+5. Save detailed learnings to `memory/compound-{YYYY-MM-DD}.md`
+6. Commit and push changes
+7. Message Kurtis a brief summary
+
+### 11:00 PM - Auto-Compound (`auto-compound`)
+**Purpose:** Ship the next priority while Kurtis sleeps.
+
+1. Git pull (get tonight's fresh learnings)
+2. Read `tasks/backlog.md`, pick first pending task
+3. Mark it as in-progress
+4. Spawn a sub-agent to implement it
+5. On completion: update status, commit, create PR if needed
+6. Message Kurtis what shipped
+
+### Managing the Backlog
+
+Add tasks to `tasks/backlog.md` in priority order:
+
+```markdown
+## [1] Task Title
+- **Status**: pending
+- **Notes**: Any context
+
+Description of what needs to be done.
+```
+
+The system picks the first `pending` task each night. Reorder to change priorities.
+
+### The Compound Effect
+
+- Monday's learnings inform Tuesday's work
+- Gotchas discovered on Wednesday are avoided Thursday
+- AGENTS.md becomes institutional memory
+- Every night, you get a little smarter and ship a little more
+
+**Key insight:** The review runs *before* auto-compound, so fresh learnings from today's work feed directly into tonight's implementation.
+
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
