@@ -22,58 +22,56 @@ async function fetchAPI(endpoint, params = {}) {
   return res.json();
 }
 
-// Get jobs - fetch upcoming events sorted by eventDate descending (future first)
-async function getUpcomingJobs(maxPages = 50) {
-  // Use PST timezone for date comparisons
+// Get jobs - fetch ALL upcoming booked/fulfillment events
+// IMPORTANT: Booked events are scattered across 23+ pages of mostly leads.
+// Uses parallel pairs (batch of 2) to balance speed vs VSCO rate limits.
+async function getUpcomingJobs(maxPages = 25) {
   const pstOptions = { timeZone: 'America/Los_Angeles' };
   const now = new Date();
-  const pstDateStr = now.toLocaleDateString('en-CA', pstOptions); // YYYY-MM-DD format
+  const pstDateStr = now.toLocaleDateString('en-CA', pstOptions);
   
   const jobs = [];
-  let page = 1;
-  let consecutivePastPages = 0;
 
-  // Fetch jobs sorted by eventDate descending (future events first)
-  while (page <= maxPages) {
-    console.log(`Fetching jobs page ${page}...`);
-    const data = await fetchAPI('/job', {
-      page,
-      pageSize: 100,
-      includeClosed: false,
-      sortBy: 'eventDate desc'
-    });
+  // Get page 1 first to learn total pages
+  console.log('Fetching jobs page 1...');
+  const first = await fetchAPI('/job', {
+    page: 1,
+    pageSize: 100,
+    includeClosed: false,
+    sortBy: 'eventDate desc'
+  });
 
-    let foundFutureOnThisPage = false;
-    for (const job of data.items) {
-      if (!job.eventDate) continue;
-      
-      // Include today and future events that are booked or in fulfillment
-      const eventDateStr = job.eventDate; // YYYY-MM-DD
-      const todayStr = pstDateStr; // Already in YYYY-MM-DD PST
-      
-      if (eventDateStr >= todayStr && (job.stage === 'booked' || job.stage === 'fulfillment')) {
-        jobs.push(job);
-        foundFutureOnThisPage = true;
-      }
+  const totalPages = Math.min(first.meta.totalPages || 1, maxPages);
+
+  for (const job of first.items) {
+    if (job.eventDate && job.eventDate >= pstDateStr && (job.stage === 'booked' || job.stage === 'fulfillment')) {
+      jobs.push(job);
     }
-
-    // Stop if no more pages
-    if (page >= data.meta.totalPages) break;
-    
-    // Track consecutive pages with no future events
-    // Only stop after 3 consecutive pages of past-only events (to handle gaps)
-    if (!foundFutureOnThisPage) {
-      consecutivePastPages++;
-      if (consecutivePastPages >= 3) {
-        console.log(`Stopping after ${consecutivePastPages} consecutive pages with no future events`);
-        break;
-      }
-    } else {
-      consecutivePastPages = 0;
-    }
-
-    page++;
   }
+
+  // Fetch remaining pages in pairs (safe parallelism for VSCO API)
+  for (let p = 2; p <= totalPages; p += 2) {
+    const batch = [p];
+    if (p + 1 <= totalPages) batch.push(p + 1);
+    
+    console.log(`Fetching pages ${batch.join(',')}/${totalPages}...`);
+    const results = await Promise.all(
+      batch.map(pg =>
+        fetchAPI('/job', { page: pg, pageSize: 100, includeClosed: false, sortBy: 'eventDate desc' })
+          .catch(e => { console.error(`Page ${pg} error:`, e.message); return { items: [] }; })
+      )
+    );
+
+    for (const data of results) {
+      for (const job of (data.items || [])) {
+        if (job.eventDate && job.eventDate >= pstDateStr && (job.stage === 'booked' || job.stage === 'fulfillment')) {
+          jobs.push(job);
+        }
+      }
+    }
+  }
+
+  console.log(`Found ${jobs.length} upcoming booked/fulfillment events across ${totalPages} pages`);
 
   // Sort by eventDate ascending
   jobs.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));

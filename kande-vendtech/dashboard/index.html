@@ -2,652 +2,413 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-vend-32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-vend.png">
   <title>Kande VendTech — Operations Platform</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #f5f7fa; --card: #ffffff; --border: #e2e8f0; --text: #1a202c;
+      --muted: #718096; --accent: #3182ce; --hot: #e53e3e; --warn: #dd6b20;
+      --success: #38a169; --purple: #7b2cbf;
     }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    .app { max-width: 1400px; margin: 0 auto; padding: 20px; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-      background: #f5f7fa;
-      min-height: 100vh;
-      color: #1a202c;
-    }
+    /* Nav */
+    .top-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .top-nav .logo { height: 40px; }
+    .top-nav a { color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; }
+    .top-nav a:hover, .top-nav a.active { color: var(--accent); background: rgba(49,130,206,0.08); }
+    .nav-spacer { flex: 1; }
+    .nav-brand { font-size: 0.9rem; font-weight: 600; color: var(--text); margin-right: 8px; }
 
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 40px 20px;
-    }
+    /* Hero */
+    .hero { text-align: center; margin-bottom: 40px; }
+    .hero h1 { font-size: 2rem; font-weight: 700; background: linear-gradient(90deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+    .hero p { color: var(--muted); font-size: 1rem; }
 
-    header {
-      text-align: center;
-      margin-bottom: 50px;
-    }
+    /* Health Bar */
+    .health-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 32px; }
+    .health-card { background: var(--card); border-radius: 12px; padding: 18px; border: 1px solid var(--border); text-align: center; transition: transform 0.2s; }
+    .health-card:hover { transform: translateY(-2px); }
+    .health-card .value { font-size: 2rem; font-weight: 700; }
+    .health-card .label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; font-weight: 600; }
+    .value.accent { color: var(--accent); }
+    .value.success { color: var(--success); }
+    .value.warn { color: var(--warn); }
+    .value.hot { color: var(--hot); }
 
-    header h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      background: linear-gradient(90deg, #3182ce, #7b2cbf);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+    /* Modules Grid */
+    .section-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-    header p {
-      color: #718096;
-      font-size: 1.1rem;
-    }
+    .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 40px; }
 
-    .stats-bar {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-bottom: 50px;
-    }
+    .module-card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); transition: all 0.2s; display: flex; flex-direction: column; text-decoration: none; color: var(--text); }
+    .module-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(49,130,206,0.1); }
+    .module-card.disabled { opacity: 0.6; pointer-events: none; }
 
-    .stat-card {
-      background: #ffffff; border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 25px;
-      text-align: center;
-      border: 1px solid #e2e8f0;
-    }
+    .module-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .module-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+    .module-info { flex: 1; }
+    .module-title { font-size: 1.05rem; font-weight: 600; }
+    .module-sub { font-size: 0.8rem; color: var(--muted); }
 
-    .stat-card .number {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #3182ce;
-    }
+    .module-status { padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+    .status-live { background: rgba(56,161,105,0.15); color: var(--success); }
+    .status-planned { background: rgba(221,107,32,0.15); color: var(--warn); }
 
-    .stat-card .label {
-      color: #718096;
-      font-size: 0.9rem;
-      margin-top: 5px;
-    }
+    .module-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; flex: 1; }
 
-    .section-title {
-      font-size: 1.5rem;
-      margin-bottom: 25px;
-      color: #1a202c;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .module-stats { display: flex; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .module-stat { font-size: 0.85rem; }
+    .module-stat strong { color: var(--accent); }
 
-    .section-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #e2e8f0;
-    }
-
-    .modules-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 25px;
-      margin-bottom: 50px;
-    }
-
-    .module-card {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 25px;
-      border: 1px solid #e2e8f0;
-      transition: all 0.3s ease;
-    }
-
-    .module-card:hover {
-      background: #f0f7ff;
-      border-color: #3182ce;
-      transform: translateY(-2px);
-    }
-
-    .module-header {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 15px;
-    }
-
-    .module-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-    }
-
-    .module-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
-    .module-status {
-      margin-left: auto;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .status-planned { background: rgba(221,107,32,0.15); color: #dd6b20; }
-    .status-building { background: rgba(49,130,206,0.15); color: #3182ce; }
-    .status-live { background: rgba(56,161,105,0.15); color: #38a169; }
-
-    .module-strategy {
-      color: #718096;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      margin-bottom: 15px;
-    }
-
-    .module-features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .feature-tag {
-      background: #ffffff; border: 1px solid #e2e8f0;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      color: #718096;
-    }
+    /* Quick Actions */
+    .quick-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
+    .quick-action { display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; text-decoration: none; color: var(--text); font-size: 0.9rem; font-weight: 500; transition: all 0.2s; }
+    .quick-action:hover { border-color: var(--accent); background: rgba(49,130,206,0.04); }
+    .quick-action .qa-icon { font-size: 1.2rem; }
 
     /* Icon colors */
-    .icon-inventory { background: linear-gradient(135deg, #4caf50, #2e7d32); }
-    .icon-planogram { background: linear-gradient(135deg, #9c27b0, #6a1b9a); }
-    .icon-performance { background: linear-gradient(135deg, #ff9800, #e65100); }
-    .icon-restock { background: linear-gradient(135deg, #2196f3, #1565c0); }
-    .icon-routes { background: linear-gradient(135deg, #00bcd4, #00838f); }
-    .icon-staff { background: linear-gradient(135deg, #e91e63, #ad1457); }
-    .icon-crm { background: linear-gradient(135deg, #673ab7, #4527a0); }
-    .icon-finance { background: linear-gradient(135deg, #4caf50, #1b5e20); }
     .icon-sales { background: linear-gradient(135deg, #ff5722, #bf360c); }
-    .icon-marketing { background: linear-gradient(135deg, #607d8b, #37474f); }
+    .icon-crm { background: linear-gradient(135deg, #673ab7, #4527a0); }
+    .icon-machines { background: linear-gradient(135deg, #2196f3, #1565c0); }
+    .icon-inventory { background: linear-gradient(135deg, #4caf50, #2e7d32); }
+    .icon-finance { background: linear-gradient(135deg, #ff9800, #e65100); }
+    .icon-restock { background: linear-gradient(135deg, #00bcd4, #00838f); }
+    .icon-routes { background: linear-gradient(135deg, #9c27b0, #6a1b9a); }
+    .icon-seo { background: linear-gradient(135deg, #607d8b, #37474f); }
+    .icon-playbook { background: linear-gradient(135deg, #e91e63, #ad1457); }
+    .icon-pipeline { background: linear-gradient(135deg, #795548, #4e342e); }
 
-    /* Location Types Section */
-    .locations-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-      margin-bottom: 50px;
-    }
+    /* Phase Indicator */
+    .phase-bar { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); margin-bottom: 40px; }
+    .phase-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .phase-header h3 { font-size: 1.1rem; }
+    .phase-track { display: flex; gap: 4px; }
+    .phase-dot { width: 100%; height: 8px; border-radius: 4px; background: var(--border); flex: 1; }
+    .phase-dot.active { background: var(--accent); }
+    .phase-dot.current { background: var(--success); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .phase-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.75rem; color: var(--muted); }
 
-    .location-card {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 20px;
-      border: 1px solid #e2e8f0;
-    }
+    footer { text-align: center; padding: 30px; color: var(--muted); font-size: 0.85rem; }
+    footer a { color: var(--accent); text-decoration: none; }
 
-    .location-card h4 {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-      font-size: 1rem;
-    }
-
-    .location-card p {
-      color: #718096;
-      font-size: 0.85rem;
-      line-height: 1.5;
-    }
-
-    /* Phases Timeline */
-    .phases-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      margin-bottom: 50px;
-    }
-
-    .phase-card {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 25px;
-      border: 1px solid #e2e8f0;
-      position: relative;
-    }
-
-    .phase-card.current {
-      border-color: #3182ce;
-      background: rgba(49,130,206,0.06);
-    }
-
-    .phase-number {
-      position: absolute;
-      top: -15px;
-      left: 25px;
-      background: linear-gradient(135deg, #3182ce, #7b2cbf);
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-
-    .phase-card h3 {
-      margin-top: 10px;
-      margin-bottom: 5px;
-      font-size: 1.1rem;
-    }
-
-    .phase-card .timeframe {
-      color: #3182ce;
-      font-size: 0.85rem;
-      margin-bottom: 15px;
-    }
-
-    .phase-card ul {
-      list-style: none;
-      color: #718096;
-      font-size: 0.9rem;
-    }
-
-    .phase-card li {
-      padding: 5px 0;
-      padding-left: 20px;
-      position: relative;
-    }
-
-    .phase-card li::before {
-      content: '→';
-      position: absolute;
-      left: 0;
-      color: #3182ce;
-    }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 30px;
-      color: #a0aec0;
-      font-size: 0.9rem;
+    @media (max-width: 768px) {
+      .health-grid { grid-template-columns: repeat(2, 1fr); }
+      .modules-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.5rem; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <img src="/logo.jpg" alt="Kande VendTech" style="height:80px;margin-bottom:12px;">
-      <p style="color:#718096;font-size:1.1rem;">Operations Platform</p>
-      <nav style="margin-top: 20px;">
-        <a href="/crm" style="color: #fff; background: #3182ce; text-decoration: none; padding: 10px 20px; border-radius: 8px; margin-right: 10px; font-weight: 600;">🎯 Sales CRM</a>
-        <a href="/playbook.html" style="color: #fff; background: #e53e3e; text-decoration: none; padding: 10px 20px; border-radius: 8px; margin-right: 10px; font-weight: 600;">📘 Playbook</a>
-        <a href="/seo.html" style="color: #fff; background: #38a169; text-decoration: none; padding: 10px 20px; border-radius: 8px; margin-right: 10px; font-weight: 600;">📊 SEO Rankings</a>
-        <a href="/pricing-reference.xlsx" style="color: #3182ce; text-decoration: none; padding: 10px 20px; border: 1px solid #3182ce; border-radius: 8px; margin-right: 10px;">💰 Pricing Sheet</a>
-        <a href="/pipeline.html" style="color: #3182ce; text-decoration: none; padding: 10px 20px; border: 1px solid #3182ce; border-radius: 8px;">📊 Sheet View</a>
-      </nav>
-    </header>
+  <div class="app">
+    <nav class="top-nav">
+      <a href="/"><img src="/logo.png" alt="Kande VendTech" class="logo"></a>
+      <span class="nav-brand">Operations</span>
+      <a href="/" class="active">Dashboard</a>
+      <a href="/crm">CRM</a>
+      <a href="/machines">Machines</a>
+      <a href="/inventory">Inventory</a>
+      <a href="/finance">Finance</a>
+      <a href="/restock">Restock</a>
+      <a href="/staff">Staff</a>
+      <a href="/clients">Clients</a>
+      <a href="/map">Map</a>
+      <a href="/performance">Performance</a>
+      <a href="/planogram">Planogram</a>
+      <a href="/ai-office">AI Office</a>
+      <a href="/strategy.html">Strategy</a>
+    </nav>
 
-    <!-- Quick Stats -->
-    <div class="stats-bar">
-      <div class="stat-card">
-        <div class="number">91</div>
-        <div class="label">Prospects in CRM</div>
+    <div class="hero">
+      <h1>Kande VendTech Operations</h1>
+      <p>Smart vending management — sales to service, all in one place</p>
+    </div>
+
+    <!-- Live Stats -->
+    <div class="health-grid" id="health-grid">
+      <div class="health-card"><div class="value accent">—</div><div class="label">Prospects</div></div>
+      <div class="health-card"><div class="value success">—</div><div class="label">Machines</div></div>
+      <div class="health-card"><div class="value warn">—</div><div class="label">Deployed</div></div>
+      <div class="health-card"><div class="value accent">—</div><div class="label">Locations</div></div>
+      <div class="health-card"><div class="value success">—</div><div class="label">Products</div></div>
+      <div class="health-card"><div class="value accent">—</div><div class="label">Month Revenue</div></div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <a href="/crm" class="quick-action"><span class="qa-icon">🎯</span> Add Prospect</a>
+      <a href="/machines" class="quick-action"><span class="qa-icon">🏭</span> Add Machine</a>
+      <a href="/restock" class="quick-action"><span class="qa-icon">📋</span> New Restock</a>
+      <a href="/finance" class="quick-action"><span class="qa-icon">💰</span> Log Revenue</a>
+      <a href="/inventory" class="quick-action"><span class="qa-icon">📦</span> Add Product</a>
+      <a href="/map" class="quick-action"><span class="qa-icon">🗺️</span> View Map</a>
+      <a href="/performance" class="quick-action"><span class="qa-icon">📊</span> Performance</a>
+      <a href="/planogram" class="quick-action"><span class="qa-icon">🎰</span> Planogram</a>
+    </div>
+
+    <!-- Phase Progress -->
+    <div class="phase-bar">
+      <div class="phase-header">
+        <h3>📈 Growth Phase</h3>
+        <span style="font-size:0.9rem;color:var(--accent);font-weight:600;">Phase 1: Launch & Blitz</span>
       </div>
-      <div class="stat-card">
-        <div class="number">60-65%</div>
-        <div class="label">Target Gross Margin</div>
+      <div class="phase-track">
+        <div class="phase-dot current"></div>
+        <div class="phase-dot"></div>
+        <div class="phase-dot"></div>
+        <div class="phase-dot"></div>
       </div>
-      <div class="stat-card">
-        <div class="number">$75K+</div>
-        <div class="label">24-Month Revenue Target</div>
-      </div>
-      <div class="stat-card">
-        <div class="number">Phase 1</div>
-        <div class="label">Current Stage</div>
+      <div class="phase-labels">
+        <span>Launch & Blitz</span>
+        <span>Systems + Warehouse</span>
+        <span>Ops Manager</span>
+        <span>Scale to $75K+/mo</span>
       </div>
     </div>
 
     <!-- Core Modules -->
-    <h2 class="section-title">Core System Modules</h2>
+    <h2 class="section-title">System Modules</h2>
     <div class="modules-grid">
-      
-      <!-- Inventory & Expiration -->
-      <div class="module-card">
-        <div class="module-header">
-          <div class="module-icon icon-inventory">📦</div>
-          <div class="module-title">Inventory & Expiration</div>
-          <span class="module-status status-planned">Planned</span>
-        </div>
-        <p class="module-strategy">
-          <strong>Strategy:</strong> Track products from distributor → warehouse → machine. FIFO enforcement ensures oldest stock ships first. <strong>Critical: avoid variety packs at scale</strong> — waste from unsold flavors costs 50+ cents/unit extra. Use distributor single-SKU ordering. Source from Sam's Club (beverages), Costco Business Center (sandwiches), Vistar (bulk + rebates 3-12%). Register as reseller to avoid sales tax on COGS.
-        </p>
-        <div class="module-features">
-          <span class="feature-tag">FIFO Tracking</span>
-          <span class="feature-tag">Expiration Alerts</span>
-          <span class="feature-tag">Single-SKU Ordering</span>
-          <span class="feature-tag">Multi-Supplier Mgmt</span>
-          <span class="feature-tag">Waste Reporting</span>
-        </div>
-      </div>
 
-      <!-- Planogram & Slot Optimization -->
-      <div class="module-card">
-        <div class="module-header">
-          <div class="module-icon icon-planogram">🎰</div>
-          <div class="module-title">Planogram & Placement</div>
-          <span class="module-status status-planned">Planned</span>
-        </div>
-        <p class="module-strategy">
-          <strong>Strategy:</strong> Eye-level (4-5ft) = buy level (100% sales). Place Monster, Red Bull, Fair Life Protein ($7.99) here. Chest level (3-4ft) = proven sellers (75-85%). Bottom rows = water, bulk items (40-60%). <strong>Cluster pricing by category</strong> for simplicity. Top sellers: Core Water ($2.99, $1.70 net), Cheetos Flamin' Hot, Snickers, Ramen (70%+ margin). At residential: add TP, paper towels, Advil, laundry pods.
-        </p>
-        <div class="module-features">
-          <span class="feature-tag">Visual Editor</span>
-          <span class="feature-tag">Slot Heatmaps</span>
-          <span class="feature-tag">Category Clustering</span>
-          <span class="feature-tag">A/B Testing</span>
-        </div>
-      </div>
-
-      <!-- Product Performance -->
-      <div class="module-card">
-        <div class="module-header">
-          <div class="module-icon icon-performance">📈</div>
-          <div class="module-title">Product Performance</div>
-          <span class="module-status status-planned">Planned</span>
-        </div>
-        <p class="module-strategy">
-          <strong>Strategy:</strong> Target <strong>60-65% gross margin</strong> on ambient, 45-50% on frozen, 30-35% net. <strong>3× markup rule</strong> (buy at $1, sell at $3). Price to gas-station parity, NOT Walmart. Use psychological pricing ($2.49, $3.95). <strong>Prioritize profit per unit over margin %</strong> — a $5 item at 40% = $2 profit beats a $2 item at 60% = $1.20. Evaluate freezers at the freezer level, not by item.
-        </p>
-        <div class="module-features">
-          <span class="feature-tag">Velocity Tracking</span>
-          <span class="feature-tag">Margin Analysis</span>
-          <span class="feature-tag">Price Optimization</span>
-          <span class="feature-tag">Swap Recommendations</span>
-        </div>
-      </div>
-
-      <!-- Restock Workflow -->
-      <div class="module-card">
-        <div class="module-header">
-          <div class="module-icon icon-restock">📋</div>
-          <div class="module-title">Restock Checklists</div>
-          <span class="module-status status-planned">Planned</span>
-        </div>
-        <p class="module-strategy">
-          <strong>Strategy:</strong> Three-stage checklist (picker → packer → loader). <strong>Frequency:</strong> Unicorn locations 3-4×/week, standard every 3-4 days, low-volume 1×/week. Shannon's $25K location sold out in 48 hours initially — be ready to adjust fast. Use insulated Cambro boxes for frozen. Align delivery days across vendors. <strong>Scan every item before opening</strong> — SKUs change.
-        </p>
-        <div class="module-features">
-          <span class="feature-tag">Picker Lists</span>
-          <span class="feature-tag">Frequency Scheduling</span>
-          <span class="feature-tag">Load Checklists</span>
-          <span class="feature-tag">Stockout Alerts</span>
-        </div>
-      </div>
-
-      <!-- Route Optimization -->
-      <div class="module-card">
-        <div class="module-header">
-          <div class="module-icon icon-routes">🚚</div>
-          <div class="module-title">Route Optimization</div>
-          <span class="module-status status-planned">Planned</span>
-        </div>
-        <p class="module-strategy">
-          <strong>Strategy:</strong> Keep all locations within <strong>10-15 mile service radius max</strong> (Shannon turned down a 69-mile opportunity). Benchmark: $3,500 revenue per 8 labor hours + expenses. <strong>Move underperformers before buying new machines</strong> — one operator doubled revenue by relocating within the same campus. Dedicated routers > SIM cards for connectivity.
-        </p>
-        <div class="module-features">
-          <span class="feature-tag">Smart Routing</span>
-          <span class="feature-tag">Radius Monitoring</span>
-          <span class="feature-tag">Revenue/Labor Ratio</span>
-          <span class="feature-tag">Mobile Navigation</span>
-        </div>
-      </div>
-
-      <!-- Staff Management -->
-      <div class="module-card">
-        <div class="module-header">
-          <div class="module-icon icon-staff">👥</div>
-          <div class="module-title">Staff Management</div>
-          <span class="module-status status-planned">Planned</span>
-        </div>
-        <p class="module-strategy">
-          <strong>Strategy:</strong> <strong>Always 2+ part-timers, never just one</strong> — Kyle's only employee quit on the spot. Hire stockers via Craigslist, screen for vehicle capacity (6+ bins). Hire sequence: stockers first (ASAP) → warehouse manager (15-25 machines) → ops manager (40+ locations). Anthony went from 8-10 hrs/week to <strong>2 hrs/week</strong> after hiring ops manager.
-        </p>
-        <div class="module-features">
-          <span class="feature-tag">Scheduling</span>
-          <span class="feature-tag">Time Tracking</span>
-          <span class="feature-tag">Redundancy Planning</span>
-          <span class="feature-tag">Performance</span>
-        </div>
-      </div>
-
-      <!-- Client CRM -->
-      <div class="module-card">
-        <div class="module-header">
-          <div class="module-icon icon-crm">🤝</div>
-          <div class="module-title">Client CRM</div>
-          <span class="module-status status-planned">Planned</span>
-        </div>
-        <p class="module-strategy">
-          <strong>Strategy:</strong> Stay top-of-mind with automated touchpoints. Monthly check-ins, contract renewal reminders, issue tracking. Relationships drive retention.
-        </p>
-        <div class="module-features">
-          <span class="feature-tag">Auto Emails</span>
-          <span class="feature-tag">Contract Tracking</span>
-          <span class="feature-tag">Renewal Alerts</span>
-          <span class="feature-tag">Issue Log</span>
-        </div>
-      </div>
-
-      <!-- Financial Tracking -->
-      <div class="module-card">
-        <div class="module-header">
-          <div class="module-icon icon-finance">💰</div>
-          <div class="module-title">Financial Tracking</div>
-          <span class="module-status status-planned">Planned</span>
-        </div>
-        <p class="module-strategy">
-          <strong>Strategy:</strong> <strong>Finance machines, conserve cash for ops.</strong> Use 0% APR business credit cards (Chase Ink, Amex Blue Business Plus) — stagger apps 30-90 days apart. Revenue share: push for $0 or flat $25/month. If %, go tiered/sliding. Target 30-35% net margin. Revenue predictable after ~5 months (±5%). Track per machine: $700/mo (bad) → $3-5K (good) → $25K (unicorn).
-        </p>
-        <div class="module-features">
-          <span class="feature-tag">Revenue/Machine</span>
-          <span class="feature-tag">Expense Management</span>
-          <span class="feature-tag">Revenue Share Calc</span>
-          <span class="feature-tag">Credit Card Tracker</span>
-        </div>
-      </div>
-
-      <!-- Sales Pipeline -->
-      <div class="module-card">
+      <a href="/crm" class="module-card">
         <div class="module-header">
           <div class="module-icon icon-sales">🎯</div>
-          <div class="module-title">Sales Pipeline</div>
+          <div class="module-info">
+            <div class="module-title">Sales CRM</div>
+            <div class="module-sub">Prospect tracking & outreach</div>
+          </div>
           <span class="module-status status-live">Live</span>
         </div>
-        <p class="module-strategy">
-          <strong>Strategy:</strong> <strong>1-in-10 pop-in conversion rate</strong>, 10-12 week avg sales cycle (up to 8 months). Target 10-15 pop-ins/week. Use the <strong>$54 rent premium pitch</strong> — vending amenity = $54/unit in premium rent. Position as "smart market" not "vending." <strong>Always ask for referrals</strong> — property managers know other PMs. Prioritize Class A luxury apartments (200+ units) and medical outpatient (150+ staff).
-        </p>
-        <div class="module-features">
-          <span class="feature-tag">CRM Live</span>
-          <span class="feature-tag">Pop-in Tracking</span>
-          <span class="feature-tag">Referral Pipeline</span>
-          <span class="feature-tag">Qualification Scoring</span>
+        <div class="module-desc">Track prospects, log activities, manage contacts. Full pipeline from cold outreach to signed deal.</div>
+        <div class="module-stats" id="crm-stats">
+          <span class="module-stat"><strong id="stat-prospects">—</strong> prospects</span>
+          <span class="module-stat"><strong id="stat-hot">—</strong> hot leads</span>
+          <span class="module-stat"><strong id="stat-signed">—</strong> signed</span>
         </div>
-      </div>
+      </a>
 
-      <!-- Marketing & SEO -->
-      <div class="module-card">
+      <a href="/machines" class="module-card">
         <div class="module-header">
-          <div class="module-icon icon-marketing">🔍</div>
-          <div class="module-title">Marketing & SEO</div>
-          <span class="module-status status-planned">Planned</span>
+          <div class="module-icon icon-machines">🏭</div>
+          <div class="module-info">
+            <div class="module-title">Machines & Locations</div>
+            <div class="module-sub">Fleet tracking & assignments</div>
+          </div>
+          <span class="module-status status-live">Live</span>
         </div>
-        <p class="module-strategy">
-          <strong>Strategy:</strong> Track SEO rankings from your agency, monitor lead sources, measure ROI on marketing spend. Know what's driving new business.
-        </p>
-        <div class="module-features">
-          <span class="feature-tag">Rank Tracking</span>
-          <span class="feature-tag">Lead Sources</span>
-          <span class="feature-tag">Traffic Analytics</span>
-          <span class="feature-tag">ROI Tracking</span>
+        <div class="module-desc">Track machines owned, assignments, contract details, revenue share terms, and machine status.</div>
+        <div class="module-stats">
+          <span class="module-stat"><strong id="stat-machines">—</strong> machines</span>
+          <span class="module-stat"><strong id="stat-deployed">—</strong> deployed</span>
+          <span class="module-stat"><strong id="stat-locations">—</strong> locations</span>
         </div>
-      </div>
+      </a>
 
-    </div>
+      <a href="/inventory" class="module-card">
+        <div class="module-header">
+          <div class="module-icon icon-inventory">📦</div>
+          <div class="module-info">
+            <div class="module-title">Product Catalog</div>
+            <div class="module-sub">Products, pricing & suppliers</div>
+          </div>
+          <span class="module-status status-live">Live</span>
+        </div>
+        <div class="module-desc">Full product catalog with cost/sell pricing, margin tracking, and supplier management. 3× markup rule.</div>
+        <div class="module-stats">
+          <span class="module-stat"><strong id="stat-products">—</strong> products</span>
+        </div>
+      </a>
 
-    <!-- Location Types -->
-    <h2 class="section-title">Supported Location Types</h2>
-    <div class="locations-grid">
-      <div class="location-card">
-        <h4>🏢 High-Rise Apartments ⭐</h4>
-        <p><strong>Minimum:</strong> 200+ units, single building only. <strong>Revenue:</strong> $6-7K/month (micro-market). Place in mailroom/package room — best performer. The $54 rent premium pitch closes these. <span style="color:#ff6b6b;">Garden-style = hard pass.</span></p>
-      </div>
-      <div class="location-card">
-        <h4>🏥 Medical Outpatient ⭐</h4>
-        <p><strong>Minimum:</strong> 150 employees + 100 patients daily. Doctors/nurses on 12-hr shifts buy Fair Life Protein ($7.99) as meal replacements. <strong>Recession-proof.</strong> High-income staff = not price-conscious. Ask about Placer AI data.</p>
-      </div>
-      <div class="location-card">
-        <h4>🏭 Warehouses & Industrial</h4>
-        <p><strong>Minimum:</strong> 150 employees. <strong>Revenue:</strong> $10K+/month. Captive audience, short 15-min breaks = can't leave. Always ask employees <em>per shift</em> — don't assume. Best format: micro-market in break room.</p>
-      </div>
-      <div class="location-card">
-        <h4>🏢 Large Office Buildings</h4>
-        <p><strong>Minimum:</strong> 200+ employees. Note: white-collar = more price-sensitive. May need cheaper can options alongside premium bottles. Surveys show complaints about pricing "42% higher than Walmart."</p>
-      </div>
-      <div class="location-card">
-        <h4>🏨 Hotels / Airbnb Towers</h4>
-        <p>High-rise with Airbnb units = massive bonus. Forced lobby traffic from guests. Travelers pay premium. Shannon's combo (apts + condos + hotel) = <strong>$22-25K/month unicorn.</strong></p>
-      </div>
-      <div class="location-card">
-        <h4>🎓 Student Housing</h4>
-        <p>High volume but watch for theft — requires secure equipment. Budget-conscious audience. Energy drinks, ramen (70%+ margin), snacks at value price points.</p>
-      </div>
-      <div class="location-card">
-        <h4>👴 Senior Living / Skilled Nursing</h4>
-        <p>Easy-to-read labels, familiar brands. Add convenience items: Advil, TP, paper towels. Lower shelves more accessible. Steady, predictable traffic.</p>
-      </div>
-      <div class="location-card">
-        <h4>🏋️ Gyms & Fitness</h4>
-        <p>Protein bars, sports drinks, healthy snacks. Fair Life Core Power 42g protein ($7.99, 56% margin) flies off shelves here. Note: <span style="color:#ff6b6b;">fitness centers within apartment buildings underperform</span> — push for lobby instead.</p>
-      </div>
-    </div>
+      <a href="/finance" class="module-card">
+        <div class="module-header">
+          <div class="module-icon icon-finance">💰</div>
+          <div class="module-info">
+            <div class="module-title">Financial Dashboard</div>
+            <div class="module-sub">P&L, revenue & credit tracking</div>
+          </div>
+          <span class="module-status status-live">Live</span>
+        </div>
+        <div class="module-desc">Revenue per machine, expense tracking, P&L charts, credit card tracker with 0% APR monitoring.</div>
+        <div class="module-stats">
+          <span class="module-stat"><strong id="stat-revenue">—</strong> this month</span>
+          <span class="module-stat"><strong id="stat-profit">—</strong> profit</span>
+        </div>
+      </a>
 
-    <!-- Rollout Phases -->
-    <h2 class="section-title">Rollout Phases</h2>
-    <div class="phases-container">
-      <div class="phase-card current">
-        <div class="phase-number">1</div>
-        <h3>Launch & Blitz</h3>
-        <div class="timeframe">Weeks 1-4 • Target: 5-8 machines placed</div>
-        <ul>
-          <li>Score all 91 prospects — rank A/B/C by qualification checklist</li>
-          <li>Blitz 20+ pop-ins/week (Anthony did 15-20 in a single day)</li>
-          <li>Register as reseller at Costco/Sam's immediately</li>
-          <li>Set up Vistar distributor + single-SKU ordering</li>
-          <li>Hire 2 part-time stockers NOW — free up salesperson to only sell</li>
-          <li>Secure storage unit with 24/7 access + delivery receiving</li>
-          <li>Finance machines via 0% APR cards from day one</li>
-        </ul>
-      </div>
-      <div class="phase-card">
-        <div class="phase-number">2</div>
-        <h3>Systems + Warehouse</h3>
-        <div class="timeframe">Months 2-3 • Target: 15+ machines, $15K+/mo</div>
-        <ul>
-          <li>Dedicated warehouse — receiving capability is a game changer</li>
-          <li>Hire warehouse manager (kitting, sales analysis, inventory)</li>
-          <li>Picker/packer/loader checklists live</li>
-          <li>Dedicated routers at all locations (no SIM cards)</li>
-          <li>Product performance tracking — rotate underperformers fast</li>
-          <li>Referral pipeline active — target property management companies</li>
-        </ul>
-      </div>
-      <div class="phase-card">
-        <div class="phase-number">3</div>
-        <h3>Ops Manager + Delegate</h3>
-        <div class="timeframe">Months 4-5 • Target: 25+ machines, $25K+/mo</div>
-        <ul>
-          <li>Hire ops manager (ordering, dispatch, pop-ins, reports)</li>
-          <li>1-1.5 month training period working together</li>
-          <li>Route optimization live — 10-15 mile service radius</li>
-          <li>Micro-markets at top locations (50-100% more revenue than smart coolers)</li>
-          <li>Revenue becoming predictable (±5% monthly)</li>
-          <li>Owner transitioning out of daily ops</li>
-        </ul>
-      </div>
-      <div class="phase-card">
-        <div class="phase-number">4</div>
-        <h3>Scale</h3>
-        <div class="timeframe">Month 6+ • Target: 40+ locations, $50K+/mo</div>
-        <ul>
-          <li>Owner at 2 hrs/week (Anthony's model)</li>
-          <li>Multi-property management company partnerships</li>
-          <li>3+ stockers, warehouse manager, ops manager all running</li>
-          <li>Advanced planogram AI + predictive restocking</li>
-          <li>Aggressive: beat Kyle's 21-month pace to $40K/mo</li>
-          <li>12-month target: $75K+/mo, 45+ locations</li>
-        </ul>
-      </div>
-    </div>
+      <a href="/restock" class="module-card">
+        <div class="module-header">
+          <div class="module-icon icon-restock">📋</div>
+          <div class="module-info">
+            <div class="module-title">Restock Workflow</div>
+            <div class="module-sub">Pick lists & delivery tracking</div>
+          </div>
+          <span class="module-status status-live">Live</span>
+        </div>
+        <div class="module-desc">Generate pick lists, track through pick → pack → load → deliver → verify workflow.</div>
+        <div class="module-stats">
+          <span class="module-stat"><strong id="stat-restocks">—</strong> pending</span>
+        </div>
+      </a>
 
-    <!-- Placement Strategy Quick Reference -->
-    <h2 class="section-title">Slot Placement Quick Reference</h2>
-    <div class="modules-grid">
-      <div class="module-card">
+      <a href="/map" class="module-card">
         <div class="module-header">
-          <div class="module-icon" style="background: linear-gradient(135deg, #ffd700, #ff8c00);">👀</div>
-          <div class="module-title">Eye Level (4-5 ft)</div>
-          <span class="module-status status-live">100% Sales</span>
+          <div class="module-icon icon-routes">🗺️</div>
+          <div class="module-info">
+            <div class="module-title">Route Planner</div>
+            <div class="module-sub">Map view & route optimization</div>
+          </div>
+          <span class="module-status status-live">Live</span>
         </div>
-        <p class="module-strategy">
-          The "buy level" — prime real estate. Place here: high-margin items, impulse buys, new products to test, energy drinks, protein bars, premium snacks.
-        </p>
-      </div>
-      <div class="module-card">
+        <div class="module-desc">Interactive map of all prospects and locations. Plan delivery routes within your 10-15 mile service radius.</div>
+      </a>
+
+      <a href="/staff" class="module-card">
         <div class="module-header">
-          <div class="module-icon" style="background: linear-gradient(135deg, #87ceeb, #4682b4);">📍</div>
-          <div class="module-title">Chest Level (3-4 ft)</div>
-          <span class="module-status status-building">75-85%</span>
+          <div class="module-icon" style="background:linear-gradient(135deg,#43a047,#2e7d32);">👥</div>
+          <div class="module-info">
+            <div class="module-title">Staff Management</div>
+            <div class="module-sub">Team, shifts & scheduling</div>
+          </div>
+          <span class="module-status status-live">Live</span>
         </div>
-        <p class="module-strategy">
-          Secondary prime zone. Place here: proven sellers, mid-tier items, popular chips and sodas, items with brand recognition.
-        </p>
-      </div>
-      <div class="module-card">
+        <div class="module-desc">Employee roster, shift tracking, weekly schedule, availability grid. Target: $3,500 per 8 labor hours.</div>
+        <div class="module-stats">
+          <span class="module-stat"><strong id="stat-staff">—</strong> staff</span>
+          <span class="module-stat"><strong id="stat-week-hours">—</strong> hrs/week</span>
+        </div>
+      </a>
+
+      <a href="/clients" class="module-card">
         <div class="module-header">
-          <div class="module-icon" style="background: linear-gradient(135deg, #dda0dd, #9370db);">⬆️</div>
-          <div class="module-title">Top Shelf (5.5+ ft)</div>
-          <span class="module-status status-planned">50-65%</span>
+          <div class="module-icon" style="background:linear-gradient(135deg,#ec407a,#c2185b);">🤝</div>
+          <div class="module-info">
+            <div class="module-title">Client CRM</div>
+            <div class="module-sub">Signed location relationships</div>
+          </div>
+          <span class="module-status status-live">Live</span>
         </div>
-        <p class="module-strategy">
-          Reach zone — customers must want it. Place here: lightweight items, strong brands people seek out, backup stock of popular items.
-        </p>
-      </div>
-      <div class="module-card">
+        <div class="module-desc">Track active client relationships, touchpoints, issues, contract renewals, and client health scores.</div>
+        <div class="module-stats">
+          <span class="module-stat"><strong id="stat-client-count">—</strong> clients</span>
+          <span class="module-stat"><strong id="stat-open-issues">—</strong> open issues</span>
+        </div>
+      </a>
+
+      <a href="/pipeline.html" class="module-card">
         <div class="module-header">
-          <div class="module-icon" style="background: linear-gradient(135deg, #a9a9a9, #696969);">⬇️</div>
-          <div class="module-title">Bottom Rows (<3 ft)</div>
-          <span class="module-status status-planned">40-60%</span>
+          <div class="module-icon icon-pipeline">📊</div>
+          <div class="module-info">
+            <div class="module-title">Pipeline Sheet</div>
+            <div class="module-sub">Spreadsheet view of prospects</div>
+          </div>
+          <span class="module-status status-live">Live</span>
         </div>
-        <p class="module-strategy">
-          Stoop zone — lowest visibility. Place here: water (people seek it), value/bulk items, heavy items, low-margin basics.
-        </p>
-      </div>
+        <div class="module-desc">Spreadsheet-style view of your sales pipeline. Quick editing and bulk operations.</div>
+      </a>
+
+      <a href="/playbook.html" class="module-card">
+        <div class="module-header">
+          <div class="module-icon icon-playbook">📘</div>
+          <div class="module-info">
+            <div class="module-title">Sales Playbook</div>
+            <div class="module-sub">Scripts, tactics & strategies</div>
+          </div>
+          <span class="module-status status-live">Live</span>
+        </div>
+        <div class="module-desc">Sales scripts, objection handling, the $54 rent premium pitch, and qualification checklists.</div>
+      </a>
+
+      <a href="/seo.html" class="module-card">
+        <div class="module-header">
+          <div class="module-icon icon-seo">🔍</div>
+          <div class="module-info">
+            <div class="module-title">SEO Rankings</div>
+            <div class="module-sub">Search visibility tracking</div>
+          </div>
+          <span class="module-status status-live">Live</span>
+        </div>
+        <div class="module-desc">Track your Google rankings for "vending machines las vegas" and related keywords.</div>
+      </a>
+
+      <a href="/performance" class="module-card">
+        <div class="module-header">
+          <div class="module-icon" style="background:linear-gradient(135deg,#ff5722,#d84315);">📊</div>
+          <div class="module-info">
+            <div class="module-title">Product Performance</div>
+            <div class="module-sub">Sales velocity & margin analytics</div>
+          </div>
+          <span class="module-status status-live">Live</span>
+        </div>
+        <div class="module-desc">Product scoreboard, category breakdown, margin analysis, swap recommendations. Track what sells and what doesn't.</div>
+      </a>
+
+      <a href="/planogram" class="module-card">
+        <div class="module-header">
+          <div class="module-icon" style="background:linear-gradient(135deg,#7b1fa2,#4a148c);">🎰</div>
+          <div class="module-info">
+            <div class="module-title">Planogram Editor</div>
+            <div class="module-sub">Visual slot optimization</div>
+          </div>
+          <span class="module-status status-live">Live</span>
+        </div>
+        <div class="module-desc">Drag-and-drop planogram editor. Zone-coded slots, placement warnings, templates, and heatmap overlays.</div>
+      </a>
+
     </div>
 
     <footer>
-      <p>Kande VendTech Operations Platform v0.1 — Built with 🤖 by Jarvis</p>
-      <p style="margin-top: 10px;">Last updated: January 31, 2026</p>
+      <p>Kande VendTech Operations Platform v1.0 — Built with 🤖</p>
+      <p style="margin-top:6px;"><a href="/pricing-reference.xlsx">📄 Pricing Reference</a></p>
     </footer>
   </div>
+
+  <script>
+    async function loadStats() {
+      try {
+        const stats = await fetch('/api/stats').then(r => r.json());
+
+        // Health grid
+        const fmt = n => '$' + (n || 0).toLocaleString();
+        document.getElementById('health-grid').innerHTML = `
+          <div class="health-card"><div class="value accent">${stats.prospects}</div><div class="label">Prospects</div></div>
+          <div class="health-card"><div class="value success">${stats.machines}</div><div class="label">Machines</div></div>
+          <div class="health-card"><div class="value warn">${stats.machinesDeployed}</div><div class="label">Deployed</div></div>
+          <div class="health-card"><div class="value accent">${stats.locations}</div><div class="label">Locations</div></div>
+          <div class="health-card"><div class="value success">${stats.products}</div><div class="label">Products</div></div>
+          <div class="health-card"><div class="value ${stats.monthRevenue > 0 ? 'success' : ''}">${fmt(stats.monthRevenue)}</div><div class="label">Month Revenue</div></div>
+        `;
+
+        // Module stats
+        document.getElementById('stat-prospects').textContent = stats.prospects;
+        document.getElementById('stat-hot').textContent = stats.hot;
+        document.getElementById('stat-signed').textContent = stats.signed;
+        document.getElementById('stat-machines').textContent = stats.machines;
+        document.getElementById('stat-deployed').textContent = stats.machinesDeployed;
+        document.getElementById('stat-locations').textContent = stats.locations;
+        document.getElementById('stat-products').textContent = stats.products;
+        document.getElementById('stat-revenue').textContent = fmt(stats.monthRevenue);
+        document.getElementById('stat-profit').textContent = fmt(stats.monthProfit);
+        document.getElementById('stat-restocks').textContent = stats.pendingRestocks;
+
+        // Staff & Client stats
+        if (document.getElementById('stat-staff')) document.getElementById('stat-staff').textContent = stats.activeStaff || 0;
+        if (document.getElementById('stat-week-hours')) document.getElementById('stat-week-hours').textContent = (stats.weekHours || 0).toFixed(1);
+        if (document.getElementById('stat-client-count')) document.getElementById('stat-client-count').textContent = stats.clientCount || 0;
+        if (document.getElementById('stat-open-issues')) document.getElementById('stat-open-issues').textContent = stats.openIssues || 0;
+      } catch (e) {
+        console.error('Failed to load stats:', e);
+      }
+    }
+
+    loadStats();
+    // Refresh every 60 seconds
+    setInterval(loadStats, 60000);
+  </script>
+<script src="/nav.js"></script>
 </body>
 </html>

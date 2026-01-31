@@ -9,6 +9,10 @@ TAG: depth
 MISS: Committed node_modules to the clawd workspace repo when pushing photo booths dashboard changes. 965 files changed — should have checked .gitignore or used the separate repo clone from the start.
 FIX: Always check git remote before committing in subdirectories inside the clawd workspace. The photo booths dashboard deploys from kinghon/kande-photo-booths-dashboard, not the workspace repo. Use /tmp clone pattern (which I did recover to).
 
+TAG: depth | RECURRING
+MISS: Broke the photo booths event list AGAIN. Added SEO page and it didn't touch vsco.js, but the earlier pagination logic (maxPages=10 + early-stop after 3 empty pages) was already silently broken — only showing 4 of 20 events. I didn't catch it because I never verified event count after deploying. Kurtis had to report it. This has happened multiple times.
+FIX: MANDATORY — after ANY push to kande-photo-booths-dashboard, verify event count via API before telling Kurtis it's done. Add to standing rules. The VSCO API has ~23 pages, booked events are <10% of jobs, scattered everywhere. Never use early-stopping heuristics on this API.
+
 TAG: confidence
 HIT: Good call spawning sub-agents for SEO optimization and machine system design — both are heavy tasks that would block the conversation. Kept main session responsive for Kurtis's rapid-fire requests.
 WHY: Pattern from earlier session worked well. Heavy research/implementation = sub-agent. Quick edits = inline.
@@ -29,3 +33,11 @@ WHY: Listened to what he actually needed (quick edits, no friction) vs. what I i
 TAG: confidence
 HIT: Spawning sub-agents for research tasks worked well — YouTube transcription + Skool scraping ran in parallel while main session stayed responsive.
 WHY: Right tool for the job. Heavy research tasks shouldn't block the conversation.
+
+TAG: depth | RECURRING ⚠️
+MISS: Broke vend.kandedash.com map TWICE in the same session by removing features without grepping for all references. First: removed radius feature but left drawServiceRadius() call → crash. Kurtis had to report "Failed to load data" both times. This is the SAME class of bug as the photo booths event count issue — making changes without verifying the result.
+FIX: MANDATORY pre-push checklist for ANY feature removal:
+  1. grep -rn "functionName\|relatedVars" across ALL project files
+  2. Remove ALL references, not just the obvious ones
+  3. Open the page in browser/curl the API after push to verify it loads
+  Never tell Kurtis "done" without confirming the page actually works.

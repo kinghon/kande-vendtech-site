@@ -557,16 +557,14 @@ app.get('/api/events', async (req, res) => {
     // Check staff filter
     const staffId = req.query.staffId;
 
-    // Use cache if fresh
-    if (dashboardCache && lastFetch && (Date.now() - lastFetch < CACHE_TTL)) {
+    // Always serve from cache — never block a request on a VSCO fetch.
+    // The auto-refresh interval (every 5 min) and startup fetch keep cache warm.
+    if (dashboardCache) {
       return await sendFilteredData(res, dashboardCache, isAdmin, staffId);
     }
 
-    // Fetch fresh data
-    dashboardCache = await getDashboardData();
-    lastFetch = Date.now();
-
-    await sendFilteredData(res, dashboardCache, isAdmin, staffId);
+    // No cache yet (server just started) — return loading state
+    res.json({ events: [], lastUpdated: null, isAdmin, loading: true });
   } catch (error) {
     console.error('Error fetching events:', error);
     res.status(500).json({ error: 'Failed to fetch events', message: error.message });
@@ -1528,15 +1526,25 @@ app.listen(PORT, async () => {
   console.log(`🎉 Kande Photo Booths Dashboard running at http://localhost:${PORT}`);
   console.log(`   Admin password: ${process.env.ADMIN_PASSWORD}`);
   
-  // Initial data fetch
-  try {
-    console.log('Fetching initial dashboard data...');
-    dashboardCache = await getDashboardData();
-    lastFetch = Date.now();
-    console.log(`Initial data loaded: ${dashboardCache.events?.length || 0} events`);
-  } catch (error) {
-    console.error('Failed to fetch initial data:', error.message);
+  // Initial data fetch with retry
+  async function fetchWithRetry(attempt = 1) {
+    try {
+      console.log(`Fetching initial dashboard data (attempt ${attempt})...`);
+      dashboardCache = await getDashboardData();
+      lastFetch = Date.now();
+      console.log(`Initial data loaded: ${dashboardCache.events?.length || 0} events`);
+      if (dashboardCache.events?.length < 10) {
+        console.warn(`WARNING: Only ${dashboardCache.events?.length} events loaded — expected ~20. Possible API issue.`);
+      }
+    } catch (error) {
+      console.error(`Failed to fetch initial data (attempt ${attempt}):`, error.message);
+      if (attempt < 3) {
+        console.log(`Retrying in 10s...`);
+        setTimeout(() => fetchWithRetry(attempt + 1), 10000);
+      }
+    }
   }
+  fetchWithRetry();
   
   // Auto-refresh VSCO data every 5 minutes
   setInterval(async () => {
