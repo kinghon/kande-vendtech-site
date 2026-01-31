@@ -1,16 +1,30 @@
+import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ContactForm } from "@/components/forms/contact-form";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
-export const metadata = {
-    title: "Contact Us",
-    description: "Get in touch with Kande VendTech to schedule your free smart vending machine installation in Las Vegas.",
+export const metadata: Metadata = {
+    title: "Contact Kande VendTech | Free Vending Machine Las Vegas",
+    description: "Contact Kande VendTech to get a free smart vending machine for your Las Vegas business. Free consultation, installation & setup. Call (702) 555-0123 or fill out our form.",
+    alternates: {
+        canonical: "https://kandevendtech.com/contact",
+    },
+    openGraph: {
+        title: "Contact Kande VendTech | Free Vending Machine Las Vegas",
+        description: "Get a free smart vending machine for your Las Vegas business. Free consultation, installation & setup.",
+        url: "https://kandevendtech.com/contact",
+    },
 };
 
 export default function ContactPage() {
     return (
         <div className="flex flex-col min-h-screen">
+            <BreadcrumbJsonLd items={[
+                { name: "Home", href: "/" },
+                { name: "Contact", href: "/contact" },
+            ]} />
             <Navbar />
 
             <main className="flex-1 pt-24 pb-16">

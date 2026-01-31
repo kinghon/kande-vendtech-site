@@ -1,12 +1,22 @@
+import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Check, Settings, Truck, Box, Smartphone, Clock } from "lucide-react";
+import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
-export const metadata = {
-    title: "Our Services",
-    description: "Full-service smart vending solutions including free installation, restocking, and maintenance.",
+export const metadata: Metadata = {
+    title: "Free Vending Machine Services Las Vegas | Installation, Restocking, Maintenance",
+    description: "Full-service smart vending machine solutions in Las Vegas. Free installation, automated restocking, 24/7 maintenance & repair, cashless payments, and real-time monitoring. Zero cost to you.",
+    alternates: {
+        canonical: "https://kandevendtech.com/services",
+    },
+    openGraph: {
+        title: "Free Vending Machine Services Las Vegas | Kande VendTech",
+        description: "Full-service smart vending solutions. Free installation, automated restocking, 24/7 maintenance. Zero cost to your business.",
+        url: "https://kandevendtech.com/services",
+    },
 };
 
 export default function ServicesPage() {
@@ -68,6 +78,11 @@ export default function ServicesPage() {
 
     return (
         <div className="flex flex-col min-h-screen">
+            <ServiceJsonLd />
+            <BreadcrumbJsonLd items={[
+                { name: "Home", href: "/" },
+                { name: "Services", href: "/services" },
+            ]} />
             <Navbar />
 
             <main className="flex-1">

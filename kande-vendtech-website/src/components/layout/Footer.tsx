@@ -23,17 +23,21 @@ export function Footer() {
                     <div>
                         <h3 className="font-semibold mb-4 text-foreground">Company</h3>
                         <ul className="space-y-3 text-sm text-muted-foreground">
+                            <li><Link href="/" className="hover:text-primary transition-colors">Home</Link></li>
                             <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
                             <li><Link href="/services" className="hover:text-primary transition-colors">Services</Link></li>
                             <li><Link href="/products" className="hover:text-primary transition-colors">Products</Link></li>
+                            <li><Link href="/contact" className="hover:text-primary transition-colors">Contact Us</Link></li>
                         </ul>
                     </div>
 
                     <div>
                         <h3 className="font-semibold mb-4 text-foreground">Services</h3>
                         <ul className="space-y-3 text-sm text-muted-foreground">
-                            <li><Link href="/services" className="hover:text-primary transition-colors">Smart Installation</Link></li>
-                            <li><Link href="/services" className="hover:text-primary transition-colors">Stocking & Maintenance</Link></li>
+                            <li><Link href="/services" className="hover:text-primary transition-colors">Free Installation</Link></li>
+                            <li><Link href="/services" className="hover:text-primary transition-colors">Automated Restocking</Link></li>
+                            <li><Link href="/services" className="hover:text-primary transition-colors">Maintenance & Repairs</Link></li>
+                            <li><Link href="/products" className="hover:text-primary transition-colors">Product Selection</Link></li>
                             <li><Link href="/contact" className="hover:text-primary transition-colors">Partner With Us</Link></li>
                         </ul>
                     </div>

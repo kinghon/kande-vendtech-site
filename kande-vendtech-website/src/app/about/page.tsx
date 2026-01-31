@@ -1,15 +1,29 @@
+import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Users, Target, Heart } from "lucide-react";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
-export const metadata = {
-    title: "About Us",
-    description: "Learn about Kande VendTech, our mission to revolutionize vending in Las Vegas, and our commitment to service.",
+export const metadata: Metadata = {
+    title: "About Kande VendTech | Las Vegas Smart Vending Company",
+    description: "Learn about Kande VendTech, Las Vegas' premier AI-powered smart vending company. Local team, 100+ machines installed, serving hotels, offices & apartments across the valley.",
+    alternates: {
+        canonical: "https://kandevendtech.com/about",
+    },
+    openGraph: {
+        title: "About Kande VendTech | Las Vegas Smart Vending Company",
+        description: "Las Vegas' premier AI-powered smart vending company. Local team serving the entire valley.",
+        url: "https://kandevendtech.com/about",
+    },
 };
 
 export default function AboutPage() {
     return (
         <div className="flex flex-col min-h-screen">
+            <BreadcrumbJsonLd items={[
+                { name: "Home", href: "/" },
+                { name: "About", href: "/about" },
+            ]} />
             <Navbar />
 
             <main className="flex-1">

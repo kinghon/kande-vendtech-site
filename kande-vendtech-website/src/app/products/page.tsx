@@ -1,12 +1,22 @@
+import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Apple, Coffee, Sandwich, Cookie } from "lucide-react";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
-export const metadata = {
-    title: "Our Products",
-    description: "Browse our selection of 40,000+ snacks, drinks, and healthy options tailored to your location.",
+export const metadata: Metadata = {
+    title: "Smart Vending Machine Products Las Vegas | Snacks, Meals, Beverages",
+    description: "Browse 40,000+ vending machine products available in Las Vegas. Healthy snacks, fresh meals, beverages, organic options & more. Customized product selection for your location.",
+    alternates: {
+        canonical: "https://kandevendtech.com/products",
+    },
+    openGraph: {
+        title: "Smart Vending Machine Products Las Vegas | Kande VendTech",
+        description: "Over 40,000 snack, meal & beverage options for your Las Vegas vending machine. Healthy, organic & premium selections.",
+        url: "https://kandevendtech.com/products",
+    },
 };
 
 export default function ProductsPage() {
@@ -35,6 +45,10 @@ export default function ProductsPage() {
 
     return (
         <div className="flex flex-col min-h-screen">
+            <BreadcrumbJsonLd items={[
+                { name: "Home", href: "/" },
+                { name: "Products", href: "/products" },
+            ]} />
             <Navbar />
 
             <main className="flex-1">
