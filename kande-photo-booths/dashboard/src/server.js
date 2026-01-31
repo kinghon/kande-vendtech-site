@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const { Pool } = require('pg');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -254,14 +254,8 @@ const ALL_STAFF = [
   { name: 'Alex Chan', email: 'alexbunchan@gmail.com' }
 ];
 
-// Email transporter (configure with your email settings)
-const transporter = nodemailer.createTransport({
-  service: 'gmail', // or your email service
-  auth: {
-    user: process.env.EMAIL_USER || 'your-email@gmail.com',
-    pass: process.env.EMAIL_PASS || 'your-app-password'
-  }
-});
+// Email client (Resend)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '../public')));
@@ -1435,7 +1429,7 @@ async function sendChecklistEmail(eventId, type, staffMember, eventTitle, eventD
     ccList.push(staffEmail);
   }
 
-  // Prepare attachments
+  // Prepare attachments for Resend
   const attachments = [];
 
   // Add signature attachment if provided
@@ -1443,9 +1437,7 @@ async function sendChecklistEmail(eventId, type, staffMember, eventTitle, eventD
     const signatureData = signature.replace(/^data:image\/\w+;base64,/, '');
     attachments.push({
       filename: `${type}_signature_${eventId}_${Date.now()}.png`,
-      content: signatureData,
-      encoding: 'base64',
-      contentType: 'image/png'
+      content: Buffer.from(signatureData, 'base64')
     });
   }
 
@@ -1454,22 +1446,20 @@ async function sendChecklistEmail(eventId, type, staffMember, eventTitle, eventD
     const screenshotData = checklistScreenshot.replace(/^data:image\/\w+;base64,/, '');
     attachments.push({
       filename: `${type}_checklist_${eventId}_${Date.now()}.png`,
-      content: screenshotData,
-      encoding: 'base64',
-      contentType: 'image/png'
+      content: Buffer.from(screenshotData, 'base64')
     });
   }
 
-  const mailOptions = {
-    from: process.env.EMAIL_USER || 'dashboard@kandephotobooths.com',
-    to: 'kurtis@kandephotobooths.com',
+  // Send via Resend (use verified domain or Resend's default)
+  const fromEmail = process.env.RESEND_FROM_EMAIL || 'Kande Photo Booths <onboarding@resend.dev>';
+  return resend.emails.send({
+    from: fromEmail,
+    to: ['kurtis@kandephotobooths.com'],
     cc: ccList,
     subject,
     html: emailBody,
-    attachments: attachments
-  };
-
-  return transporter.sendMail(mailOptions);
+    attachments: attachments.length > 0 ? attachments : undefined
+  });
 }
 
 // Health check
