@@ -1198,6 +1198,7 @@
         </label>
       </div>
       <button id="packerConfigBtn" onclick="window.location.href='/packer-config.html'" style="display:none; background:#667eea;">📦 Packer Config</button>
+      <button id="seoBtn" onclick="window.location.href='/seo.html'" style="display:none; background:#38a169; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-size:14px;">📊 SEO Rankings</button>
       <select id="staffFilter">
         <option value="">All Events</option>
       </select>
@@ -2805,6 +2806,7 @@
       const loginBtn = document.getElementById('loginBtn');
       const emailToggleContainer = document.getElementById('emailToggleContainer');
       const packerConfigBtn = document.getElementById('packerConfigBtn');
+      const seoBtn = document.getElementById('seoBtn');
       
       if (isAdmin) {
         // Logout
@@ -2816,6 +2818,7 @@
         document.getElementById('adminBadge').style.display = 'none';
         emailToggleContainer.style.display = 'none';
         if (packerConfigBtn) packerConfigBtn.style.display = 'none';
+        if (seoBtn) seoBtn.style.display = 'none';
         // Clear localStorage
         localStorage.removeItem('kande_admin_password');
         // Re-render with non-admin view
@@ -2832,6 +2835,7 @@
       const loginBtn = document.getElementById('loginBtn');
       const emailToggleContainer = document.getElementById('emailToggleContainer');
       const packerConfigBtn = document.getElementById('packerConfigBtn');
+      const seoBtn = document.getElementById('seoBtn');
       
       if (isAdmin) {
         pwInput.style.display = 'none';
@@ -2839,12 +2843,14 @@
         document.getElementById('adminBadge').style.display = 'inline';
         emailToggleContainer.style.display = 'flex';
         if (packerConfigBtn) packerConfigBtn.style.display = 'inline-block';
+        if (seoBtn) seoBtn.style.display = 'inline-block';
       } else {
         pwInput.style.display = 'inline-block';
         loginBtn.textContent = '🔐 Login';
         document.getElementById('adminBadge').style.display = 'none';
         emailToggleContainer.style.display = 'none';
         if (packerConfigBtn) packerConfigBtn.style.display = 'none';
+        if (seoBtn) seoBtn.style.display = 'none';
       }
     }
 

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/kande-logo.jpg">
+  <title>SEO Rankings — Kande Photo Booths</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #f5f7fa; --card: #ffffff; --border: #e2e8f0;
+      --text: #1a202c; --muted: #718096; --accent: #667eea;
+      --hot: #e53e3e; --warn: #dd6b20; --success: #38a169;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); }
+
+    .topbar {
+      background: var(--card); border-bottom: 1px solid var(--border);
+      padding: 12px 24px; display: flex; align-items: center; gap: 16px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar img { height: 32px; border-radius: 4px; }
+    .topbar h1 { font-size: 1.1rem; color: var(--accent); }
+    .topbar a { color: var(--accent); text-decoration: none; font-size: 0.9rem; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--card); border-radius: 12px; padding: 20px;
+      border: 1px solid var(--border); text-align: center;
+    }
+    .stat-value { font-size: 1.8rem; font-weight: 700; }
+    .stat-value.good { color: var(--success); }
+    .stat-value.warn { color: var(--warn); }
+    .stat-value.bad { color: var(--hot); }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+    .stat-change { font-size: 0.75rem; margin-top: 4px; }
+    .stat-change.up { color: var(--success); }
+    .stat-change.down { color: var(--hot); }
+
+    .chart-card {
+      background: var(--card); border-radius: 12px; padding: 24px;
+      border: 1px solid var(--border); margin-bottom: 24px;
+    }
+    .chart-card h2 { font-size: 1.1rem; margin-bottom: 16px; color: var(--text); }
+    .chart-container { position: relative; height: 350px; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+    @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+
+    .keyword-table {
+      background: var(--card); border-radius: 12px;
+      border: 1px solid var(--border); overflow: hidden;
+    }
+    .keyword-table h2 { font-size: 1.1rem; padding: 20px 24px 12px; }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      background: #edf2f7; padding: 10px 16px; text-align: left;
+      font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--muted); font-weight: 600;
+    }
+    td { padding: 12px 16px; border-top: 1px solid var(--border); font-size: 0.9rem; }
+    tr:hover { background: #f7fafc; }
+    .pos { font-weight: 700; font-size: 1rem; }
+    .pos.top3 { color: var(--success); }
+    .pos.top10 { color: var(--accent); }
+    .pos.top20 { color: var(--warn); }
+    .pos.low { color: var(--hot); }
+    .change-badge {
+      display: inline-block; padding: 2px 8px; border-radius: 10px;
+      font-size: 0.75rem; font-weight: 600;
+    }
+    .change-badge.up { background: rgba(56,161,105,0.1); color: var(--success); }
+    .change-badge.down { background: rgba(229,62,62,0.1); color: var(--hot); }
+    .change-badge.same { background: rgba(113,128,150,0.1); color: var(--muted); }
+
+    .auth-wall { text-align: center; padding: 80px 24px; }
+    .auth-wall h2 { margin-bottom: 8px; }
+    .auth-wall p { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <img src="/kande-logo.jpg" alt="Kande">
+    <h1>📊 SEO Rankings — kandephotobooths.com</h1>
+    <a href="/">← Dashboard</a>
+  </div>
+
+  <div class="container" id="mainContent">
+    <div class="auth-wall" id="authWall">
+      <h2>🔒 Admin Access Required</h2>
+      <p>Log in on the main dashboard, then return here.</p>
+      <a href="/" style="color:var(--accent);">Go to Dashboard →</a>
+    </div>
+  </div>
+
+  <script>
+    const KEYWORD_COLORS = [
+      '#667eea', '#e53e3e', '#38a169', '#dd6b20', '#805ad5',
+      '#d69e2e', '#319795', '#b83280', '#2b6cb0', '#c53030',
+      '#2f855a', '#c05621'
+    ];
+
+    async function init() {
+      const pw = localStorage.getItem('kande_admin_password');
+      if (!pw) return; // Show auth wall
+
+      try {
+        const res = await fetch('/api/seo', { headers: { 'Authorization': `Bearer ${pw}` } });
+        if (!res.ok) return;
+        const data = await res.json();
+
+        document.getElementById('authWall').style.display = 'none';
+        
+        if (!data.history || data.history.length === 0) {
+          document.getElementById('mainContent').innerHTML = `
+            <div style="text-align:center;padding:60px;color:var(--muted);">
+              <h2>No SEO data yet</h2>
+              <p style="margin-top:8px;">Rankings will be checked weekly and appear here.</p>
+              <p style="margin-top:4px;font-size:0.85rem;">First check scheduled for next Monday at 9 AM PST.</p>
+            </div>`;
+          return;
+        }
+
+        document.getElementById('mainContent').innerHTML = `
+          <div class="stats-row" id="statsRow"></div>
+          <div class="chart-card">
+            <h2>Weekly Keyword Rankings</h2>
+            <div class="chart-container"><canvas id="rankingsChart"></canvas></div>
+          </div>
+          <div class="two-col">
+            <div class="chart-card">
+              <h2>SEO Visibility Score</h2>
+              <div class="chart-container" style="height:200px;"><canvas id="visibilityChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+              <h2>Page Speed Trend (Mobile)</h2>
+              <div class="chart-container" style="height:200px;"><canvas id="speedChart"></canvas></div>
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="chart-card">
+              <h2>Page Speed Scores</h2>
+              <div id="pageSpeedContent"><p style="color:var(--muted)">Loading...</p></div>
+            </div>
+            <div class="chart-card">
+              <h2>On-Page SEO Health</h2>
+              <div id="onPageContent"><p style="color:var(--muted)">Loading...</p></div>
+            </div>
+          </div>
+          <div class="chart-card"><h2>Competitor Positions</h2><div id="competitorContent"><p style="color:var(--muted)">Loading...</p></div></div>
+          <div class="keyword-table">
+            <h2>Tracked Keywords</h2>
+            <table><thead><tr>
+              <th>Keyword</th><th>Current Position</th><th>Change</th><th>Best</th><th>URL</th><th>Last Checked</th>
+            </tr></thead><tbody id="keywordBody"></tbody></table>
+          </div>
+        `;
+
+        renderStats(data);
+        renderRankingsChart(data);
+        renderVisibilityChart(data);
+        renderPageSpeed(data);
+        renderOnPage(data);
+        renderSpeedTrend(data);
+        renderCompetitors(data);
+        renderKeywordTable(data);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function renderStats(data) {
+      const latest = data.history[data.history.length - 1];
+      const prev = data.history.length > 1 ? data.history[data.history.length - 2] : null;
+      const keywords = Object.keys(latest.rankings || {});
+      const positions = keywords.map(k => latest.rankings[k]).filter(p => p > 0 && p < 99);
+      const avgPos = positions.length ? (positions.reduce((a,b) => a+b, 0) / positions.length).toFixed(1) : '-';
+      const top10 = positions.filter(p => p <= 10).length;
+      const top20 = positions.filter(p => p <= 20).length;
+      const visibility = positions.length ? Math.round(positions.reduce((s, p) => s + Math.max(0, 100 - (p - 1) * 3), 0) / positions.length) : 0;
+
+      let avgChange = '';
+      if (prev) {
+        const prevPositions = Object.keys(prev.rankings || {}).map(k => prev.rankings[k]).filter(p => p > 0 && p < 99);
+        const prevAvg = prevPositions.length ? prevPositions.reduce((a,b) => a+b, 0) / prevPositions.length : null;
+        if (prevAvg) {
+          const diff = (prevAvg - parseFloat(avgPos)).toFixed(1);
+          avgChange = diff > 0 ? `<div class="stat-change up">↑ ${diff} positions</div>` : diff < 0 ? `<div class="stat-change down">↓ ${Math.abs(diff)} positions</div>` : '';
+        }
+      }
+
+      document.getElementById('statsRow').innerHTML = `
+        <div class="stat-card"><div class="stat-value ${avgPos <= 10 ? 'good' : avgPos <= 20 ? 'warn' : 'bad'}">${avgPos}</div><div class="stat-label">Avg Position</div>${avgChange}</div>
+        <div class="stat-card"><div class="stat-value good">${top10}</div><div class="stat-label">Top 10 Keywords</div></div>
+        <div class="stat-card"><div class="stat-value">${top20}</div><div class="stat-label">Top 20 Keywords</div></div>
+        <div class="stat-card"><div class="stat-value ${visibility >= 60 ? 'good' : visibility >= 30 ? 'warn' : 'bad'}">${visibility}</div><div class="stat-label">Visibility Score</div></div>
+        <div class="stat-card"><div class="stat-value">${keywords.length}</div><div class="stat-label">Tracked Keywords</div></div>
+      `;
+    }
+
+    function renderRankingsChart(data) {
+      const keywords = data.keywords || [];
+      const datasets = keywords.map((kw, i) => ({
+        label: kw,
+        data: data.history.map(h => ({ x: h.date, y: h.rankings?.[kw] || null })),
+        borderColor: KEYWORD_COLORS[i % KEYWORD_COLORS.length],
+        tension: 0.3, pointRadius: 4, fill: false
+      }));
+
+      new Chart(document.getElementById('rankingsChart').getContext('2d'), {
+        type: 'line', data: { datasets },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: {
+            x: { type: 'time', time: { unit: 'week' }, grid: { color: '#edf2f7' } },
+            y: { reverse: true, min: 1, title: { display: true, text: 'Position (lower is better)' }, grid: { color: '#edf2f7' } }
+          },
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12, padding: 16 } },
+            tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: #${ctx.parsed.y}` } }
+          }
+        }
+      });
+    }
+
+    function renderVisibilityChart(data) {
+      const scores = data.history.map(h => {
+        const p = Object.values(h.rankings || {}).filter(v => v > 0 && v < 99);
+        return { x: h.date, y: p.length ? Math.round(p.reduce((s, v) => s + Math.max(0, 100 - (v - 1) * 3), 0) / p.length) : 0 };
+      });
+      new Chart(document.getElementById('visibilityChart').getContext('2d'), {
+        type: 'line',
+        data: { datasets: [{ label: 'Visibility', data: scores, borderColor: '#667eea', backgroundColor: 'rgba(102,126,234,0.1)', tension: 0.3, fill: true, pointRadius: 5 }] },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { x: { type: 'time', time: { unit: 'week' }, grid: { color: '#edf2f7' } }, y: { min: 0, max: 100, grid: { color: '#edf2f7' } } },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    function renderPageSpeed(data) {
+      const ps = data.history[data.history.length - 1].pageSpeed;
+      if (!ps) { document.getElementById('pageSpeedContent').innerHTML = '<p style="color:var(--muted);font-size:0.9rem;">First check runs Monday 9 AM.</p>'; return; }
+      const sc = (s) => s >= 90 ? 'good' : s >= 50 ? 'warn' : 'bad';
+      document.getElementById('pageSpeedContent').innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px;"><div class="stat-value ${sc(ps.mobileScore||0)}" style="font-size:2rem;">${ps.mobileScore||'-'}</div><div style="font-size:0.8rem;color:var(--muted);">Mobile</div></div>
+          <div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px;"><div class="stat-value ${sc(ps.desktopScore||0)}" style="font-size:2rem;">${ps.desktopScore||'-'}</div><div style="font-size:0.8rem;color:var(--muted);">Desktop</div></div>
+        </div>
+        <div style="margin-top:12px;font-size:0.85rem;">
+          ${['FCP','LCP','TBT','CLS','Speed Index'].map((l,i) => {
+            const k = ['fcp','lcp','tbt','cls','speedIndex'][i];
+            return `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>${l}</span><strong>${ps[k]||'-'}</strong></div>`;
+          }).join('')}
+        </div>`;
+    }
+
+    function renderOnPage(data) {
+      const op = data.history[data.history.length - 1].onPage;
+      if (!op) { document.getElementById('onPageContent').innerHTML = '<p style="color:var(--muted);font-size:0.9rem;">First check runs Monday 9 AM.</p>'; return; }
+      const c = (ok, l) => `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);"><span style="color:${ok?'var(--success)':'var(--hot)'};">${ok?'✅':'❌'}</span><span style="font-size:0.85rem;">${l}</span></div>`;
+      document.getElementById('onPageContent').innerHTML = `
+        ${c(op.title, 'Title tag')} ${c(op.description, 'Meta description')}
+        ${c(op.h1Count > 0, 'H1 tags: ' + op.h1Count)} ${c(op.h2Count > 0, 'H2 tags: ' + op.h2Count)}
+        ${c(op.imgsWithoutAlt === 0, 'Imgs without alt: ' + op.imgsWithoutAlt)}
+        ${c(op.schema, 'Schema/JSON-LD')} ${c(op.canonical, 'Canonical URL')} ${c(op.ogTags, 'Open Graph tags')} ${c(op.ssl, 'SSL/HTTPS')}
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;"><span>📄</span><span style="font-size:0.85rem;">Indexed pages: <strong>${op.indexedPages||'-'}</strong></span></div>`;
+    }
+
+    function renderSpeedTrend(data) {
+      const pts = data.history.filter(h => h.pageSpeed?.mobileScore).map(h => ({ x: h.date, y: h.pageSpeed.mobileScore }));
+      if (!pts.length) { document.getElementById('speedChart').parentElement.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">Appears after first check.</p>'; return; }
+      new Chart(document.getElementById('speedChart').getContext('2d'), {
+        type: 'line',
+        data: { datasets: [{ label: 'Mobile Score', data: pts, borderColor: '#667eea', backgroundColor: 'rgba(102,126,234,0.1)', tension: 0.3, fill: true, pointRadius: 5 }] },
+        options: { responsive: true, maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'week' }, grid: { color: '#edf2f7' } }, y: { min: 0, max: 100, grid: { color: '#edf2f7' } } }, plugins: { legend: { display: false } } }
+      });
+    }
+
+    function renderCompetitors(data) {
+      const comp = data.history[data.history.length - 1].competitors;
+      if (!comp || !Object.keys(comp).length) { document.getElementById('competitorContent').innerHTML = '<p style="color:var(--muted);font-size:0.9rem;">Starts with first weekly check.</p>'; return; }
+      const latest = data.history[data.history.length - 1];
+      const names = [...new Set(Object.values(comp).flatMap(c => Object.keys(c)))];
+      let html = '<table><thead><tr><th>Keyword</th><th>Kande</th>';
+      names.forEach(n => html += `<th>${n}</th>`);
+      html += '</tr></thead><tbody>';
+      Object.entries(comp).forEach(([kw, positions]) => {
+        const ours = latest.rankings?.[kw] || 99;
+        const pc = ours <= 3 ? 'top3' : ours <= 10 ? 'top10' : ours <= 20 ? 'top20' : 'low';
+        html += `<tr><td><strong>${kw}</strong></td><td><span class="pos ${pc}">#${ours}</span></td>`;
+        names.forEach(n => { const p = positions[n] || '-'; const c = p <= 3 ? 'top3' : p <= 10 ? 'top10' : p <= 20 ? 'top20' : 'low'; html += `<td><span class="pos ${c}">${p !== '-' ? '#'+p : '-'}</span></td>`; });
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+      document.getElementById('competitorContent').innerHTML = html;
+    }
+
+    function renderKeywordTable(data) {
+      const latest = data.history[data.history.length - 1];
+      const prev = data.history.length > 1 ? data.history[data.history.length - 2] : null;
+      const keywords = data.keywords || [];
+      const best = {};
+      keywords.forEach(kw => { best[kw] = Math.min(...data.history.map(h => h.rankings?.[kw] || 999).filter(p => p > 0)); });
+
+      document.getElementById('keywordBody').innerHTML = keywords.map(kw => {
+        const pos = latest.rankings?.[kw] || '-';
+        const prevPos = prev?.rankings?.[kw];
+        let ch = '<span class="change-badge same">New</span>';
+        if (prevPos && pos !== '-') {
+          const d = prevPos - pos;
+          ch = d > 0 ? `<span class="change-badge up">↑ ${d}</span>` : d < 0 ? `<span class="change-badge down">↓ ${Math.abs(d)}</span>` : '<span class="change-badge same">—</span>';
+        }
+        const pc = pos <= 3 ? 'top3' : pos <= 10 ? 'top10' : pos <= 20 ? 'top20' : 'low';
+        return `<tr><td><strong>${kw}</strong></td><td><span class="pos ${pc}">#${pos}</span></td><td>${ch}</td><td>#${best[kw]===999?'-':best[kw]}</td><td style="color:var(--muted);font-size:0.8rem;">kandephotobooths.com</td><td style="color:var(--muted);font-size:0.8rem;">${new Date(latest.date).toLocaleDateString()}</td></tr>`;
+      }).join('');
+    }
+
+    init();
+  </script>
+</body>
+</html>

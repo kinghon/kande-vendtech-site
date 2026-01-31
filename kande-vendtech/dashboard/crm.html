@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <title>Sales CRM — Kande VendTech</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1a202c;
+      --muted: #718096;
+      --accent: #3182ce;
+      --hot: #e53e3e;
+      --warm: #dd6b20;
+      --success: #38a169;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .app { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
+    }
+    .header h1 {
+      font-size: 1.5rem;
+      background: linear-gradient(90deg, var(--accent), #7b2cbf);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header-actions { display: flex; gap: 12px; }
+
+    .btn {
+      padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;
+      font-size: 0.9rem; font-weight: 500; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+    .btn-danger { background: var(--hot); color: #fff; }
+    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+
+    .stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px; margin-bottom: 24px;
+    }
+    .stat {
+      background: var(--card); border-radius: 12px; padding: 16px;
+      text-align: center; border: 1px solid var(--border);
+    }
+    .stat-value { font-size: 1.8rem; font-weight: 700; }
+    .stat-value.hot { color: var(--hot); }
+    .stat-value.accent { color: var(--accent); }
+    .stat-value.warn { color: var(--warm); }
+    .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+    .filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 8px 16px; background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; color: var(--muted); cursor: pointer; font-size: 0.85rem;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(49,130,206,0.1); border-color: var(--accent); color: var(--accent);
+    }
+    .search-input {
+      flex: 1; min-width: 200px; padding: 10px 16px; background: var(--card);
+      border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem;
+    }
+
+    .prospect-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .prospect-card {
+      background: var(--card); border-radius: 12px; border: 1px solid var(--border);
+      cursor: pointer; transition: all 0.2s; overflow: hidden;
+    }
+    .prospect-card:hover { border-color: var(--accent); }
+    .prospect-card.hot { border-left: 4px solid var(--hot); }
+    .prospect-card.warm { border-left: 4px solid var(--warm); }
+    .prospect-card.expanded { border-color: var(--accent); cursor: default; }
+
+    .prospect-summary { padding: 16px; }
+    .prospect-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+    .prospect-name { font-size: 1.1rem; font-weight: 600; }
+    .prospect-badge {
+      padding: 4px 10px; border-radius: 12px; font-size: 0.7rem;
+      font-weight: 600; text-transform: uppercase;
+    }
+    .badge-hot { background: rgba(229,62,62,0.15); color: var(--hot); }
+    .badge-warm { background: rgba(221,107,32,0.15); color: var(--warm); }
+    .badge-new { background: rgba(49,130,206,0.15); color: var(--accent); }
+    .badge-closed { background: rgba(160,174,192,0.15); color: #a0aec0; }
+    .prospect-meta { font-size: 0.85rem; color: var(--muted); }
+
+    /* Expanded detail area */
+    .prospect-detail {
+      display: none; padding: 0 16px 16px; border-top: 1px solid var(--border);
+    }
+    .prospect-card.expanded .prospect-detail { display: block; }
+
+    .detail-section {
+      margin-top: 16px; padding: 14px; background: var(--bg);
+      border-radius: 8px;
+    }
+    .detail-section-title {
+      font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 10px; letter-spacing: 0.5px;
+    }
+
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .field-group { display: flex; flex-direction: column; gap: 4px; }
+    .field-group.full { grid-column: 1 / -1; }
+    .field-label { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
+    .field-input {
+      width: 100%; padding: 8px 10px; background: var(--card);
+      border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text); font-size: 0.9rem; font-family: inherit;
+    }
+    .field-input:focus { outline: none; border-color: var(--accent); }
+    select.field-input { cursor: pointer; }
+    textarea.field-input { min-height: 70px; resize: vertical; }
+
+    .notes-box {
+      margin-top: 12px; padding: 12px; background: var(--card);
+      border-radius: 8px; border-left: 3px solid var(--accent);
+    }
+    .notes-box.kurtis { border-left-color: var(--warm); }
+    .notes-box label {
+      display: block; font-size: 0.8rem; font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .notes-box label.sales { color: var(--accent); }
+    .notes-box label.kurtis { color: var(--warm); }
+    .notes-box textarea {
+      width: 100%; padding: 8px 10px; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text); font-size: 0.9rem; font-family: inherit;
+      min-height: 60px; resize: vertical;
+    }
+    .notes-box textarea:focus { outline: none; border-color: var(--accent); }
+
+    .action-bar {
+      display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;
+      padding-top: 12px; border-top: 1px solid var(--border);
+    }
+    .action-btn {
+      padding: 8px 14px; background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); cursor: pointer; font-size: 0.85rem;
+    }
+    .action-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .action-btn.danger { color: var(--hot); }
+    .action-btn.danger:hover { border-color: var(--hot); }
+    .action-btn.save { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .action-btn.save:hover { opacity: 0.9; }
+
+    /* Activities inline */
+    .activities-section { margin-top: 16px; }
+    .activity-item {
+      padding: 10px; background: var(--card); border-radius: 8px;
+      border-left: 3px solid var(--accent); margin-bottom: 8px;
+    }
+    .activity-item.call { border-left-color: var(--accent); }
+    .activity-item.pop-in { border-left-color: var(--success); }
+    .activity-item.email { border-left-color: var(--warm); }
+    .activity-type { font-size: 0.7rem; text-transform: uppercase; color: var(--muted); }
+    .activity-desc { font-size: 0.85rem; margin-top: 2px; }
+    .activity-date { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+    /* Contacts inline */
+    .contact-card {
+      padding: 10px; background: var(--card); border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    /* Modals (kept for add prospect, log activity, add contact) */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: none; align-items: center; justify-content: center;
+      z-index: 1000; padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--card); border-radius: 16px; width: 100%;
+      max-width: 600px; max-height: 90vh; overflow-y: auto;
+      border: 1px solid var(--border);
+    }
+    .modal-header {
+      padding: 20px; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; background: var(--card);
+    }
+    .modal-header h2 { font-size: 1.2rem; }
+    .modal-close { background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; }
+    .modal-body { padding: 20px; }
+    .modal-footer {
+      padding: 20px; border-top: 1px solid var(--border);
+      display: flex; gap: 12px; justify-content: flex-end;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 12px; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-size: 0.95rem;
+    }
+    .form-textarea { min-height: 80px; resize: vertical; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+
+    .saved-indicator {
+      display: inline-block; padding: 4px 10px; border-radius: 12px;
+      font-size: 0.75rem; background: rgba(56,161,105,0.15); color: var(--success);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .saved-indicator.show { opacity: 1; }
+
+    @media (max-width: 600px) {
+      .field-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <h1>🎯 Sales CRM</h1>
+      <div class="header-actions">
+        <a href="/crm/map" class="btn btn-secondary" style="border-color:var(--accent);color:var(--accent);">📍 Map View</a>
+        <a href="/" class="btn btn-secondary">← Dashboard</a>
+        <button class="btn btn-primary" onclick="showAddModal()">+ New Prospect</button>
+      </div>
+    </div>
+
+    <div class="stats" id="stats">
+      <div class="stat"><div class="stat-value hot" id="statHot">-</div><div class="stat-label">🔥 Hot Leads</div></div>
+      <div class="stat"><div class="stat-value accent" id="statActive">-</div><div class="stat-label">Active</div></div>
+      <div class="stat"><div class="stat-value warn" id="statFollowup">-</div><div class="stat-label">Need Follow-up</div></div>
+      <div class="stat"><div class="stat-value" id="statWeek">-</div><div class="stat-label">Activities (7d)</div></div>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="hot">🔥 Hot</button>
+      <button class="filter-btn" data-filter="active">Active</button>
+      <button class="filter-btn" data-filter="followup">Needs Action</button>
+      <input type="text" class="search-input" id="search" placeholder="Search prospects...">
+    </div>
+
+    <div class="prospect-list" id="prospectList">
+      <div class="empty-state"><h3>Loading...</h3></div>
+    </div>
+  </div>
+
+  <!-- Add Prospect Modal (only for new) -->
+  <div class="modal-overlay" id="prospectModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Add Prospect</h2>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="prospectForm">
+          <div class="form-group">
+            <label class="form-label">Property Name *</label>
+            <input type="text" class="form-input" id="addName" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Property Type</label>
+              <select class="form-select" id="addPropertyType">
+                <option value="">Select...</option>
+                <option value="Apartments">Apartments</option>
+                <option value="Condos">Condos</option>
+                <option value="Extended Stay">Extended Stay</option>
+                <option value="Office">Office Building</option>
+                <option value="Gym">Gym/Fitness</option>
+                <option value="Warehouse">Warehouse</option>
+                <option value="Senior Living">Senior Living</option>
+                <option value="Skilled Nursing">Skilled Nursing</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label"># of Units</label>
+              <input type="text" class="form-input" id="addUnits" placeholder="e.g., 100+">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <input type="text" class="form-input" id="addAddress">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-input" id="addPhone">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hours</label>
+              <input type="text" class="form-input" id="addHours" placeholder="e.g., M-F 9-5">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="addProspect()">Add Prospect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Log Activity Modal -->
+  <div class="modal-overlay" id="activityModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="activityTitle">Log Activity</h2>
+        <button class="modal-close" onclick="closeActivityModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="activityForm">
+          <input type="hidden" id="activityProspectId">
+          <input type="hidden" id="activityType">
+          <div class="form-group">
+            <label class="form-label">What happened?</label>
+            <textarea class="form-textarea" id="activityDesc" placeholder="Spoke with manager, showed them the catalog..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Outcome</label>
+            <select class="form-select" id="activityOutcome">
+              <option value="">Select...</option>
+              <option value="interested">Interested - Follow up</option>
+              <option value="thinking">Thinking about it</option>
+              <option value="not_available">Contact not available</option>
+              <option value="not_interested">Not interested</option>
+              <option value="left_info">Left information</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Next Action</label>
+              <input type="text" class="form-input" id="nextAction" placeholder="e.g., Send proposal">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Follow-up Date</label>
+              <input type="date" class="form-input" id="nextActionDate">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeActivityModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveActivity()">Save Activity</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Contact Modal -->
+  <div class="modal-overlay" id="contactModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Add Contact</h2>
+        <button class="modal-close" onclick="closeContactModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="contactForm">
+          <input type="hidden" id="contactProspectId">
+          <div class="form-group">
+            <label class="form-label">Name *</label>
+            <input type="text" class="form-input" id="contactName" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Role</label>
+            <input type="text" class="form-input" id="contactRole" placeholder="e.g., Property Manager">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" id="contactEmail">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-input" id="contactPhone">
+            </div>
+          </div>
+          <div class="form-group">
+            <label><input type="checkbox" id="contactPrimary"> Primary contact</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeContactModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveContact()">Save Contact</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let prospects = [];
+    let expandedId = null;
+    let currentFilter = 'all';
+    let saveTimers = {};
+
+    async function loadData() {
+      await Promise.all([loadStats(), loadProspects()]);
+    }
+
+    async function loadStats() {
+      const res = await fetch('/api/stats');
+      const s = await res.json();
+      document.getElementById('statHot').textContent = s.hot;
+      document.getElementById('statActive').textContent = s.active;
+      document.getElementById('statFollowup').textContent = s.needsFollowup;
+      document.getElementById('statWeek').textContent = s.thisWeek;
+    }
+
+    async function loadProspects() {
+      const res = await fetch('/api/prospects');
+      prospects = await res.json();
+      renderProspects();
+    }
+
+    function renderProspects() {
+      let filtered = prospects;
+      const search = document.getElementById('search').value.toLowerCase();
+
+      if (currentFilter === 'hot') filtered = filtered.filter(p => p.priority === 'hot');
+      else if (currentFilter === 'active') filtered = filtered.filter(p => p.status === 'active');
+      else if (currentFilter === 'followup') filtered = filtered.filter(p => p.next_action);
+
+      if (search) {
+        filtered = filtered.filter(p =>
+          p.name.toLowerCase().includes(search) ||
+          (p.address || '').toLowerCase().includes(search) ||
+          (p.primary_contact || '').toLowerCase().includes(search)
+        );
+      }
+
+      if (filtered.length === 0) {
+        document.getElementById('prospectList').innerHTML = '<div class="empty-state"><h3>No prospects found</h3></div>';
+        return;
+      }
+
+      document.getElementById('prospectList').innerHTML = filtered.map(p => `
+        <div class="prospect-card ${p.priority} ${expandedId === p.id ? 'expanded' : ''}" id="card-${p.id}">
+          <div class="prospect-summary" onclick="toggleExpand(${p.id})">
+            <div class="prospect-header">
+              <div class="prospect-name">${p.name}</div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span class="saved-indicator" id="saved-${p.id}">✓ Saved</span>
+                <span class="prospect-badge badge-${getBadgeClass(p)}" onclick="event.stopPropagation(); cycleTag(${p.id})" style="cursor:pointer;" title="Click to change">
+                  ${getBadgeLabel(p)}
+                </span>
+              </div>
+            </div>
+            <div class="prospect-meta">
+              ${p.property_type || 'Unknown'} ${p.units ? '• ' + p.units + ' units' : ''}
+              ${p.address ? ' • ' + p.address : ''}
+            </div>
+          </div>
+          ${expandedId === p.id ? renderDetail(p) : ''}
+        </div>
+      `).join('');
+    }
+
+    function renderDetail(p) {
+      const contacts = p.contacts || [];
+      const activities = p.activities || [];
+
+      return `
+        <div class="prospect-detail" style="display:block;">
+          <!-- Editable Fields -->
+          <div class="detail-section">
+            <div class="detail-section-title">Property Info</div>
+            <div class="field-grid">
+              <div class="field-group">
+                <label class="field-label">Property Name</label>
+                <input class="field-input" value="${esc(p.name)}" onchange="updateField(${p.id},'name',this.value)">
+              </div>
+              <div class="field-group">
+                <label class="field-label">Property Type</label>
+                <select class="field-input" onchange="updateField(${p.id},'property_type',this.value)">
+                  <option value="">Select...</option>
+                  ${['Apartments','Condos','Extended Stay','Office','Gym','Warehouse','Senior Living','Skilled Nursing','Other'].map(t =>
+                    `<option value="${t}" ${p.property_type === t ? 'selected' : ''}>${t}</option>`
+                  ).join('')}
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label"># of Units</label>
+                <input class="field-input" value="${esc(p.units || '')}" onchange="updateField(${p.id},'units',this.value)">
+              </div>
+              <div class="field-group">
+                <label class="field-label">Phone</label>
+                <input class="field-input" value="${esc(p.phone || '')}" onchange="updateField(${p.id},'phone',this.value)">
+              </div>
+              <div class="field-group full">
+                <label class="field-label">Address</label>
+                <input class="field-input" value="${esc(p.address || '')}" onchange="updateField(${p.id},'address',this.value)">
+              </div>
+              <div class="field-group">
+                <label class="field-label">Hours</label>
+                <input class="field-input" value="${esc(p.hours || '')}" onchange="updateField(${p.id},'hours',this.value)">
+              </div>
+              <div class="field-group">
+                <label class="field-label">Status</label>
+                <select class="field-input" onchange="updateField(${p.id},'status',this.value)">
+                  <option value="new" ${p.status==='new'?'selected':''}>New</option>
+                  <option value="active" ${p.status==='active'?'selected':''}>Active</option>
+                  <option value="closed" ${p.status==='closed'?'selected':''}>Closed/Lost</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Priority</label>
+                <select class="field-input" onchange="updateField(${p.id},'priority',this.value)">
+                  <option value="normal" ${p.priority==='normal'?'selected':''}>Normal</option>
+                  <option value="warm" ${p.priority==='warm'?'selected':''}>Warm</option>
+                  <option value="hot" ${p.priority==='hot'?'selected':''}>🔥 Hot</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sales Notes -->
+          <div class="notes-box">
+            <label class="sales">📝 Sales Notes</label>
+            <textarea onchange="updateField(${p.id},'notes',this.value)">${esc(p.notes || '')}</textarea>
+          </div>
+
+          <!-- Kurtis Notes -->
+          <div class="notes-box kurtis">
+            <label class="kurtis">👤 Kurtis Notes</label>
+            <textarea onchange="updateField(${p.id},'kurtis_notes',this.value)">${esc(p.kurtis_notes || '')}</textarea>
+          </div>
+
+          <!-- Activities -->
+          <div class="activities-section">
+            <div class="detail-section-title" style="margin-bottom:8px;">Activities</div>
+            ${activities.length ? activities.map(a => `
+              <div class="activity-item ${a.type}">
+                <div class="activity-type">${a.type}</div>
+                <div class="activity-desc">${a.description || ''}</div>
+                ${a.outcome ? `<div style="font-size:0.8rem;color:var(--accent);margin-top:2px;">Outcome: ${a.outcome}</div>` : ''}
+                ${a.next_action ? `<div style="font-size:0.8rem;color:var(--warm);margin-top:2px;">→ ${a.next_action}</div>` : ''}
+                <div class="activity-date">${new Date(a.created_at).toLocaleDateString()}</div>
+              </div>
+            `).join('') : '<p style="color:var(--muted);font-size:0.85rem;">No activities logged yet.</p>'}
+          </div>
+
+          <!-- Contacts -->
+          <div class="detail-section" style="margin-top:12px;">
+            <div class="detail-section-title">Contacts</div>
+            ${contacts.length ? contacts.map(c => `
+              <div class="contact-card">
+                <strong>${c.name}</strong> ${c.is_primary ? '⭐' : ''}
+                <span style="color:var(--muted);font-size:0.8rem;margin-left:8px;">${c.role || ''}</span><br>
+                ${c.email ? `<a href="mailto:${c.email}" style="color:var(--accent);font-size:0.85rem;">${c.email}</a> ` : ''}
+                ${c.phone ? `<a href="tel:${c.phone}" style="color:var(--accent);font-size:0.85rem;">${c.phone}</a>` : ''}
+              </div>
+            `).join('') : '<p style="color:var(--muted);font-size:0.85rem;">No contacts yet.</p>'}
+            <button class="action-btn" style="margin-top:8px;" onclick="showAddContact(${p.id})">+ Add Contact</button>
+          </div>
+
+          <!-- Action bar -->
+          <div class="action-bar">
+            <button class="action-btn" onclick="logActivity(${p.id},'call')">📞 Log Call</button>
+            <button class="action-btn" onclick="logActivity(${p.id},'pop-in')">🚶 Log Pop-in</button>
+            <button class="action-btn" onclick="logActivity(${p.id},'email')">📧 Log Email</button>
+            <button class="action-btn danger" onclick="deleteProspect(${p.id},'${esc(p.name)}')">🗑 Remove</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Tag cycling: new → warm → hot → closed → new
+    const TAG_CYCLE = [
+      { priority: 'normal', status: 'new' },
+      { priority: 'warm', status: 'active' },
+      { priority: 'hot', status: 'active' },
+      { priority: 'normal', status: 'closed' }
+    ];
+
+    function getBadgeClass(p) {
+      if (p.priority === 'hot') return 'hot';
+      if (p.priority === 'warm') return 'warm';
+      if (p.status === 'closed') return 'closed';
+      return 'new';
+    }
+
+    function getBadgeLabel(p) {
+      if (p.priority === 'hot') return '🔥 Hot';
+      if (p.priority === 'warm') return 'Warm';
+      if (p.status === 'closed') return 'Closed';
+      return 'New';
+    }
+
+    function cycleTag(id) {
+      const p = prospects.find(p => p.id === id);
+      if (!p) return;
+
+      // Find current position in cycle
+      let idx = TAG_CYCLE.findIndex(t =>
+        t.priority === p.priority && (t.status === p.status || (t.status === 'new' && p.status === 'new') || (t.status === 'active' && p.status === 'active'))
+      );
+      if (idx === -1) idx = 0;
+
+      // Move to next
+      const next = TAG_CYCLE[(idx + 1) % TAG_CYCLE.length];
+      p.priority = next.priority;
+      p.status = next.status;
+
+      // Save both fields
+      fetch(`/api/prospects/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priority: next.priority, status: next.status })
+      }).then(() => {
+        const el = document.getElementById(`saved-${id}`);
+        if (el) { el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1500); }
+        loadStats();
+      });
+
+      renderProspects();
+    }
+
+    function esc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    async function toggleExpand(id) {
+      if (expandedId === id) {
+        expandedId = null;
+      } else {
+        // Fetch fresh detail data
+        const res = await fetch(`/api/prospects/${id}`);
+        const detail = await res.json();
+        const idx = prospects.findIndex(p => p.id === id);
+        if (idx >= 0) prospects[idx] = detail;
+        expandedId = id;
+      }
+      renderProspects();
+      if (expandedId) {
+        setTimeout(() => {
+          document.getElementById(`card-${expandedId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
+      }
+    }
+
+    // Auto-save on field change
+    function updateField(id, field, value) {
+      // Update local data
+      const p = prospects.find(p => p.id === id);
+      if (p) p[field] = value;
+
+      // Debounce save
+      clearTimeout(saveTimers[id]);
+      saveTimers[id] = setTimeout(async () => {
+        await fetch(`/api/prospects/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ [field]: value })
+        });
+        // Flash saved indicator
+        const el = document.getElementById(`saved-${id}`);
+        if (el) { el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1500); }
+        loadStats();
+      }, 500);
+    }
+
+    // Filters
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderProspects();
+      });
+    });
+    document.getElementById('search').addEventListener('input', renderProspects);
+
+    // Add new prospect
+    function showAddModal() {
+      document.getElementById('prospectForm').reset();
+      document.getElementById('prospectModal').classList.add('active');
+    }
+    function closeModal() { document.getElementById('prospectModal').classList.remove('active'); }
+
+    async function addProspect() {
+      const data = {
+        name: document.getElementById('addName').value,
+        property_type: document.getElementById('addPropertyType').value,
+        units: document.getElementById('addUnits').value,
+        address: document.getElementById('addAddress').value,
+        phone: document.getElementById('addPhone').value,
+        hours: document.getElementById('addHours').value,
+        status: 'new', priority: 'normal', notes: '', kurtis_notes: ''
+      };
+      await fetch('/api/prospects', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      closeModal();
+      loadData();
+    }
+
+    // Activity
+    function logActivity(prospectId, type) {
+      document.getElementById('activityProspectId').value = prospectId;
+      document.getElementById('activityType').value = type;
+      document.getElementById('activityTitle').textContent = `Log ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+      document.getElementById('activityForm').reset();
+      document.getElementById('activityModal').classList.add('active');
+    }
+    function closeActivityModal() { document.getElementById('activityModal').classList.remove('active'); }
+
+    async function saveActivity() {
+      const pid = document.getElementById('activityProspectId').value;
+      const data = {
+        type: document.getElementById('activityType').value,
+        description: document.getElementById('activityDesc').value,
+        outcome: document.getElementById('activityOutcome').value,
+        next_action: document.getElementById('nextAction').value,
+        next_action_date: document.getElementById('nextActionDate').value
+      };
+      await fetch(`/api/prospects/${pid}/activities`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      closeActivityModal();
+      // Refresh the expanded card
+      expandedId = parseInt(pid);
+      const res = await fetch(`/api/prospects/${pid}`);
+      const detail = await res.json();
+      const idx = prospects.findIndex(p => p.id === parseInt(pid));
+      if (idx >= 0) prospects[idx] = detail;
+      renderProspects();
+      loadStats();
+    }
+
+    // Contacts
+    function showAddContact(prospectId) {
+      document.getElementById('contactProspectId').value = prospectId;
+      document.getElementById('contactForm').reset();
+      document.getElementById('contactModal').classList.add('active');
+    }
+    function closeContactModal() { document.getElementById('contactModal').classList.remove('active'); }
+
+    async function saveContact() {
+      const pid = document.getElementById('contactProspectId').value;
+      const data = {
+        name: document.getElementById('contactName').value,
+        role: document.getElementById('contactRole').value,
+        email: document.getElementById('contactEmail').value,
+        phone: document.getElementById('contactPhone').value,
+        is_primary: document.getElementById('contactPrimary').checked
+      };
+      await fetch(`/api/prospects/${pid}/contacts`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      closeContactModal();
+      expandedId = parseInt(pid);
+      const res = await fetch(`/api/prospects/${pid}`);
+      const detail = await res.json();
+      const idx = prospects.findIndex(p => p.id === parseInt(pid));
+      if (idx >= 0) prospects[idx] = detail;
+      renderProspects();
+    }
+
+    // Delete
+    async function deleteProspect(id, name) {
+      if (!confirm(`Remove "${name}" from the list? This cannot be undone.`)) return;
+      await fetch(`/api/prospects/${id}`, { method: 'DELETE' });
+      expandedId = null;
+      loadData();
+    }
+
+    loadData();
+  </script>
+</body>
+</html>

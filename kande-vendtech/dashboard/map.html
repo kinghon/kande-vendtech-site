@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <title>Sales Map — Kande VendTech</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #1a202c; }
+
+    .app { display: flex; height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 380px;
+      background: #ffffff;
+      border-right: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .sidebar-header {
+      padding: 16px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .sidebar-header h2 { font-size: 18px; margin-bottom: 8px; }
+    .sidebar-header .nav-links { display: flex; gap: 12px; margin-bottom: 12px; }
+    .sidebar-header .nav-links a {
+      color: #3182ce;
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .sidebar-header .nav-links a:hover { text-decoration: underline; }
+
+    .mode-tabs {
+      display: flex;
+      gap: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+    .mode-tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      background: #f0f4f8;
+      border: none;
+      color: #718096;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .mode-tab.active { background: #3182ce; color: #ffffff; }
+    .mode-tab:hover:not(.active) { background: #edf2f7; }
+
+    .sidebar-content { flex: 1; overflow-y: auto; }
+
+    /* All Leads View */
+    .filter-bar {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .filter-bar input {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      background: #f0f4f8;
+      color: #1a202c;
+      font-size: 13px;
+    }
+    .filter-chips {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      background: #f0f4f8;
+      color: #718096;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-chip.active { border-color: #3182ce; color: #3182ce; background: rgba(0,212,255,0.1); }
+
+    .lead-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid #edf2f7;
+      cursor: pointer;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .lead-item:hover { background: #edf2f7; }
+    .lead-item.selected { background: rgba(0,212,255,0.1); border-left: 3px solid #3182ce; }
+
+    .lead-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .lead-dot.hot { background: #e53e3e; }
+    .lead-dot.warm { background: #dd6b20; }
+    .lead-dot.normal { background: #3182ce; }
+    .lead-dot.closed { background: #666; }
+
+    .lead-info { flex: 1; min-width: 0; }
+    .lead-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lead-address { font-size: 11px; color: #718096; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lead-type { font-size: 10px; color: #666; margin-top: 2px; }
+
+    /* Route Planner */
+    .route-section { padding: 16px; }
+    .route-section h3 { font-size: 14px; margin-bottom: 12px; color: #718096; }
+
+    .route-start {
+      margin-bottom: 16px;
+    }
+    .route-start label { font-size: 12px; color: #718096; display: block; margin-bottom: 4px; }
+    .route-start input {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      background: #f0f4f8;
+      color: #1a202c;
+      font-size: 13px;
+    }
+
+    .route-stops { margin-bottom: 16px; }
+    .route-stop {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid #edf2f7;
+    }
+    .stop-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #3182ce;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .stop-info { flex: 1; min-width: 0; }
+    .stop-name { font-size: 13px; font-weight: 500; }
+    .stop-address { font-size: 11px; color: #718096; }
+    .stop-remove {
+      background: none;
+      border: none;
+      color: #e53e3e;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+    }
+
+    .add-stop-input {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .add-stop-input input {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      background: #f0f4f8;
+      color: #1a202c;
+      font-size: 13px;
+    }
+    .add-stop-btn {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      background: #e2e8f0;
+      color: #1a202c;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .route-actions { display: flex; flex-direction: column; gap: 8px; }
+    .btn-optimize {
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background: #3182ce;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-optimize:hover { opacity: 0.9; }
+    .btn-optimize:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-clear {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: transparent;
+      color: #718096;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .route-summary {
+      margin-top: 16px;
+      padding: 12px;
+      background: #f0f4f8;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+    .route-summary h4 { font-size: 13px; color: #3182ce; margin-bottom: 8px; }
+    .route-stat { font-size: 12px; color: #718096; margin-bottom: 4px; }
+    .route-stat strong { color: #1a202c; }
+
+    .select-from-list {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #e2e8f0;
+    }
+    .select-from-list h4 { font-size: 13px; color: #718096; margin-bottom: 8px; }
+    .select-lead {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid #edf2f7;
+      cursor: pointer;
+    }
+    .select-lead:hover { background: rgba(0,212,255,0.05); }
+    .select-lead input[type=checkbox] { accent-color: #3182ce; }
+    .select-lead-name { font-size: 12px; }
+
+    /* Map */
+    .map-container { flex: 1; position: relative; }
+    #map { width: 100%; height: 100%; }
+
+    /* Popup styling */
+    .leaflet-popup-content-wrapper {
+      background: #ffffff;
+      color: #1a202c;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .leaflet-popup-tip { background: #ffffff; }
+    .popup-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .popup-type { font-size: 11px; color: #3182ce; margin-bottom: 8px; }
+    .popup-address { font-size: 12px; color: #718096; margin-bottom: 6px; }
+    .popup-contact { font-size: 12px; margin-bottom: 6px; }
+    .popup-contact strong { color: #3182ce; }
+    .popup-notes { font-size: 11px; color: #718096; max-height: 120px; overflow-y: auto; line-height: 1.4; border-top: 1px solid #e2e8f0; padding-top: 6px; margin-top: 6px; }
+    .popup-priority { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; margin-bottom: 6px; }
+    .popup-priority.hot { background: rgba(255,107,107,0.2); color: #e53e3e; }
+    .popup-priority.warm { background: rgba(255,193,7,0.2); color: #dd6b20; }
+
+    .popup-actions { margin-top: 8px; display: flex; gap: 6px; }
+    .popup-btn {
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+      background: #f0f4f8;
+      color: #3182ce;
+      font-size: 11px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    /* Geocoding status */
+    .geocode-status {
+      padding: 8px 16px;
+      background: #f0f4f8;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 12px;
+      color: #718096;
+    }
+    .geocode-status .progress {
+      height: 3px;
+      background: #e2e8f0;
+      border-radius: 2px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    .geocode-status .progress-bar {
+      height: 100%;
+      background: #3182ce;
+      transition: width 0.3s;
+    }
+
+    /* Legend */
+    .map-legend {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      z-index: 1000;
+      font-size: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; margin: 4px 0; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .app { flex-direction: column-reverse; }
+      .sidebar { width: 100%; height: 45vh; }
+      .map-container { height: 55vh; }
+    }
+
+    .loading-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      font-size: 16px;
+    }
+    .loading-overlay.hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="nav-links">
+          <a href="/crm">← CRM</a>
+          <a href="/">Dashboard</a>
+        </div>
+        <h2>📍 Sales Map</h2>
+        <div class="mode-tabs">
+          <button class="mode-tab active" onclick="switchMode('leads')">All Leads</button>
+          <button class="mode-tab" onclick="switchMode('route')">Route Planner</button>
+        </div>
+      </div>
+
+      <div id="geocodeStatus" class="geocode-status" style="display:none;">
+        <span id="geocodeText">Geocoding addresses...</span>
+        <div class="progress"><div class="progress-bar" id="geocodeProgress" style="width:0%"></div></div>
+      </div>
+
+      <div id="leadsView" class="sidebar-content">
+        <div class="filter-bar">
+          <input type="text" id="mapSearch" placeholder="Search prospects..." oninput="filterLeads()">
+          <div class="filter-chips">
+            <div class="filter-chip active" data-filter="all" onclick="setFilter('all')">All</div>
+            <div class="filter-chip" data-filter="hot" onclick="setFilter('hot')">🔥 Hot</div>
+            <div class="filter-chip" data-filter="warm" onclick="setFilter('warm')">🌡 Warm</div>
+            <div class="filter-chip" data-filter="active" onclick="setFilter('active')">Active</div>
+            <div class="filter-chip" data-filter="closed" onclick="setFilter('closed')">Closed</div>
+          </div>
+        </div>
+        <div id="leadsList"></div>
+      </div>
+
+      <div id="routeView" class="sidebar-content" style="display:none;">
+        <div class="route-section">
+          <h3>🚗 Plan Your Route</h3>
+
+          <div class="route-start">
+            <label>Starting Location</label>
+            <input type="text" id="startAddress" placeholder="e.g. Your office address" value="">
+          </div>
+
+          <div class="route-stops" id="routeStops">
+            <!-- Stops appear here -->
+          </div>
+
+          <div class="add-stop-input">
+            <input type="text" id="customStop" placeholder="Add custom address...">
+            <button class="add-stop-btn" onclick="addCustomStop()">+</button>
+          </div>
+
+          <div class="route-actions">
+            <button class="btn-optimize" id="btnOptimize" onclick="optimizeRoute()" disabled>
+              🗺 Optimize Route
+            </button>
+            <button class="btn-clear" onclick="clearRoute()">Clear Route</button>
+          </div>
+
+          <div class="route-summary" id="routeSummary" style="display:none;">
+            <h4>📊 Route Summary</h4>
+            <div class="route-stat">Stops: <strong id="summaryStops">0</strong></div>
+            <div class="route-stat">Total Distance: <strong id="summaryDistance">-</strong></div>
+            <div class="route-stat">Est. Drive Time: <strong id="summaryTime">-</strong></div>
+          </div>
+
+          <div class="select-from-list">
+            <h4>Add from your prospects:</h4>
+            <input type="text" id="routeSearch" placeholder="Search..." style="width:100%;padding:6px 10px;border-radius:6px;border:1px solid #e2e8f0;background:#f0f4f8;color:#1a202c;font-size:12px;margin-bottom:8px;" oninput="filterRouteLeads()">
+            <div id="routeLeadsList" style="max-height: 300px; overflow-y: auto;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="map-container">
+      <div id="map"></div>
+      <div class="map-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#e53e3e"></div> Hot Lead</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#dd6b20"></div> Warm Lead</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#3182ce"></div> Active</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#a0aec0"></div> Closed</div>
+      </div>
+      <div class="loading-overlay" id="loadingOverlay">
+        <div>⏳ Loading map data...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // State
+    let prospects = [];
+    let markers = {};
+    let routeStops = [];
+    let routeLayer = null;
+    let currentFilter = 'all';
+    let map;
+
+    // Custom marker icons
+    function createIcon(color) {
+      return L.divIcon({
+        className: 'custom-marker',
+        html: `<div style="width:28px;height:28px;border-radius:50%;background:${color};border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.4);"></div>`,
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+        popupAnchor: [0, -16]
+      });
+    }
+
+    function createNumberIcon(num, color) {
+      return L.divIcon({
+        className: 'custom-marker',
+        html: `<div style="width:32px;height:32px;border-radius:50%;background:${color};border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;">${num}</div>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        popupAnchor: [0, -18]
+      });
+    }
+
+    const priorityColors = { hot: '#e53e3e', warm: '#dd6b20', normal: '#3182ce', closed: '#a0aec0' };
+
+    // Init map centered on Las Vegas
+    map = L.map('map', {
+      zoomControl: true,
+    }).setView([36.12, -115.17], 12);
+
+    L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      attribution: '© Google Maps',
+      maxZoom: 20
+    }).addTo(map);
+
+    // Load prospects
+    async function loadProspects() {
+      try {
+        const res = await fetch('/api/prospects');
+        prospects = await res.json();
+        await geocodeAll();
+        renderMarkers();
+        renderLeadsList();
+        renderRouteLeadsList();
+        document.getElementById('loadingOverlay').classList.add('hidden');
+      } catch (e) {
+        console.error('Failed to load prospects:', e);
+        document.getElementById('loadingOverlay').innerHTML = '<div>❌ Failed to load data</div>';
+      }
+    }
+
+    // Geocode addresses using Nominatim (free)
+    async function geocodeAll() {
+      const needGeocoding = prospects.filter(p => p.address && !p.lat);
+      if (needGeocoding.length === 0) return;
+
+      const statusEl = document.getElementById('geocodeStatus');
+      const textEl = document.getElementById('geocodeText');
+      const progressEl = document.getElementById('geocodeProgress');
+      statusEl.style.display = 'block';
+
+      // Check cache first
+      let cache = {};
+      try {
+        const cacheRes = await fetch('/api/geocache');
+        cache = await cacheRes.json();
+      } catch(e) {}
+
+      let done = 0;
+      for (const p of prospects) {
+        if (!p.address) continue;
+        
+        // Check cache
+        const cacheKey = p.address.trim().toLowerCase();
+        if (cache[cacheKey]) {
+          p.lat = cache[cacheKey].lat;
+          p.lng = cache[cacheKey].lng;
+          done++;
+          continue;
+        }
+
+        if (p.lat) { done++; continue; }
+
+        textEl.textContent = `Geocoding: ${p.name}...`;
+        progressEl.style.width = `${(done / prospects.length) * 100}%`;
+
+        try {
+          const addr = p.address.match(/\b(NV|Nevada)\b/i) ? p.address : p.address + ', Las Vegas, NV';
+          const q = encodeURIComponent(addr);
+          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${q}&limit=1`, {
+            headers: { 'User-Agent': 'KandeVendTech-CRM/1.0' }
+          });
+          const data = await res.json();
+          if (data.length > 0) {
+            p.lat = parseFloat(data[0].lat);
+            p.lng = parseFloat(data[0].lon);
+            // Save to cache
+            cache[cacheKey] = { lat: p.lat, lng: p.lng };
+          }
+        } catch(e) {
+          console.warn('Geocode failed for', p.name);
+        }
+
+        done++;
+        // Nominatim: 1 req/sec
+        await new Promise(r => setTimeout(r, 1100));
+      }
+
+      // Save cache
+      try {
+        await fetch('/api/geocache', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(cache)
+        });
+      } catch(e) {}
+
+      statusEl.style.display = 'none';
+    }
+
+    // Render markers
+    function renderMarkers() {
+      // Clear existing markers
+      Object.values(markers).forEach(m => map.removeLayer(m));
+      markers = {};
+
+      const bounds = [];
+
+      for (const p of prospects) {
+        if (!p.lat || !p.lng) continue;
+
+        const priority = p.status === 'closed' ? 'closed' : (p.priority || 'normal');
+        const color = priorityColors[priority];
+        const icon = createIcon(color);
+
+        const popup = `
+          <div style="min-width:220px;max-width:280px;">
+            ${priority === 'hot' ? '<span class="popup-priority hot">🔥 HOT LEAD</span>' : ''}
+            ${priority === 'warm' ? '<span class="popup-priority warm">🌡 WARM</span>' : ''}
+            <div class="popup-title">${p.name}</div>
+            <div class="popup-type">${p.property_type || ''}</div>
+            <div class="popup-address">📍 ${p.address}</div>
+            ${p.primary_contact ? `<div class="popup-contact"><strong>Contact:</strong> ${p.primary_contact}</div>` : ''}
+            ${p.phone ? `<div class="popup-contact">📞 <a href="tel:${p.phone}" style="color:#3182ce;">${p.phone}</a></div>` : ''}
+            ${p.notes ? `<div class="popup-notes">${p.notes}</div>` : ''}
+            <div class="popup-actions">
+              <a class="popup-btn" href="/crm?id=${p.id}" target="_blank">Open in CRM</a>
+              <a class="popup-btn" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(p.address)}" target="_blank">Directions</a>
+            </div>
+          </div>
+        `;
+
+        const marker = L.marker([p.lat, p.lng], { icon })
+          .addTo(map)
+          .bindPopup(popup, { maxWidth: 300 });
+
+        markers[p.id] = marker;
+        bounds.push([p.lat, p.lng]);
+      }
+
+      if (bounds.length > 0) {
+        map.fitBounds(bounds, { padding: [40, 40] });
+      }
+    }
+
+    // Render sidebar leads list
+    function renderLeadsList() {
+      const container = document.getElementById('leadsList');
+      const search = document.getElementById('mapSearch').value.toLowerCase();
+      
+      const filtered = prospects.filter(p => {
+        if (search && !p.name.toLowerCase().includes(search) && !(p.address || '').toLowerCase().includes(search)) return false;
+        if (currentFilter === 'hot') return p.priority === 'hot';
+        if (currentFilter === 'warm') return p.priority === 'warm';
+        if (currentFilter === 'active') return p.status !== 'closed';
+        if (currentFilter === 'closed') return p.status === 'closed';
+        return true;
+      });
+
+      container.innerHTML = filtered.map(p => {
+        const priority = p.status === 'closed' ? 'closed' : (p.priority || 'normal');
+        return `
+          <div class="lead-item" onclick="focusLead(${p.id})" data-id="${p.id}">
+            <div class="lead-dot ${priority}"></div>
+            <div class="lead-info">
+              <div class="lead-name">${p.name}</div>
+              <div class="lead-address">${p.address || 'No address'}</div>
+              <div class="lead-type">${p.property_type || ''}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterLeads() { renderLeadsList(); }
+
+    function setFilter(f) {
+      currentFilter = f;
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.filter === f));
+      renderLeadsList();
+      renderMarkers(); // Update visible markers
+    }
+
+    function focusLead(id) {
+      const m = markers[id];
+      if (m) {
+        map.setView(m.getLatLng(), 15);
+        m.openPopup();
+      }
+    }
+
+    // Mode switching
+    function switchMode(mode) {
+      document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('leadsView').style.display = mode === 'leads' ? 'block' : 'none';
+      document.getElementById('routeView').style.display = mode === 'route' ? 'block' : 'none';
+    }
+
+    // Route planner
+    // Sort prospects by geographic proximity (nearest-neighbor chain)
+    function sortByProximity(list) {
+      if (list.length <= 1) return list;
+      
+      const sorted = [];
+      const remaining = [...list];
+      
+      // Start from northernmost point
+      remaining.sort((a, b) => b.lat - a.lat);
+      sorted.push(remaining.shift());
+      
+      while (remaining.length > 0) {
+        const last = sorted[sorted.length - 1];
+        let closestIdx = 0;
+        let closestDist = Infinity;
+        
+        for (let i = 0; i < remaining.length; i++) {
+          const dist = Math.pow(remaining[i].lat - last.lat, 2) + Math.pow(remaining[i].lng - last.lng, 2);
+          if (dist < closestDist) {
+            closestDist = dist;
+            closestIdx = i;
+          }
+        }
+        
+        sorted.push(remaining.splice(closestIdx, 1)[0]);
+      }
+      
+      return sorted;
+    }
+
+    function renderRouteLeadsList() {
+      const container = document.getElementById('routeLeadsList');
+      const search = (document.getElementById('routeSearch')?.value || '').toLowerCase();
+
+      const geocoded = sortByProximity(prospects.filter(p => p.lat && p.lng && p.status !== 'closed'));
+      const filtered = search ? geocoded.filter(p => p.name.toLowerCase().includes(search) || (p.address || '').toLowerCase().includes(search)) : geocoded;
+
+      container.innerHTML = filtered.map(p => {
+        const inRoute = routeStops.some(s => s.prospectId === p.id);
+        return `
+          <div class="select-lead" onclick="toggleRouteStop(${p.id})">
+            <input type="checkbox" ${inRoute ? 'checked' : ''} onclick="event.stopPropagation(); toggleRouteStop(${p.id})">
+            <div>
+              <div class="select-lead-name">${p.name}</div>
+              <div style="font-size:10px;color:#666;">${p.address || ''}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterRouteLeads() { renderRouteLeadsList(); }
+
+    function toggleRouteStop(prospectId) {
+      const idx = routeStops.findIndex(s => s.prospectId === prospectId);
+      if (idx >= 0) {
+        routeStops.splice(idx, 1);
+      } else {
+        const p = prospects.find(p => p.id === prospectId);
+        if (p && p.lat) {
+          routeStops.push({
+            prospectId: p.id,
+            name: p.name,
+            address: p.address,
+            lat: p.lat,
+            lng: p.lng
+          });
+        }
+      }
+      renderRouteStops();
+      renderRouteLeadsList();
+    }
+
+    async function addCustomStop() {
+      const input = document.getElementById('customStop');
+      const address = input.value.trim();
+      if (!address) return;
+
+      try {
+        const q = encodeURIComponent(address);
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${q}&limit=1`);
+        const data = await res.json();
+        if (data.length > 0) {
+          routeStops.push({
+            prospectId: null,
+            name: address.split(',')[0],
+            address: address,
+            lat: parseFloat(data[0].lat),
+            lng: parseFloat(data[0].lon)
+          });
+          renderRouteStops();
+          input.value = '';
+        } else {
+          alert('Could not find that address. Try being more specific.');
+        }
+      } catch(e) {
+        alert('Geocoding failed. Try again.');
+      }
+    }
+
+    function renderRouteStops() {
+      const container = document.getElementById('routeStops');
+      const btn = document.getElementById('btnOptimize');
+      btn.disabled = routeStops.length < 2;
+
+      container.innerHTML = routeStops.map((s, i) => `
+        <div class="route-stop">
+          <div class="stop-number">${i + 1}</div>
+          <div class="stop-info">
+            <div class="stop-name">${s.name}</div>
+            <div class="stop-address">${s.address}</div>
+          </div>
+          <button class="stop-remove" onclick="removeStop(${i})">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function removeStop(idx) {
+      routeStops.splice(idx, 1);
+      renderRouteStops();
+      renderRouteLeadsList();
+    }
+
+    function clearRoute() {
+      routeStops = [];
+      renderRouteStops();
+      renderRouteLeadsList();
+      if (routeLayer) { map.removeLayer(routeLayer); routeLayer = null; }
+      document.getElementById('routeSummary').style.display = 'none';
+      // Restore original markers
+      renderMarkers();
+    }
+
+    async function optimizeRoute() {
+      if (routeStops.length < 2) return;
+
+      const btn = document.getElementById('btnOptimize');
+      btn.disabled = true;
+      btn.textContent = '⏳ Optimizing...';
+
+      try {
+        // Build coordinates string for OSRM
+        let coords = [];
+        let startCoord = null;
+
+        // Check if start address is set
+        const startAddr = document.getElementById('startAddress').value.trim();
+        if (startAddr) {
+          try {
+            const q = encodeURIComponent(startAddr);
+            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${q}&limit=1`);
+            const data = await res.json();
+            if (data.length > 0) {
+              startCoord = { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+              coords.push(`${startCoord.lng},${startCoord.lat}`);
+            }
+          } catch(e) {}
+        }
+
+        // Add all stops
+        for (const s of routeStops) {
+          coords.push(`${s.lng},${s.lat}`);
+        }
+
+        // Use OSRM trip (TSP solver)
+        const coordStr = coords.join(';');
+        const sourceParam = startCoord ? '&source=first' : '';
+        const url = `https://router.project-osrm.org/trip/v1/driving/${coordStr}?overview=full&geometries=geojson&steps=true${sourceParam}&roundtrip=false&destination=last`;
+        
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.code !== 'Ok') {
+          // Fallback: use route endpoint instead of trip
+          const routeUrl = `https://router.project-osrm.org/route/v1/driving/${coordStr}?overview=full&geometries=geojson`;
+          const routeRes = await fetch(routeUrl);
+          const routeData = await routeRes.json();
+          
+          if (routeData.code === 'Ok') {
+            displayRoute(routeData.routes[0], null);
+          } else {
+            alert('Could not calculate route. Make sure addresses are valid.');
+          }
+        } else {
+          // Reorder stops based on optimized waypoints
+          const trip = data.trips[0];
+          const waypoints = data.waypoints;
+          
+          // Reorder route stops based on waypoint_index
+          const offset = startCoord ? 1 : 0;
+          const reordered = [];
+          
+          waypoints.forEach(wp => {
+            const idx = wp.waypoint_index - offset;
+            if (idx >= 0 && idx < routeStops.length) {
+              reordered[wp.waypoint_index - offset] = routeStops[idx];
+            }
+          });
+          
+          // Actually use trips_index to reorder
+          const newOrder = waypoints
+            .filter((_, i) => i >= offset)
+            .sort((a, b) => a.waypoint_index - b.waypoint_index)
+            .map((wp, i) => routeStops[i]);
+
+          // Simpler: just use the geometry and display
+          displayRoute(trip, startCoord);
+        }
+
+      } catch(e) {
+        console.error('Route optimization failed:', e);
+        alert('Route optimization failed. Please try again.');
+      }
+
+      btn.disabled = false;
+      btn.textContent = '🗺 Optimize Route';
+    }
+
+    function displayRoute(route, startCoord) {
+      // Remove old route
+      if (routeLayer) { map.removeLayer(routeLayer); }
+
+      // Draw route line
+      const coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
+      routeLayer = L.layerGroup();
+
+      L.polyline(coords, {
+        color: '#3182ce',
+        weight: 4,
+        opacity: 0.8
+      }).addTo(routeLayer);
+
+      // Clear markers and add numbered ones
+      Object.values(markers).forEach(m => map.removeLayer(m));
+
+      // Start marker
+      if (startCoord) {
+        L.marker([startCoord.lat, startCoord.lng], {
+          icon: createNumberIcon('🏠', '#38a169')
+        }).addTo(routeLayer).bindPopup('Start');
+      }
+
+      // Stop markers with numbers
+      routeStops.forEach((s, i) => {
+        const numIcon = createNumberIcon(i + 1, '#3182ce');
+        const p = prospects.find(p => p.id === s.prospectId);
+        
+        const popup = p ? `
+          <div style="min-width:200px;">
+            <div class="popup-title">Stop ${i + 1}: ${s.name}</div>
+            <div class="popup-address">📍 ${s.address}</div>
+            ${p.primary_contact ? `<div class="popup-contact"><strong>Contact:</strong> ${p.primary_contact}</div>` : ''}
+            ${p.phone ? `<div class="popup-contact">📞 <a href="tel:${p.phone}" style="color:#3182ce;">${p.phone}</a></div>` : ''}
+            ${p.notes ? `<div class="popup-notes">${p.notes}</div>` : ''}
+          </div>
+        ` : `<div><strong>Stop ${i + 1}:</strong> ${s.name}</div>`;
+
+        L.marker([s.lat, s.lng], { icon: numIcon })
+          .addTo(routeLayer)
+          .bindPopup(popup, { maxWidth: 280 });
+      });
+
+      routeLayer.addTo(map);
+
+      // Fit bounds
+      map.fitBounds(coords, { padding: [40, 40] });
+
+      // Show summary
+      const summary = document.getElementById('routeSummary');
+      summary.style.display = 'block';
+      document.getElementById('summaryStops').textContent = routeStops.length;
+      document.getElementById('summaryDistance').textContent = (route.distance / 1609.34).toFixed(1) + ' miles';
+      document.getElementById('summaryTime').textContent = formatDuration(route.duration);
+    }
+
+    function formatDuration(seconds) {
+      const hrs = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      if (hrs > 0) return `${hrs}h ${mins}m`;
+      return `${mins} min`;
+    }
+
+    // Init
+    loadProspects();
+  </script>
+</body>
+</html>

@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-vend-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-vend.png">
   <title>Kande VendTech — Operations Platform</title>
   <style>
     * {
@@ -13,9 +15,9 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      background: #f5f7fa;
       min-height: 100vh;
-      color: #fff;
+      color: #1a202c;
     }
 
     .container {
@@ -33,14 +35,14 @@
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 10px;
-      background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+      background: linear-gradient(90deg, #3182ce, #7b2cbf);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
     header p {
-      color: #8892b0;
+      color: #718096;
       font-size: 1.1rem;
     }
 
@@ -52,21 +54,21 @@
     }
 
     .stat-card {
-      background: rgba(255,255,255,0.05);
+      background: #ffffff; border: 1px solid #e2e8f0;
       border-radius: 16px;
       padding: 25px;
       text-align: center;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid #e2e8f0;
     }
 
     .stat-card .number {
       font-size: 2.5rem;
       font-weight: 700;
-      color: #00d4ff;
+      color: #3182ce;
     }
 
     .stat-card .label {
-      color: #8892b0;
+      color: #718096;
       font-size: 0.9rem;
       margin-top: 5px;
     }
@@ -74,7 +76,7 @@
     .section-title {
       font-size: 1.5rem;
       margin-bottom: 25px;
-      color: #fff;
+      color: #1a202c;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -84,7 +86,7 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: rgba(255,255,255,0.1);
+      background: #e2e8f0;
     }
 
     .modules-grid {
@@ -95,16 +97,16 @@
     }
 
     .module-card {
-      background: rgba(255,255,255,0.03);
+      background: #ffffff;
       border-radius: 16px;
       padding: 25px;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid #e2e8f0;
       transition: all 0.3s ease;
     }
 
     .module-card:hover {
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(0,212,255,0.3);
+      background: #f0f7ff;
+      border-color: #3182ce;
       transform: translateY(-2px);
     }
 
@@ -139,12 +141,12 @@
       text-transform: uppercase;
     }
 
-    .status-planned { background: rgba(255,193,7,0.2); color: #ffc107; }
-    .status-building { background: rgba(0,212,255,0.2); color: #00d4ff; }
-    .status-live { background: rgba(76,175,80,0.2); color: #4caf50; }
+    .status-planned { background: rgba(221,107,32,0.15); color: #dd6b20; }
+    .status-building { background: rgba(49,130,206,0.15); color: #3182ce; }
+    .status-live { background: rgba(56,161,105,0.15); color: #38a169; }
 
     .module-strategy {
-      color: #8892b0;
+      color: #718096;
       font-size: 0.95rem;
       line-height: 1.6;
       margin-bottom: 15px;
@@ -157,11 +159,11 @@
     }
 
     .feature-tag {
-      background: rgba(255,255,255,0.05);
+      background: #ffffff; border: 1px solid #e2e8f0;
       padding: 4px 10px;
       border-radius: 6px;
       font-size: 0.8rem;
-      color: #a8b2d1;
+      color: #718096;
     }
 
     /* Icon colors */
@@ -185,10 +187,10 @@
     }
 
     .location-card {
-      background: rgba(255,255,255,0.03);
+      background: #ffffff;
       border-radius: 12px;
       padding: 20px;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid #e2e8f0;
     }
 
     .location-card h4 {
@@ -200,7 +202,7 @@
     }
 
     .location-card p {
-      color: #8892b0;
+      color: #718096;
       font-size: 0.85rem;
       line-height: 1.5;
     }
@@ -214,23 +216,23 @@
     }
 
     .phase-card {
-      background: rgba(255,255,255,0.03);
+      background: #ffffff;
       border-radius: 16px;
       padding: 25px;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid #e2e8f0;
       position: relative;
     }
 
     .phase-card.current {
-      border-color: rgba(0,212,255,0.5);
-      background: rgba(0,212,255,0.05);
+      border-color: #3182ce;
+      background: rgba(49,130,206,0.06);
     }
 
     .phase-number {
       position: absolute;
       top: -15px;
       left: 25px;
-      background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+      background: linear-gradient(135deg, #3182ce, #7b2cbf);
       width: 30px;
       height: 30px;
       border-radius: 50%;
@@ -248,14 +250,14 @@
     }
 
     .phase-card .timeframe {
-      color: #00d4ff;
+      color: #3182ce;
       font-size: 0.85rem;
       margin-bottom: 15px;
     }
 
     .phase-card ul {
       list-style: none;
-      color: #8892b0;
+      color: #718096;
       font-size: 0.9rem;
     }
 
@@ -269,14 +271,14 @@
       content: '→';
       position: absolute;
       left: 0;
-      color: #00d4ff;
+      color: #3182ce;
     }
 
     /* Footer */
     footer {
       text-align: center;
       padding: 30px;
-      color: #5a6a8a;
+      color: #a0aec0;
       font-size: 0.9rem;
     }
   </style>
@@ -284,23 +286,30 @@
 <body>
   <div class="container">
     <header>
-      <h1>🤖 Kande VendTech</h1>
-      <p>AI-Powered Smart Vending Operations Platform</p>
+      <img src="/logo.jpg" alt="Kande VendTech" style="height:80px;margin-bottom:12px;">
+      <p style="color:#718096;font-size:1.1rem;">Operations Platform</p>
+      <nav style="margin-top: 20px;">
+        <a href="/crm" style="color: #fff; background: #3182ce; text-decoration: none; padding: 10px 20px; border-radius: 8px; margin-right: 10px; font-weight: 600;">🎯 Sales CRM</a>
+        <a href="/playbook.html" style="color: #fff; background: #e53e3e; text-decoration: none; padding: 10px 20px; border-radius: 8px; margin-right: 10px; font-weight: 600;">📘 Playbook</a>
+        <a href="/seo.html" style="color: #fff; background: #38a169; text-decoration: none; padding: 10px 20px; border-radius: 8px; margin-right: 10px; font-weight: 600;">📊 SEO Rankings</a>
+        <a href="/pricing-reference.xlsx" style="color: #3182ce; text-decoration: none; padding: 10px 20px; border: 1px solid #3182ce; border-radius: 8px; margin-right: 10px;">💰 Pricing Sheet</a>
+        <a href="/pipeline.html" style="color: #3182ce; text-decoration: none; padding: 10px 20px; border: 1px solid #3182ce; border-radius: 8px;">📊 Sheet View</a>
+      </nav>
     </header>
 
     <!-- Quick Stats -->
     <div class="stats-bar">
       <div class="stat-card">
-        <div class="number">10</div>
-        <div class="label">Core Modules</div>
+        <div class="number">91</div>
+        <div class="label">Prospects in CRM</div>
       </div>
       <div class="stat-card">
-        <div class="number">12</div>
-        <div class="label">Location Types</div>
+        <div class="number">60-65%</div>
+        <div class="label">Target Gross Margin</div>
       </div>
       <div class="stat-card">
-        <div class="number">4</div>
-        <div class="label">Rollout Phases</div>
+        <div class="number">$75K+</div>
+        <div class="label">24-Month Revenue Target</div>
       </div>
       <div class="stat-card">
         <div class="number">Phase 1</div>
@@ -320,12 +329,13 @@
           <span class="module-status status-planned">Planned</span>
         </div>
         <p class="module-strategy">
-          <strong>Strategy:</strong> Track products from distributor → warehouse → machine. FIFO enforcement ensures oldest stock ships first. Automated alerts prevent waste from expired products.
+          <strong>Strategy:</strong> Track products from distributor → warehouse → machine. FIFO enforcement ensures oldest stock ships first. <strong>Critical: avoid variety packs at scale</strong> — waste from unsold flavors costs 50+ cents/unit extra. Use distributor single-SKU ordering. Source from Sam's Club (beverages), Costco Business Center (sandwiches), Vistar (bulk + rebates 3-12%). Register as reseller to avoid sales tax on COGS.
         </p>
         <div class="module-features">
           <span class="feature-tag">FIFO Tracking</span>
           <span class="feature-tag">Expiration Alerts</span>
-          <span class="feature-tag">Par Levels</span>
+          <span class="feature-tag">Single-SKU Ordering</span>
+          <span class="feature-tag">Multi-Supplier Mgmt</span>
           <span class="feature-tag">Waste Reporting</span>
         </div>
       </div>
@@ -338,12 +348,12 @@
           <span class="module-status status-planned">Planned</span>
         </div>
         <p class="module-strategy">
-          <strong>Strategy:</strong> Eye-level = buy level. Place high-margin impulse items at 4-5ft, value items lower. Visual editor with performance heatmaps shows what's working.
+          <strong>Strategy:</strong> Eye-level (4-5ft) = buy level (100% sales). Place Monster, Red Bull, Fair Life Protein ($7.99) here. Chest level (3-4ft) = proven sellers (75-85%). Bottom rows = water, bulk items (40-60%). <strong>Cluster pricing by category</strong> for simplicity. Top sellers: Core Water ($2.99, $1.70 net), Cheetos Flamin' Hot, Snickers, Ramen (70%+ margin). At residential: add TP, paper towels, Advil, laundry pods.
         </p>
         <div class="module-features">
           <span class="feature-tag">Visual Editor</span>
           <span class="feature-tag">Slot Heatmaps</span>
-          <span class="feature-tag">Location Templates</span>
+          <span class="feature-tag">Category Clustering</span>
           <span class="feature-tag">A/B Testing</span>
         </div>
       </div>
@@ -356,13 +366,13 @@
           <span class="module-status status-planned">Planned</span>
         </div>
         <p class="module-strategy">
-          <strong>Strategy:</strong> Data-driven product decisions. Auto-flag underperformers (<3 sales/week), recommend swaps based on what works at similar locations. Continuous optimization loop.
+          <strong>Strategy:</strong> Target <strong>60-65% gross margin</strong> on ambient, 45-50% on frozen, 30-35% net. <strong>3× markup rule</strong> (buy at $1, sell at $3). Price to gas-station parity, NOT Walmart. Use psychological pricing ($2.49, $3.95). <strong>Prioritize profit per unit over margin %</strong> — a $5 item at 40% = $2 profit beats a $2 item at 60% = $1.20. Evaluate freezers at the freezer level, not by item.
         </p>
         <div class="module-features">
           <span class="feature-tag">Velocity Tracking</span>
-          <span class="feature-tag">Swap Recommendations</span>
-          <span class="feature-tag">Lifecycle Management</span>
           <span class="feature-tag">Margin Analysis</span>
+          <span class="feature-tag">Price Optimization</span>
+          <span class="feature-tag">Swap Recommendations</span>
         </div>
       </div>
 
@@ -374,13 +384,13 @@
           <span class="module-status status-planned">Planned</span>
         </div>
         <p class="module-strategy">
-          <strong>Strategy:</strong> Three-stage checklist (picker → packer → loader) with signatures, timestamps, and photos. Email confirmation ensures accountability. Zero missed items.
+          <strong>Strategy:</strong> Three-stage checklist (picker → packer → loader). <strong>Frequency:</strong> Unicorn locations 3-4×/week, standard every 3-4 days, low-volume 1×/week. Shannon's $25K location sold out in 48 hours initially — be ready to adjust fast. Use insulated Cambro boxes for frozen. Align delivery days across vendors. <strong>Scan every item before opening</strong> — SKUs change.
         </p>
         <div class="module-features">
           <span class="feature-tag">Picker Lists</span>
-          <span class="feature-tag">Packer Verification</span>
+          <span class="feature-tag">Frequency Scheduling</span>
           <span class="feature-tag">Load Checklists</span>
-          <span class="feature-tag">Email Reports</span>
+          <span class="feature-tag">Stockout Alerts</span>
         </div>
       </div>
 
@@ -392,12 +402,12 @@
           <span class="module-status status-planned">Planned</span>
         </div>
         <p class="module-strategy">
-          <strong>Strategy:</strong> Minimize drive time, prioritize urgent restocks. Pull real-time inventory from machines, calculate optimal route order. Save hours per week.
+          <strong>Strategy:</strong> Keep all locations within <strong>10-15 mile service radius max</strong> (Shannon turned down a 69-mile opportunity). Benchmark: $3,500 revenue per 8 labor hours + expenses. <strong>Move underperformers before buying new machines</strong> — one operator doubled revenue by relocating within the same campus. Dedicated routers > SIM cards for connectivity.
         </p>
         <div class="module-features">
           <span class="feature-tag">Smart Routing</span>
-          <span class="feature-tag">Urgency Scoring</span>
-          <span class="feature-tag">Time Estimates</span>
+          <span class="feature-tag">Radius Monitoring</span>
+          <span class="feature-tag">Revenue/Labor Ratio</span>
           <span class="feature-tag">Mobile Navigation</span>
         </div>
       </div>
@@ -410,12 +420,12 @@
           <span class="module-status status-planned">Planned</span>
         </div>
         <p class="module-strategy">
-          <strong>Strategy:</strong> Schedule, track, and pay staff efficiently. Mobile clock-in/out, route assignments, performance metrics. Know who's doing great and who needs support.
+          <strong>Strategy:</strong> <strong>Always 2+ part-timers, never just one</strong> — Kyle's only employee quit on the spot. Hire stockers via Craigslist, screen for vehicle capacity (6+ bins). Hire sequence: stockers first (ASAP) → warehouse manager (15-25 machines) → ops manager (40+ locations). Anthony went from 8-10 hrs/week to <strong>2 hrs/week</strong> after hiring ops manager.
         </p>
         <div class="module-features">
           <span class="feature-tag">Scheduling</span>
           <span class="feature-tag">Time Tracking</span>
-          <span class="feature-tag">Payroll Calc</span>
+          <span class="feature-tag">Redundancy Planning</span>
           <span class="feature-tag">Performance</span>
         </div>
       </div>
@@ -446,13 +456,13 @@
           <span class="module-status status-planned">Planned</span>
         </div>
         <p class="module-strategy">
-          <strong>Strategy:</strong> Know your numbers. Revenue per machine, expense tracking, revenue share calculations, P&L by location. Make decisions with real data.
+          <strong>Strategy:</strong> <strong>Finance machines, conserve cash for ops.</strong> Use 0% APR business credit cards (Chase Ink, Amex Blue Business Plus) — stagger apps 30-90 days apart. Revenue share: push for $0 or flat $25/month. If %, go tiered/sliding. Target 30-35% net margin. Revenue predictable after ~5 months (±5%). Track per machine: $700/mo (bad) → $3-5K (good) → $25K (unicorn).
         </p>
         <div class="module-features">
-          <span class="feature-tag">Revenue Tracking</span>
+          <span class="feature-tag">Revenue/Machine</span>
           <span class="feature-tag">Expense Management</span>
-          <span class="feature-tag">Revenue Share</span>
-          <span class="feature-tag">P&L Reports</span>
+          <span class="feature-tag">Revenue Share Calc</span>
+          <span class="feature-tag">Credit Card Tracker</span>
         </div>
       </div>
 
@@ -461,16 +471,16 @@
         <div class="module-header">
           <div class="module-icon icon-sales">🎯</div>
           <div class="module-title">Sales Pipeline</div>
-          <span class="module-status status-planned">Planned</span>
+          <span class="module-status status-live">Live</span>
         </div>
         <p class="module-strategy">
-          <strong>Strategy:</strong> Track leads from first contact to signed contract. Commission tracking motivates sales team. Smooth handoff to operations when deals close.
+          <strong>Strategy:</strong> <strong>1-in-10 pop-in conversion rate</strong>, 10-12 week avg sales cycle (up to 8 months). Target 10-15 pop-ins/week. Use the <strong>$54 rent premium pitch</strong> — vending amenity = $54/unit in premium rent. Position as "smart market" not "vending." <strong>Always ask for referrals</strong> — property managers know other PMs. Prioritize Class A luxury apartments (200+ units) and medical outpatient (150+ staff).
         </p>
         <div class="module-features">
-          <span class="feature-tag">Lead Tracking</span>
-          <span class="feature-tag">Proposals</span>
-          <span class="feature-tag">Commissions</span>
-          <span class="feature-tag">Handoff Flow</span>
+          <span class="feature-tag">CRM Live</span>
+          <span class="feature-tag">Pop-in Tracking</span>
+          <span class="feature-tag">Referral Pipeline</span>
+          <span class="feature-tag">Qualification Scoring</span>
         </div>
       </div>
 
@@ -498,52 +508,36 @@
     <h2 class="section-title">Supported Location Types</h2>
     <div class="locations-grid">
       <div class="location-card">
-        <h4>🏢 Office Buildings</h4>
-        <p><strong>Strategy:</strong> Energy drinks, premium coffee, quick snacks at eye level. Workers are time-pressed — impulse items win.</p>
+        <h4>🏢 High-Rise Apartments ⭐</h4>
+        <p><strong>Minimum:</strong> 200+ units, single building only. <strong>Revenue:</strong> $6-7K/month (micro-market). Place in mailroom/package room — best performer. The $54 rent premium pitch closes these. <span style="color:#ff6b6b;">Garden-style = hard pass.</span></p>
       </div>
       <div class="location-card">
-        <h4>🏋️ Gyms & Fitness</h4>
-        <p><strong>Strategy:</strong> Protein bars, sports drinks, healthy snacks dominate. Health-conscious buyers — make healthy visible.</p>
-      </div>
-      <div class="location-card">
-        <h4>🏫 Schools & Universities</h4>
-        <p><strong>Strategy:</strong> Balance impulse + budget. Energy drinks if allowed, variety of price points. Students are cost-conscious.</p>
-      </div>
-      <div class="location-card">
-        <h4>🏥 Hospitals & Healthcare</h4>
-        <p><strong>Strategy:</strong> Healthy options visible for staff, comfort snacks accessible for visitors. Mixed audience needs variety.</p>
-      </div>
-      <div class="location-card">
-        <h4>🏨 Hotels</h4>
-        <p><strong>Strategy:</strong> Premium items at eye level — travelers will pay more. Brand names, quality perception matters.</p>
+        <h4>🏥 Medical Outpatient ⭐</h4>
+        <p><strong>Minimum:</strong> 150 employees + 100 patients daily. Doctors/nurses on 12-hr shifts buy Fair Life Protein ($7.99) as meal replacements. <strong>Recession-proof.</strong> High-income staff = not price-conscious. Ask about Placer AI data.</p>
       </div>
       <div class="location-card">
         <h4>🏭 Warehouses & Industrial</h4>
-        <p><strong>Strategy:</strong> High-energy items for physical workers. Energy drinks, hearty snacks, hydration. Volume over premium.</p>
+        <p><strong>Minimum:</strong> 150 employees. <strong>Revenue:</strong> $10K+/month. Captive audience, short 15-min breaks = can't leave. Always ask employees <em>per shift</em> — don't assume. Best format: micro-market in break room.</p>
       </div>
       <div class="location-card">
-        <h4>👴 Senior Living Centers</h4>
-        <p><strong>Strategy:</strong> Easy-to-read labels, familiar brands, softer snacks. Lower shelves more accessible. Comfort items.</p>
+        <h4>🏢 Large Office Buildings</h4>
+        <p><strong>Minimum:</strong> 200+ employees. Note: white-collar = more price-sensitive. May need cheaper can options alongside premium bottles. Surveys show complaints about pricing "42% higher than Walmart."</p>
       </div>
       <div class="location-card">
-        <h4>🏪 Retail & Malls</h4>
-        <p><strong>Strategy:</strong> Impulse-heavy. Shoppers with disposable income. Premium positioning, trendy items.</p>
+        <h4>🏨 Hotels / Airbnb Towers</h4>
+        <p>High-rise with Airbnb units = massive bonus. Forced lobby traffic from guests. Travelers pay premium. Shannon's combo (apts + condos + hotel) = <strong>$22-25K/month unicorn.</strong></p>
       </div>
       <div class="location-card">
-        <h4>🚗 Auto Dealerships</h4>
-        <p><strong>Strategy:</strong> Waiting customers have time. Premium coffee, quality snacks. Perception matters in sales environment.</p>
+        <h4>🎓 Student Housing</h4>
+        <p>High volume but watch for theft — requires secure equipment. Budget-conscious audience. Energy drinks, ramen (70%+ margin), snacks at value price points.</p>
       </div>
       <div class="location-card">
-        <h4>🏦 Banks & Financial</h4>
-        <p><strong>Strategy:</strong> Professional environment. Premium, health-conscious options. Clean presentation essential.</p>
+        <h4>👴 Senior Living / Skilled Nursing</h4>
+        <p>Easy-to-read labels, familiar brands. Add convenience items: Advil, TP, paper towels. Lower shelves more accessible. Steady, predictable traffic.</p>
       </div>
       <div class="location-card">
-        <h4>🎰 Entertainment Venues</h4>
-        <p><strong>Strategy:</strong> Fun, indulgent items. Candy, sodas, shareable snacks. People are in spending mode.</p>
-      </div>
-      <div class="location-card">
-        <h4>🏗️ Construction Sites</h4>
-        <p><strong>Strategy:</strong> Rugged placement, high-energy items. Workers need fuel. Durability over aesthetics.</p>
+        <h4>🏋️ Gyms & Fitness</h4>
+        <p>Protein bars, sports drinks, healthy snacks. Fair Life Core Power 42g protein ($7.99, 56% margin) flies off shelves here. Note: <span style="color:#ff6b6b;">fitness centers within apartment buildings underperform</span> — push for lobby instead.</p>
       </div>
     </div>
 
@@ -552,50 +546,55 @@
     <div class="phases-container">
       <div class="phase-card current">
         <div class="phase-number">1</div>
-        <h3>Solo Operation</h3>
-        <div class="timeframe">Months 1-3 • Current</div>
+        <h3>Launch & Blitz</h3>
+        <div class="timeframe">Weeks 1-4 • Target: 5-8 machines placed</div>
         <ul>
-          <li>Basic location & machine tracking</li>
-          <li>Manual inventory logging</li>
-          <li>Sales data from machine backend</li>
-          <li>Simple expense tracking</li>
-          <li>Learn the business hands-on</li>
+          <li>Score all 91 prospects — rank A/B/C by qualification checklist</li>
+          <li>Blitz 20+ pop-ins/week (Anthony did 15-20 in a single day)</li>
+          <li>Register as reseller at Costco/Sam's immediately</li>
+          <li>Set up Vistar distributor + single-SKU ordering</li>
+          <li>Hire 2 part-time stockers NOW — free up salesperson to only sell</li>
+          <li>Secure storage unit with 24/7 access + delivery receiving</li>
+          <li>Finance machines via 0% APR cards from day one</li>
         </ul>
       </div>
       <div class="phase-card">
         <div class="phase-number">2</div>
-        <h3>First Hires</h3>
-        <div class="timeframe">Months 3-6</div>
+        <h3>Systems + Warehouse</h3>
+        <div class="timeframe">Months 2-3 • Target: 15+ machines, $15K+/mo</div>
         <ul>
-          <li>Picker/packer/loader checklists</li>
-          <li>Mobile app for field staff</li>
-          <li>Staff scheduling & time tracking</li>
-          <li>Automated client emails</li>
-          <li>Revenue share calculations</li>
+          <li>Dedicated warehouse — receiving capability is a game changer</li>
+          <li>Hire warehouse manager (kitting, sales analysis, inventory)</li>
+          <li>Picker/packer/loader checklists live</li>
+          <li>Dedicated routers at all locations (no SIM cards)</li>
+          <li>Product performance tracking — rotate underperformers fast</li>
+          <li>Referral pipeline active — target property management companies</li>
         </ul>
       </div>
       <div class="phase-card">
         <div class="phase-number">3</div>
-        <h3>Warehouse + Manager</h3>
-        <div class="timeframe">Months 6-12</div>
+        <h3>Ops Manager + Delegate</h3>
+        <div class="timeframe">Months 4-5 • Target: 25+ machines, $25K+/mo</div>
         <ul>
-          <li>Full inventory & expiration system</li>
-          <li>Planogram editor</li>
-          <li>Product performance analytics</li>
-          <li>Route optimization v1</li>
-          <li>Manager dashboards</li>
+          <li>Hire ops manager (ordering, dispatch, pop-ins, reports)</li>
+          <li>1-1.5 month training period working together</li>
+          <li>Route optimization live — 10-15 mile service radius</li>
+          <li>Micro-markets at top locations (50-100% more revenue than smart coolers)</li>
+          <li>Revenue becoming predictable (±5% monthly)</li>
+          <li>Owner transitioning out of daily ops</li>
         </ul>
       </div>
       <div class="phase-card">
         <div class="phase-number">4</div>
         <h3>Scale</h3>
-        <div class="timeframe">Year 2+</div>
+        <div class="timeframe">Month 6+ • Target: 40+ locations, $50K+/mo</div>
         <ul>
-          <li>Predictive restocking (ML)</li>
-          <li>Advanced planogram AI</li>
-          <li>Multi-warehouse support</li>
-          <li>Franchise/territory features</li>
-          <li>Full business intelligence</li>
+          <li>Owner at 2 hrs/week (Anthony's model)</li>
+          <li>Multi-property management company partnerships</li>
+          <li>3+ stockers, warehouse manager, ops manager all running</li>
+          <li>Advanced planogram AI + predictive restocking</li>
+          <li>Aggressive: beat Kyle's 21-month pace to $40K/mo</li>
+          <li>12-month target: $75K+/mo, 45+ locations</li>
         </ul>
       </div>
     </div>

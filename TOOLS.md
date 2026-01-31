@@ -7,6 +7,11 @@ Skills define *how* tools work. This file is for *your* specifics — the stuff 
 Things Kurtis said I can do without asking:
 - **Railway**: Auto-deploy is fine (2025-01-30)
 
+## Standing Rules
+
+- **Always add persistent storage** when creating apps with data (Railway volumes, external DB, etc.). Never use ephemeral filesystem for anything that needs to survive deploys. (2025-01-31)
+- **Always do heavy processing server-side** — geocoding, data transforms, aggregations, etc. should run on the server and serve pre-computed results. Never make the user's browser do work that the server can do ahead of time. (2025-01-31)
+
 ## Projects & Repos
 
 | Project | GitHub Repo | Railway/Hosting | Notes |

@@ -31,4 +31,61 @@
     "source": "website",
     "status": "active"
   }
+  ,
+  {
+    "id": "vendtech-005",
+    "fact": "Ops dashboard launched at vend.kandedash.com (GitHub: kinghon/kande-vendtech-dashboard, Railway hosted)",
+    "category": "milestone",
+    "timestamp": "2026-01-31",
+    "source": "conversation",
+    "status": "active"
+  },
+  {
+    "id": "vendtech-006",
+    "fact": "Dashboard includes: Sales CRM, Playbook, SEO Rankings, Pricing Sheet, Pipeline view, Map view",
+    "category": "status",
+    "timestamp": "2026-01-31",
+    "source": "conversation",
+    "status": "active"
+  },
+  {
+    "id": "vendtech-007",
+    "fact": "Kurtis wants aggressive 6-month timeline: ops manager by month 4-5, scale by month 6+",
+    "category": "milestone",
+    "timestamp": "2026-01-31",
+    "source": "conversation",
+    "status": "active"
+  },
+  {
+    "id": "vendtech-008",
+    "fact": "kandevendtech.com not yet ranking for any target keywords — baseline SEO check recorded 2026-01-31",
+    "category": "status",
+    "timestamp": "2026-01-31",
+    "source": "seo-check",
+    "status": "active"
+  },
+  {
+    "id": "vendtech-009",
+    "fact": "Local competitors identified: R&R Vending, Royal ReFresh, Moonlight Vending, A&L Vending",
+    "category": "status",
+    "timestamp": "2026-01-31",
+    "source": "seo-check",
+    "status": "active"
+  },
+  {
+    "id": "vendtech-010",
+    "fact": "Site has no H1 tag and no schema/JSON-LD markup — easy SEO wins to fix",
+    "category": "status",
+    "timestamp": "2026-01-31",
+    "source": "seo-audit",
+    "status": "active"
+  },
+  {
+    "id": "vendtech-011",
+    "fact": "Kande VendTech logo is black text on white with swoosh design",
+    "category": "status",
+    "timestamp": "2026-01-31",
+    "source": "conversation",
+    "status": "active"
+  }
 ]

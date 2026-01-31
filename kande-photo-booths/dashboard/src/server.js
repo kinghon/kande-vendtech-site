@@ -1462,6 +1462,59 @@ async function sendChecklistEmail(eventId, type, staffMember, eventTitle, eventD
   });
 }
 
+// SEO Rankings API
+const SEO_FILE = fs.existsSync('/data') ? '/data/seo.json' : path.join(__dirname, '..', 'data', 'seo.json');
+
+function loadSEO() {
+  try {
+    if (fs.existsSync(SEO_FILE)) return JSON.parse(fs.readFileSync(SEO_FILE, 'utf8'));
+  } catch (e) {}
+  return {
+    keywords: [
+      'photo booth rental las vegas',
+      'photo booth las vegas',
+      'photo booth service las vegas',
+      'wedding photo booth las vegas',
+      'event photo booth las vegas',
+      'corporate photo booth las vegas',
+      '360 photo booth las vegas',
+      'photo booth rental near me',
+      'kande photo booths',
+      'photo booth company las vegas',
+      'party photo booth las vegas',
+      'photo booth henderson nv'
+    ],
+    history: []
+  };
+}
+
+function saveSEO(data) {
+  const dir = path.dirname(SEO_FILE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(SEO_FILE, JSON.stringify(data, null, 2));
+}
+
+app.get('/api/seo', requireAuth, (req, res) => {
+  if (!req.isAdmin) return res.status(403).json({ error: 'Admin only' });
+  res.json(loadSEO());
+});
+
+app.post('/api/seo/check', (req, res) => {
+  // Allow from cron/bot without auth via secret header, or admin auth
+  const data = loadSEO();
+  const entry = {
+    date: new Date().toISOString(),
+    rankings: req.body.rankings || {},
+    pageSpeed: req.body.pageSpeed || null,
+    onPage: req.body.onPage || null,
+    competitors: req.body.competitors || null
+  };
+  data.history.push(entry);
+  if (data.history.length > 52) data.history = data.history.slice(-52);
+  saveSEO(data);
+  res.json({ success: true, entries: data.history.length });
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ 
