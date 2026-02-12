@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Products | Kande VendTech</title>
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="description" content="Browse our selection of 40,000+ snacks, drinks, and healthy options tailored to your Las Vegas location.">
+    <meta name="keywords" content="Vending Products, Healthy Snacks, Fresh Food Vending, Las Vegas Vending, Smart Vending Products">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Our Products | Kande VendTech">
+    <meta property="og:description" content="Browse our selection of 40,000+ snacks, drinks, and healthy options tailored to your location.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kandevendtech.com/products/">
+    <link rel="canonical" href="https://kandevendtech.com/products/">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#1e40af',
+                        accent: '#3b82f6',
+                        dark: '#1f2937',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-hero { background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        .transition-all { transition: all 0.3s ease; }
+        .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .fade-in { opacity: 0; transition: opacity 0.8s ease-out; }
+        .fade-in.visible { opacity: 1; }
+        .slide-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .slide-left.visible { opacity: 1; transform: translateX(0); }
+        .slide-right { opacity: 0; transform: translateX(40px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .slide-right.visible { opacity: 1; transform: translateX(0); }
+        .scale-up { opacity: 0; transform: scale(0.9); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
+        .scale-up.visible { opacity: 1; transform: scale(1); }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="/"><img src="/images/logo.png" alt="Kande VendTech" class="h-28"></a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="text-gray-600 hover:text-primary transition-all">Home</a>
+                    <a href="/services/" class="text-gray-600 hover:text-primary transition-all">Services</a>
+                    <a href="/products/" class="text-primary font-semibold transition-all">Products</a>
+                    <a href="/about/" class="text-gray-600 hover:text-primary transition-all">About</a>
+                    <a href="/contact/" class="text-gray-600 hover:text-primary transition-all">Contact</a>
+                    <a href="/contact/" class="bg-primary text-white px-6 py-2 rounded-full hover:bg-secondary transition-all">Get Started</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-4 py-4 space-y-3">
+                <a href="/" class="block text-gray-600 hover:text-primary">Home</a>
+                <a href="/services/" class="block text-gray-600 hover:text-primary">Services</a>
+                <a href="/products/" class="block text-primary font-semibold">Products</a>
+                <a href="/about/" class="block text-gray-600 hover:text-primary">About</a>
+                <a href="/contact/" class="block text-gray-600 hover:text-primary">Contact</a>
+                <a href="/contact/" class="block bg-primary text-white px-6 py-2 rounded-full text-center">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-hero pt-24 pb-16 lg:pt-32 lg:pb-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="inline-block bg-blue-100 text-primary px-4 py-1 rounded-full text-sm font-medium mb-4">OUR PRODUCTS</span>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-dark leading-tight mb-6">
+                Curated Selection, <span class="text-primary">Endless Variety</span>
+            </h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                With access to over 40,000 products, we customize the menu to fit your location's specific tastes. From gym-goers needing protein to office workers needing a caffeine boost.
+            </p>
+        </div>
+    </section>
+
+    <!-- Product Categories -->
+    <section class="py-16 lg:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Healthy & Organic -->
+                <div class="bg-white rounded-2xl p-8 card-shadow card-hover transition-all border border-gray-100">
+                    <div class="flex items-start gap-6">
+                        <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span class="text-2xl">🍎</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-dark mb-4">Healthy & Organic</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Protein Bars</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Nuts & Trail Mix</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Dried Fruit</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Organic Chips</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Gluten-Free Options</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Keto Snacks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Beverages -->
+                <div class="bg-white rounded-2xl p-8 card-shadow card-hover transition-all border border-gray-100">
+                    <div class="flex items-start gap-6">
+                        <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span class="text-2xl">☕</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-dark mb-4">Beverages</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Energy Drinks</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Cold Brew Coffee</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Sparkling Water</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Sports Drinks</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Premium Sodas</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Juices</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Classic Snacks -->
+                <div class="bg-white rounded-2xl p-8 card-shadow card-hover transition-all border border-gray-100">
+                    <div class="flex items-start gap-6">
+                        <div class="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span class="text-2xl">🍪</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-dark mb-4">Classic Snacks</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Potato Chips</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Pretzels</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Cookies</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Crackers</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Candy Bars</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Gum & Mints</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fresh Food -->
+                <div class="bg-white rounded-2xl p-8 card-shadow card-hover transition-all border border-gray-100">
+                    <div class="flex items-start gap-6">
+                        <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span class="text-2xl">🥪</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-dark mb-4">Fresh Food</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Sandwiches</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Salads</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Yogurt Parfaits</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Cheese Plates</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Cut Fruit</span>
+                                <span class="px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 font-medium">Breakfast Items</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bento Grid from Homepage -->
+    <section class="py-16 lg:py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-primary font-semibold">FEATURED SELECTIONS</span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-dark mt-2 mb-4">Fresh & Delicious Options</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-4 mb-8">
+                <div class="md:col-span-2 md:row-span-2 relative group rounded-3xl overflow-hidden card-shadow">
+                    <img src="/images/sandwich.png" alt="Fresh Gourmet Sandwich" class="w-full h-full min-h-[300px] md:min-h-[400px] object-cover group-hover:scale-105 transition-all duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                        <span class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">MOST POPULAR</span>
+                        <h3 class="text-2xl md:text-3xl font-bold text-white mt-3">Gourmet Sandwiches & Wraps</h3>
+                        <p class="text-gray-200 mt-2">Made with premium ingredients</p>
+                    </div>
+                </div>
+                
+                <div class="relative group rounded-3xl overflow-hidden card-shadow h-48 md:h-auto">
+                    <img src="/images/ramen2.png" alt="Hot Ramen" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-500">
+                    <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-4">
+                        <h3 class="text-lg font-bold text-white">Ready to Eat Meals</h3>
+                        <p class="text-gray-200 text-sm">Ramen, soups & entrees</p>
+                    </div>
+                </div>
+                
+                <div class="relative group rounded-3xl overflow-hidden card-shadow h-48 md:h-auto">
+                    <img src="/images/cookies1.png" alt="Fresh Cookies" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-500">
+                    <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/90 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-4">
+                        <h3 class="text-lg font-bold text-white">Baked Treats</h3>
+                        <p class="text-gray-200 text-sm">Cookies & pastries</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="bg-white rounded-2xl card-shadow p-6 md:p-8">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                    <div>
+                        <div class="text-3xl md:text-4xl font-bold text-primary">40K+</div>
+                        <div class="text-gray-600 text-sm mt-1">Product Options</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl md:text-4xl font-bold text-primary">Fresh</div>
+                        <div class="text-gray-600 text-sm mt-1">Weekly Restocking</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl md:text-4xl font-bold text-primary">100%</div>
+                        <div class="text-gray-600 text-sm mt-1">Customizable</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl md:text-4xl font-bold text-primary">Healthy</div>
+                        <div class="text-gray-600 text-sm mt-1">Options Available</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Don't See What You Want CTA -->
+    <section class="py-16 lg:py-24">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold text-dark mb-6">Don't See What You Want?</h2>
+            <p class="text-xl text-gray-600 mb-8">We can source almost any product you request. Our inventory system allows for rapid rotation of products to keep things exciting.</p>
+            <a href="/contact/" class="bg-primary text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-secondary transition-all inline-flex items-center">
+                Request Specific Products
+                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-5 gap-8">
+                <div class="md:col-span-1">
+                    <div class="mb-4"><img src="/images/logo-white.png" alt="Kande VendTech" class="h-28"></div>
+                    <p class="text-gray-400 text-sm mb-4">AI-powered smart vending solutions for Las Vegas. Zero cost, full service.</p>
+                    <ul class="space-y-1 text-gray-400 text-sm">
+                        <li><a href="tel:7252288822" class="hover:text-white transition-all">(725) 228-8822</a></li>
+                        <li><a href="mailto:kurtis@kandevendtech.com" class="hover:text-white transition-all">kurtis@kandevendtech.com</a></li>
+                        <li>5725 S Valley View Blvd Suite 6</li>
+                        <li>Las Vegas, NV 89118</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/" class="hover:text-white transition-all">Home</a></li>
+                        <li><a href="/services/" class="hover:text-white transition-all">Services</a></li>
+                        <li><a href="/products/" class="hover:text-white transition-all">Products</a></li>
+                        <li><a href="/about/" class="hover:text-white transition-all">About</a></li>
+                        <li><a href="/contact/" class="hover:text-white transition-all">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Vending Machines</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="/snack-vending-machines/" class="hover:text-white transition-all">Snack Machines</a></li>
+                        <li><a href="/drink-vending-machines/" class="hover:text-white transition-all">Drink Machines</a></li>
+                        <li><a href="/coffee-vending-machines/" class="hover:text-white transition-all">Coffee Machines</a></li>
+                        <li><a href="/combo-vending-machines/" class="hover:text-white transition-all">Combo Machines</a></li>
+                        <li><a href="/healthy-vending-machines/" class="hover:text-white transition-all">Healthy Vending</a></li>
+                        <li><a href="/meal-vending-machines/" class="hover:text-white transition-all">Meal Machines</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Industries</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="/office-vending-machines/" class="hover:text-white transition-all">Office Vending</a></li>
+                        <li><a href="/hotel-vending-machines/" class="hover:text-white transition-all">Hotel Vending</a></li>
+                        <li><a href="/apartment-building-vending-machines/" class="hover:text-white transition-all">Apartment Vending</a></li>
+                        <li><a href="/hospital-vending-machines/" class="hover:text-white transition-all">Hospital Vending</a></li>
+                        <li><a href="/school-vending-machines/" class="hover:text-white transition-all">School Vending</a></li>
+                        <li><a href="/workplace-vending-machines/" class="hover:text-white transition-all">Workplace Vending</a></li>
+                        <li><a href="/gym-vending-machines/" class="hover:text-white transition-all">Gym Vending</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2026 Kande VendTech. All rights reserved. | <a href="#" class="hover:text-white">Privacy Policy</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } });
+        }, observerOptions);
+        
+        document.querySelectorAll('section > div > .text-center').forEach(el => { el.classList.add('fade-up'); observer.observe(el); });
+        document.querySelectorAll('.card-shadow').forEach((el, i) => { el.classList.add('fade-up'); el.style.transitionDelay = `${(i % 4) * 0.1}s`; observer.observe(el); });
+        document.querySelectorAll('section').forEach(el => { observer.observe(el); });
+        
+        setTimeout(() => {
+            document.querySelectorAll('.fade-up, .fade-in, .slide-left, .slide-right, .scale-up').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) { el.classList.add('visible'); }
+            });
+        }, 100);
+    </script>
+
+</body>
+</html>

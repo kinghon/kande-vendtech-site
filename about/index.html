@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Kande VendTech</title>
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="description" content="Learn about Kande VendTech, our mission to revolutionize vending in Las Vegas, and our commitment to service.">
+    <meta name="keywords" content="Smart Vending, Las Vegas Vending, AI Vending Machines, Healthy Snacks, Office Vending, Hotel Vending">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="About Us | Kande VendTech">
+    <meta property="og:description" content="Learn about Kande VendTech, our mission to revolutionize vending in Las Vegas, and our commitment to service.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kandevendtech.com/about/">
+    <link rel="canonical" href="https://kandevendtech.com/about/">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#1e40af',
+                        accent: '#3b82f6',
+                        dark: '#1f2937',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-hero { background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        .transition-all { transition: all 0.3s ease; }
+        
+        /* Scroll Animations */
+        .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .fade-in { opacity: 0; transition: opacity 0.8s ease-out; }
+        .fade-in.visible { opacity: 1; }
+        .slide-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .slide-left.visible { opacity: 1; transform: translateX(0); }
+        .slide-right { opacity: 0; transform: translateX(40px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .slide-right.visible { opacity: 1; transform: translateX(0); }
+        .scale-up { opacity: 0; transform: scale(0.9); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
+        .scale-up.visible { opacity: 1; transform: scale(1); }
+    </style>
+</head>
+<body class="bg-white text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="/"><img src="/images/logo.png" alt="Kande VendTech" class="h-28"></a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="text-gray-600 hover:text-primary transition-all">Home</a>
+                    <a href="/services/" class="text-gray-600 hover:text-primary transition-all">Services</a>
+                    <a href="/products/" class="text-gray-600 hover:text-primary transition-all">Products</a>
+                    <a href="/about/" class="text-primary font-semibold transition-all">About</a>
+                    <a href="/contact/" class="text-gray-600 hover:text-primary transition-all">Contact</a>
+                    <a href="/contact/" class="bg-primary text-white px-6 py-2 rounded-full hover:bg-secondary transition-all">Get Started</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-4 py-4 space-y-3">
+                <a href="/" class="block text-gray-600 hover:text-primary">Home</a>
+                <a href="/services/" class="block text-gray-600 hover:text-primary">Services</a>
+                <a href="/products/" class="block text-gray-600 hover:text-primary">Products</a>
+                <a href="/about/" class="block text-primary font-semibold">About</a>
+                <a href="/contact/" class="block text-gray-600 hover:text-primary">Contact</a>
+                <a href="/contact/" class="block bg-primary text-white px-6 py-2 rounded-full text-center">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-hero pt-24 pb-16 lg:pt-32 lg:pb-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="inline-block bg-blue-100 text-primary px-4 py-1 rounded-full text-sm font-medium mb-4">ABOUT US</span>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-dark leading-tight mb-6">
+                Redefining Convenience in <span class="text-primary">Las Vegas</span>
+            </h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                We started with a simple idea: Vending machines shouldn't be boring, broken, or empty. They should be smart, reliable, and filled with things you actually want.
+            </p>
+        </div>
+    </section>
+
+    <!-- Mission, Customer First, Local Team Cards -->
+    <section class="py-16 lg:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-2xl p-8 card-shadow card-hover transition-all border border-gray-100">
+                    <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="6"></circle>
+                            <circle cx="12" cy="12" r="2"></circle>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-3">Our Mission</h3>
+                    <p class="text-gray-600">To modernize the breakroom experience by providing cutting-edge technology and superior product selection without any hassle to business owners.</p>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 card-shadow card-hover transition-all border border-gray-100">
+                    <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-3">Customer First</h3>
+                    <p class="text-gray-600">We believe in service above all. That means machines that work, food that is fresh, and a team that responds instantly to your needs.</p>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 card-shadow card-hover transition-all border border-gray-100">
+                    <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-dark mb-3">Local Team</h3>
+                    <p class="text-gray-600">As a Las Vegas based business, we understand the local market. From high-end hotels to 24/7 gyms, we know what Vegas needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Story -->
+    <section class="py-16 lg:py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+                <div>
+                    <span class="text-primary font-semibold">OUR STORY</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-dark mt-2 mb-6">The Kande VendTech Story</h2>
+                    <p class="text-gray-600 mb-6">
+                        Founded in Las Vegas, Kande VendTech noticed a gap in the market. Traditional vending machines were often neglected, taking cash only, and stocking stale products.
+                    </p>
+                    <p class="text-gray-600 mb-6">
+                        We decided to change that. By investing in AI-powered smart machines, we brought vending into the 21st century. Our machines track inventory in real-time, accept all forms of digital payment, and offer verified product freshness.
+                    </p>
+                    <p class="text-gray-600 mb-6">
+                        Today, we serve dozens of locations across the Las Vegas valley, proving that convenience doesn't have to come at the cost of quality.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-dark font-medium">Locally Owned</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-dark font-medium">AI-Powered</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-dark font-medium">Fully Insured</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-12 lg:mt-0">
+                    <div class="bg-white rounded-2xl card-shadow p-8">
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-12 text-center">
+                            <span class="text-5xl font-bold text-primary block mb-2">100+</span>
+                            <span class="text-gray-600 uppercase tracking-wider text-sm">Machines Installed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 lg:py-20 bg-primary">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">Ready to Partner With Us?</h2>
+            <p class="text-xl text-blue-100 mb-8">Join dozens of Las Vegas businesses already enjoying our free vending service. No cost, no hassle, just happy customers.</p>
+            <a href="/contact/" class="inline-flex items-center bg-white text-primary px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition-all">
+                Get Your Free Machine
+                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-5 gap-8">
+                <div class="md:col-span-1">
+                    <div class="mb-4"><img src="/images/logo-white.png" alt="Kande VendTech" class="h-28"></div>
+                    <p class="text-gray-400 text-sm mb-4">AI-powered smart vending solutions for Las Vegas. Zero cost, full service.</p>
+                    <ul class="space-y-1 text-gray-400 text-sm">
+                        <li><a href="tel:7252288822" class="hover:text-white transition-all">(725) 228-8822</a></li>
+                        <li><a href="mailto:kurtis@kandevendtech.com" class="hover:text-white transition-all">kurtis@kandevendtech.com</a></li>
+                        <li>5725 S Valley View Blvd Suite 6</li>
+                        <li>Las Vegas, NV 89118</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/" class="hover:text-white transition-all">Home</a></li>
+                        <li><a href="/services/" class="hover:text-white transition-all">Services</a></li>
+                        <li><a href="/products/" class="hover:text-white transition-all">Products</a></li>
+                        <li><a href="/about/" class="hover:text-white transition-all">About</a></li>
+                        <li><a href="/contact/" class="hover:text-white transition-all">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Vending Machines</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="/snack-vending-machines/" class="hover:text-white transition-all">Snack Machines</a></li>
+                        <li><a href="/drink-vending-machines/" class="hover:text-white transition-all">Drink Machines</a></li>
+                        <li><a href="/coffee-vending-machines/" class="hover:text-white transition-all">Coffee Machines</a></li>
+                        <li><a href="/combo-vending-machines/" class="hover:text-white transition-all">Combo Machines</a></li>
+                        <li><a href="/healthy-vending-machines/" class="hover:text-white transition-all">Healthy Vending</a></li>
+                        <li><a href="/meal-vending-machines/" class="hover:text-white transition-all">Meal Machines</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Industries</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="/office-vending-machines/" class="hover:text-white transition-all">Office Vending</a></li>
+                        <li><a href="/hotel-vending-machines/" class="hover:text-white transition-all">Hotel Vending</a></li>
+                        <li><a href="/apartment-building-vending-machines/" class="hover:text-white transition-all">Apartment Vending</a></li>
+                        <li><a href="/hospital-vending-machines/" class="hover:text-white transition-all">Hospital Vending</a></li>
+                        <li><a href="/school-vending-machines/" class="hover:text-white transition-all">School Vending</a></li>
+                        <li><a href="/workplace-vending-machines/" class="hover:text-white transition-all">Workplace Vending</a></li>
+                        <li><a href="/gym-vending-machines/" class="hover:text-white transition-all">Gym Vending</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2026 Kande VendTech. All rights reserved. | <a href="#" class="hover:text-white">Privacy Policy</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } });
+        }, observerOptions);
+        
+        document.querySelectorAll('section > div > .text-center').forEach(el => { el.classList.add('fade-up'); observer.observe(el); });
+        document.querySelectorAll('.card-shadow').forEach((el, i) => { el.classList.add('fade-up'); el.style.transitionDelay = `${(i % 4) * 0.1}s`; observer.observe(el); });
+        document.querySelectorAll('section').forEach(el => { observer.observe(el); });
+        
+        setTimeout(() => {
+            document.querySelectorAll('.fade-up, .fade-in, .slide-left, .slide-right, .scale-up').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) { el.classList.add('visible'); }
+            });
+        }, 100);
+    </script>
+
+</body>
+</html>
