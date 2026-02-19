@@ -65,12 +65,38 @@
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="/" class="text-gray-600 hover:text-primary transition-all">Home</a>
-                    <a href="/services/" class="text-primary font-semibold transition-all">Services</a>
-                    <a href="/products/" class="text-gray-600 hover:text-primary transition-all">Products</a>
+                    <a href="/services/" class="text-gray-600 hover:text-primary transition-all">Services</a>
+                    <div class="relative group">
+                        <button class="text-gray-600 hover:text-primary transition-all flex items-center gap-1">Vending Machines <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+                        <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <div class="bg-white rounded-xl shadow-lg border border-gray-100 py-2 min-w-[220px]">
+                                <a href="/combo-vending-machines/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary">Combo Vending Machines</a>
+                                <a href="/snack-vending-machines/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary">Snack Vending Machines</a>
+                                <a href="/drink-vending-machines/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary">Drink Vending Machines</a>
+                                <a href="/coffee-vending-machines/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary">Coffee Vending Machines</a>
+                                <a href="/meal-vending-machines/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary">Meal Vending Machines</a>
+                                <a href="/healthy-vending-machines/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary">Healthy Vending Machines</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative group">
+                        <button class="text-gray-600 hover:text-primary transition-all flex items-center gap-1">Industries <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+                        <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <div class="bg-white rounded-xl shadow-lg border border-gray-100 py-2 min-w-[260px]">
+                                <a href="/apartment-building-vending-machines/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary">Apartment Buildings</a>
+                                <a href="/hotel-vending-machines/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary">Hotels &amp; Hospitality</a>
+                                <a href="/office-vending-machines/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary">Offices &amp; Workplaces</a>
+                                <a href="/hospital-vending-machines/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary">Hospitals &amp; Healthcare</a>
+                                <a href="/gym-vending-machines/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary">Gyms &amp; Fitness Centers</a>
+                                <a href="/school-vending-machines/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary">Schools &amp; Universities</a>
+                                <a href="/workplace-vending-machines/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary">Warehouses &amp; Industrial</a>
+                            </div>
+                        </div>
+                    </div>
                     <a href="/about/" class="text-gray-600 hover:text-primary transition-all">About</a>
-                    <a href="/contact/" class="text-gray-600 hover:text-primary transition-all">Contact</a>
                     <a href="/contact/" class="bg-primary text-white px-6 py-2 rounded-full hover:bg-secondary transition-all">Get Started</a>
                 </div>
+                <!-- Mobile menu button -->
                 <div class="md:hidden">
                     <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary">
                         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -80,13 +106,35 @@
                 </div>
             </div>
         </div>
+        <!-- Mobile menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
             <div class="px-4 py-4 space-y-3">
                 <a href="/" class="block text-gray-600 hover:text-primary">Home</a>
-                <a href="/services/" class="block text-primary font-semibold">Services</a>
-                <a href="/products/" class="block text-gray-600 hover:text-primary">Products</a>
+                <a href="/services/" class="block text-gray-600 hover:text-primary">Services</a>
+                <div>
+                    <button class="mobile-dropdown-btn block w-full text-left text-gray-600 hover:text-primary flex items-center justify-between" onclick="this.nextElementSibling.classList.toggle('hidden')">Vending Machines <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+                    <div class="hidden pl-4 pt-2 space-y-2">
+                        <a href="/combo-vending-machines/" class="block text-sm text-gray-500 hover:text-primary">Combo Vending Machines</a>
+                        <a href="/snack-vending-machines/" class="block text-sm text-gray-500 hover:text-primary">Snack Vending Machines</a>
+                        <a href="/drink-vending-machines/" class="block text-sm text-gray-500 hover:text-primary">Drink Vending Machines</a>
+                        <a href="/coffee-vending-machines/" class="block text-sm text-gray-500 hover:text-primary">Coffee Vending Machines</a>
+                        <a href="/meal-vending-machines/" class="block text-sm text-gray-500 hover:text-primary">Meal Vending Machines</a>
+                        <a href="/healthy-vending-machines/" class="block text-sm text-gray-500 hover:text-primary">Healthy Vending Machines</a>
+                    </div>
+                </div>
+                <div>
+                    <button class="mobile-dropdown-btn block w-full text-left text-gray-600 hover:text-primary flex items-center justify-between" onclick="this.nextElementSibling.classList.toggle('hidden')">Industries <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button>
+                    <div class="hidden pl-4 pt-2 space-y-2">
+                        <a href="/apartment-building-vending-machines/" class="block text-sm text-gray-500 hover:text-primary">Apartment Buildings</a>
+                        <a href="/hotel-vending-machines/" class="block text-sm text-gray-500 hover:text-primary">Hotels &amp; Hospitality</a>
+                        <a href="/office-vending-machines/" class="block text-sm text-gray-500 hover:text-primary">Offices &amp; Workplaces</a>
+                        <a href="/hospital-vending-machines/" class="block text-sm text-gray-500 hover:text-primary">Hospitals &amp; Healthcare</a>
+                        <a href="/gym-vending-machines/" class="block text-sm text-gray-500 hover:text-primary">Gyms &amp; Fitness Centers</a>
+                        <a href="/school-vending-machines/" class="block text-sm text-gray-500 hover:text-primary">Schools &amp; Universities</a>
+                        <a href="/workplace-vending-machines/" class="block text-sm text-gray-500 hover:text-primary">Warehouses &amp; Industrial</a>
+                    </div>
+                </div>
                 <a href="/about/" class="block text-gray-600 hover:text-primary">About</a>
-                <a href="/contact/" class="block text-gray-600 hover:text-primary">Contact</a>
                 <a href="/contact/" class="block bg-primary text-white px-6 py-2 rounded-full text-center">Get Started</a>
             </div>
         </div>
