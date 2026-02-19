@@ -7,8 +7,8 @@ export function JsonLd() {
     description:
       "Premier AI-powered smart vending machine services in Las Vegas. Free installation, restocking, and maintenance for hotels, offices, apartments, and gyms.",
     url: "https://kandevendtech.com",
-    telephone: "(702) 555-0123",
-    email: "contact@kandevendtech.com",
+    telephone: "(725) 228-8822",
+    email: "hello@kandevendtech.com",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Las Vegas",
@@ -73,9 +73,9 @@ export function JsonLd() {
     },
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "(702) 555-0123",
+      telephone: "(725) 228-8822",
       contactType: "customer service",
-      email: "contact@kandevendtech.com",
+      email: "hello@kandevendtech.com",
       areaServed: "Las Vegas Valley",
       availableLanguage: "English",
     },

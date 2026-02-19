@@ -49,8 +49,8 @@ export function Footer() {
                                 <span className="w-2 h-2 rounded-full bg-green-500"></span>
                                 Serving Las Vegas, NV
                             </li>
-                            <li>contact@kandevendtech.com</li>
-                            <li>(702) 555-0123</li>
+                            <li>hello@kandevendtech.com</li>
+                            <li>(725) 228-8822</li>
                         </ul>
                         <div className="flex gap-4 mt-6">
                             <Link href="#" className="p-2 rounded-full bg-muted hover:bg-primary/20 hover:text-primary transition-colors">

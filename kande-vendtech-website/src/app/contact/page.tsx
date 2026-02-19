@@ -7,7 +7,7 @@ import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
     title: "Contact Kande VendTech | Free Vending Machine Las Vegas",
-    description: "Contact Kande VendTech to get a free smart vending machine for your Las Vegas business. Free consultation, installation & setup. Call (702) 555-0123 or fill out our form.",
+    description: "Contact Kande VendTech to get a free smart vending machine for your Las Vegas business. Free consultation, installation & setup. Call (725) 228-8822 or fill out our form.",
     alternates: {
         canonical: "https://kandevendtech.com/contact",
     },
@@ -43,7 +43,7 @@ export default function ContactPage() {
                                     <Phone className="w-6 h-6 text-primary" />
                                 </div>
                                 <h3 className="font-semibold mb-2">Phone</h3>
-                                <p className="text-muted-foreground">(702) 555-0123</p>
+                                <p className="text-muted-foreground">(725) 228-8822</p>
                                 <p className="text-xs text-muted-foreground mt-1">Mon-Fri, 9am - 6pm</p>
                             </div>
 
@@ -52,7 +52,7 @@ export default function ContactPage() {
                                     <Mail className="w-6 h-6 text-primary" />
                                 </div>
                                 <h3 className="font-semibold mb-2">Email</h3>
-                                <p className="text-muted-foreground">contact@kandevendtech.com</p>
+                                <p className="text-muted-foreground">hello@kandevendtech.com</p>
                                 <p className="text-xs text-muted-foreground mt-1">24/7 Response</p>
                             </div>
 
