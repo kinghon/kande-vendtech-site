@@ -1381,7 +1381,7 @@ async function sendChecklistEmail(eventId, type, staffMember, eventTitle, eventD
   const requiredItems = checklist.filter(item => item.required);
   const completedRequired = requiredItems.filter(item => item.completed);
 
-  const timestamp = new Date().toLocaleString();
+  const timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles', month: 'numeric', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
 
   const emailBody = `
     <h2>${subject}</h2>
