@@ -955,15 +955,15 @@
                             </div>
                             <div>
                                 <label class="block text-dark font-medium mb-2">Phone Number</label>
-                                <input type="tel" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all" placeholder="(702) 555-1234" name="phone">
+                                <input type="tel" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all" placeholder="(702) 555-1234" name="phone" required>
                             </div>
                             <div>
                                 <label class="block text-dark font-medium mb-2">Company / Location</label>
-                                <input type="text" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all" placeholder="Highrise Apartments" name="company">
+                                <input type="text" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all" placeholder="Highrise Apartments" name="company" required>
                             </div>
                             <div>
                                 <label class="block text-dark font-medium mb-2">Location Type</label>
-                                <select name="location_type" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                                <select name="location_type" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all" required>
                                     <option value="">Select your location type</option>
                                     <option>Hotel / Resort</option>
                                     <option>Office Building</option>
@@ -977,7 +977,7 @@
                             </div>
                             <div>
                                 <label class="block text-dark font-medium mb-2">How Many Employees?</label>
-                                <select name="employees" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                                <select name="employees" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all" required>
                                     <option value="">Select employee count</option>
                                     <option>&lt;50</option>
                                     <option>50-100</option>
@@ -987,7 +987,7 @@
                             </div>
                             <div>
                                 <label class="block text-dark font-medium mb-2">Message</label>
-                                <textarea rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all" placeholder="Tell us about your space..." name="message"></textarea>
+                                <textarea rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all" placeholder="Tell us about your space..." name="message" required></textarea>
                             </div>
                             <div class="cf-turnstile" data-sitekey="0x4AAAAAAFe-aJN6UvZwZmbv"></div>
                             <button type="submit" class="w-full bg-primary text-white py-4 rounded-xl font-semibold hover:bg-secondary transition-all">
