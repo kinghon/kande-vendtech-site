@@ -275,11 +275,11 @@
                 </div>
                 
                 <div class="mt-12 lg:mt-0">
-                    <form action="https://formsubmit.co/hello@kandevendtech.com" method="POST" class="bg-white rounded-2xl card-shadow p-8 border border-gray-100">
-                        <input type="hidden" name="_next" value="https://kandevendtech.com/thank-you.html">
-                        <input type="hidden" name="_subject" value="New Lead from Kande VendTech Website">
-                        <input type="hidden" name="_captcha" value="true">
-                        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+                    <form action="https://api.web3forms.com/submit" method="POST" class="bg-white rounded-2xl card-shadow p-8 border border-gray-100">
+                        <input type="hidden" name="access_key" value="d8133382-d2c5-4b61-873e-4a5cd195ea66">
+                        <input type="hidden" name="subject" value="New Lead from Kande VendTech Website">
+                        <input type="hidden" name="redirect" value="https://kandevendtech.com/thank-you.html">
+                        <input type="checkbox" name="botcheck" class="hidden" style="display:none">
                         <div class="space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
@@ -301,24 +301,37 @@
                                     <input type="text" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all" placeholder="Highrise Apartments" name="company">
                                 </div>
                             </div>
-                            <div>
-                                <label class="block text-dark font-medium mb-2">Location Type</label>
-                                <select name="location_type" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all">
-                                    <option value="">Select your location type</option>
-                                    <option>Hotel / Resort</option>
-                                    <option>Office Building</option>
-                                    <option>Apartment Complex</option>
-                                    <option>Gym / Fitness Center</option>
-                                    <option>School / University</option>
-                                    <option>Healthcare Facility</option>
-                                    <option>Warehouse / Distribution Center</option>
-                                    <option>Other</option>
-                                </select>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-dark font-medium mb-2">Location Type</label>
+                                    <select name="location_type" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                                        <option value="">Select your location type</option>
+                                        <option>Hotel / Resort</option>
+                                        <option>Office Building</option>
+                                        <option>Apartment Complex</option>
+                                        <option>Gym / Fitness Center</option>
+                                        <option>School / University</option>
+                                        <option>Healthcare Facility</option>
+                                        <option>Warehouse / Distribution Center</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-dark font-medium mb-2">How Many Employees?</label>
+                                    <select name="employees" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                                        <option value="">Select employee count</option>
+                                        <option>&lt;50</option>
+                                        <option>50-100</option>
+                                        <option>100-200</option>
+                                        <option>200+</option>
+                                    </select>
+                                </div>
                             </div>
                             <div>
                                 <label class="block text-dark font-medium mb-2">Message</label>
                                 <textarea rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-blue-100 outline-none transition-all" placeholder="Tell us about your space and what you're looking for..." name="message"></textarea>
                             </div>
+                            <div class="cf-turnstile" data-sitekey="0x4AAAAAAFe-aJN6UvZwZmbv"></div>
                             <button type="submit" class="w-full bg-primary text-white py-4 rounded-xl font-semibold hover:bg-secondary transition-all text-lg">
                                 Request Free Consultation
                             </button>
@@ -405,5 +418,6 @@
         }, 100);
     </script>
 
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </body>
 </html>
