@@ -82,6 +82,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         .slide-right.visible { opacity: 1; transform: translateX(0); }
         .scale-up { opacity: 0; transform: scale(0.9); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
         .scale-up.visible { opacity: 1; transform: scale(1); }
+        html { scroll-behavior: smooth; }
+        #contact-form { scroll-margin-top: 100px; }
     </style>
 </head>
 <body class="bg-white text-gray-800">
@@ -187,6 +189,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                 Want a vending machine at your location? Reach out and we'll set it up.
             </p>
+            <div class="mt-6">
+                <a href="#contact-form" class="inline-block bg-primary text-white px-6 py-2 rounded-full hover:bg-secondary transition-all">Get Started</a>
+            </div>
         </div>
     </section>
 
@@ -232,7 +237,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </section>
 
     <!-- Contact Form & Info -->
-    <section class="py-16 lg:py-24">
+    <section id="contact-form" class="py-16 lg:py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-2 lg:gap-12">
                 <div>
