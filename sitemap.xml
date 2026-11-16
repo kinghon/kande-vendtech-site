@@ -13,6 +13,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://kandevendtech.com/blog/state-snack-index/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://kandevendtech.com/about/</loc>
     <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
